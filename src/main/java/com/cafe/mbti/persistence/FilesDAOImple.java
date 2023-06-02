@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository // 저장소
 public class FilesDAOImple implements FilesDAO {
 	private static final Logger logger = LoggerFactory.getLogger(FilesDAOImple.class);
-	private static final String NAMESPACE = "com.cafe.mbti.FileMapper";
+	private static final String NAMESPACE = "com.cafe.mbti.FilesMapper";
 	
 	// MyBatis의 SqlSession을 사용하기 위해 Spring Framework가 생성한 bean을 주입(injection)받음
 	@Autowired
@@ -19,6 +19,6 @@ public class FilesDAOImple implements FilesDAO {
 	@Override
 	public int deleteOnBoard(int boardNumber) {
 		logger.info("deleteOnBoard() 호출");
-		return sqlSession.delete(NAMESPACE + ".deleteOnBoard(boardNumber)", boardNumber);
+		return sqlSession.delete(NAMESPACE + ".deleteOnBoard", boardNumber);
 	}
 } // end FileDAOImple

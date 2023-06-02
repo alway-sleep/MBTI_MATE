@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.persistence.BoardDAO;
@@ -75,10 +76,13 @@ public class BoardServiceImple implements BoardService {
 		return boardDAO.updateType(boardType, boardNumber);
 	}
 
-	//@Transactional(value = "transactionManager") // - root-context.xml에서 설정
+	@Transactional(value = "transactionManager") // - root-context.xml에서 설정
 	@Override
 	public int delete(int boardNumber) throws Exception {
 		logger.info("BOARD delete() 호출");
+		boardlikeDAO.deleteOnBoard(boardNumber);
+		commentsDAO.updateDeleteOnBoard(boardNumber);
+		filesDAO.deleteOnBoard(boardNumber);
 		return boardDAO.delete(boardNumber);
 	}
 }

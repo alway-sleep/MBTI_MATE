@@ -360,7 +360,6 @@ body {
 		}); // end $('input[type="submit"][value="수정"]').click(function(e) {})		
 		// 게시글 삭제
 		$('input[type="submit"][value="삭제"]').click(function(e) {
-			e.preventDefault();
 			// 해당 게시글 작성자만 게시글 삭제 가능
 			if ("${boardVO.memberNumber}" == "${sessionScope.memberVO.memberNumber}") {
 				// 게시글을 삭제할 건지 한번 더 확인
