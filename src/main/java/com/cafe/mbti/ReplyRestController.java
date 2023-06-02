@@ -29,44 +29,39 @@ public class ReplyRestController {
 	@Autowired
 	private ReplyService replyService;
 	
-	@PostMapping // POST : 대댓글 입력
-	// @RequestBody : 클라이언트에서 전송받은 JSON타입의 데이터를 자바 객체로 변환시켜주는 annotation
-	public ResponseEntity<Integer> createReply(HttpServletRequest request, @RequestBody ReplyVO vo) {
-		logger.info("Request URL (POST)  : {}", request.getRequestURI());
-		logger.info("vo = " + vo.toString());
+	@PostMapping // INSERT
+	public ResponseEntity<Integer> replyPOST(HttpServletRequest request, @RequestBody ReplyVO replyVO) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+
+		return new ResponseEntity<Integer>(replyService.create(replyVO), HttpStatus.OK);
+	} // end replyPOST()
+	
+	@GetMapping("/list/{commentNumber}") // SELECT
+	public ResponseEntity<List<ReplyVO>> replyListGET(HttpServletRequest request, @PathVariable("commentNumber") int commentNumber) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		// ResponseEntity<T> : REST 방식에서 데이터를 리턴할 때 쓰이는 객체
-		// 데이터 HttpStatus를 전송
-		// <T> : 보내고자 하는 데이터 타입
-		int result = replyService.create(vo);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	} // end createReply()
+		return new ResponseEntity<List<ReplyVO>>(replyService.readAll(commentNumber), HttpStatus.OK);
+	} // end replyListGET()
 	
-	@GetMapping("/all/{commentNumber}") // GET : 대댓글 선택(all)
-	// @PathVariable("commentNumber") : /all/{commentNumber} 값을 설정된 변수에 저장
-	public ResponseEntity<List<ReplyVO>> readAllReply(HttpServletRequest request, @PathVariable("commentNumber") int commentNumber) {
-		logger.info("Request URL (GET)  : {}", request.getRequestURI());
-		List<ReplyVO> list = replyService.readAll(commentNumber);
-		for(ReplyVO vo : list) {
-			logger.info(vo.toString());
-		}
-		return new ResponseEntity<List<ReplyVO>>(list, HttpStatus.OK);
-	} // end readAllReply()
+	@GetMapping("/{commentNumber}") // SELECT
+	public ResponseEntity<List<ReplyVO>> replyCountGET(HttpServletRequest request, @PathVariable("commentNumber") int commentNumber) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		
+		return new ResponseEntity<List<ReplyVO>>(replyService.readAll(commentNumber), HttpStatus.OK);
+	} // end replyCountGET()
 	
-	@PutMapping("/{replyNumber}") // PUT : 대댓글 수정
-	public ResponseEntity<Integer> updateReply(HttpServletRequest request, @RequestBody String replyContent, @PathVariable("replyNumber") int replyNumber) {
-		logger.info("Request URL (PUT)  : {}", request.getRequestURI());
-		logger.info("replyNumber = " + replyNumber + ", replyContent = " + replyContent);
-		int result = replyService.update(replyContent, replyNumber);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	} // end updateReply()
+	@PutMapping("/update/{replyNumber}") // UPDATE
+	public ResponseEntity<Integer> replyPUT(HttpServletRequest request, @RequestBody String replyContent, @PathVariable("replyNumber") int replyNumber) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+
+		return new ResponseEntity<Integer>(replyService.update(replyContent, replyNumber), HttpStatus.OK);
+	} // end replyPUT()
 	
-	@DeleteMapping("/{replyNumber}") // DELETE : 대댓글 삭제
-	public ResponseEntity<Integer> deleteReply(HttpServletRequest request, @PathVariable("replyNumber") int replyNumber) {
-		logger.info("Request URL (DELETE)  : {}", request.getRequestURI());
-		logger.info("replyNumber = " + replyNumber);
-		int result = replyService.delete(replyNumber);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	} // end deleteReply()
+	@DeleteMapping("/delete/{replyNumber}") // DELETE
+	public ResponseEntity<Integer> replyDELETE(HttpServletRequest request, @PathVariable("replyNumber") int replyNumber) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+
+		return new ResponseEntity<Integer>(replyService.delete(replyNumber), HttpStatus.OK);
+	} // end replyDELETE()
 	
 } // end ReplyRestController

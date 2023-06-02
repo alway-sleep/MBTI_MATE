@@ -53,7 +53,6 @@ public class CommentsRestController {
 	@PutMapping("/update/{commentsNumber}") // UPDATE
 	public ResponseEntity<Integer> commentsPUT(HttpServletRequest request, @RequestBody String commentsContent, @PathVariable("commentsNumber") int commentsNumber) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		logger.info("{} {}", commentsContent, commentsNumber);
 		
 		return new ResponseEntity<Integer>(commentsService.update(commentsContent, commentsNumber), HttpStatus.OK);
 	} // end commentsPUT()

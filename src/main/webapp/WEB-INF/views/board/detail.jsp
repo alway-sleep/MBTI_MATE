@@ -63,9 +63,49 @@ body {
 }
 /* 옵션 버튼 스타일 */
 .detail-wrapper .detail-options,
-.detail-wrapper .comments-options {
+.detail-wrapper .reply-options {
 	display: flex;
 	justify-content: flex-end;
+}
+
+.detail-wrapper .comments-options {
+	display: flex;
+	justify-content: space-between;
+}
+
+.detail-wrapper .comments-options .left-align {
+	align-self: flex-start;
+}
+
+.detail-wrapper .comments-options .right-align {
+	align-self: flex-end;
+}
+
+.comments .reply {
+	display: none;
+	background-color: #eaeaea;
+	margin-top: 3px;
+	border-radius: 10px;
+}
+
+.detail-wrapper .reply #memberNickname,
+.reply-list textarea {
+	background-color: #eaeaea;
+}
+
+.reply .left-align {
+	padding-left: 8px;
+ 	margin-top: 8px;
+}
+
+.reply .right-align {
+	flex: 1;
+	margin: 5px 10px;
+}
+
+.display-flex {
+	display: flex;
+	font-weight: bold;
 }
 /* 회원사진 스타일 */
 .writer-picture img {
@@ -168,8 +208,38 @@ body {
 										'</div>'+
 										'<textarea rows="3" class="commentsContent" name="commentsContent" minlength="5" maxlength="2000" placeholder="댓글을 남겨보세요" readonly>'+this.commentsContent+'</textarea>'+
 										'<div class="comments-options">'+
+										'<div class="left-align">'+
+										'<button type="button" class="replyGET" value="'+this.commentsNumber+'">답글</button>'+
+										'</div>'+
+										'<div class="right-align">'+
 										'<button type="button" class="commentsPUT" value="'+this.commentsNumber+'" '+hidden+'>수정</button>'+
 										'<button type="button" class="commentsDELETE" value="'+this.commentsNumber+'" hidden>삭제</button>'+
+										'</div>'+
+										'</div>'+
+										'<div class="reply-list">'+
+										'</div>'+
+										'<div class="reply">'+
+										'<div class="display-flex">'+
+										'<div class="left-align">'+
+										'└&nbsp;'+
+										'</div>'+
+										'<div class="right-align">'+
+										'<div class="writer-wrapper">'+
+										'<div class="writer-area">'+
+										'<div class="writer-info">'+
+										'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+										'</div>'+
+										'</div>'+
+										'</div>'+
+										'<div class="reply-info">'+
+										'<textarea rows="2" id="replyContent" name="replyContent" minlength="5" maxlength="2000" placeholder="답글을 남겨보세요(10글자 이상)"></textarea>'+
+										'</div>'+
+										'<div class="reply-options">'+
+										'<button type="button" class="replyPOST" value="'+this.commentsNumber+'">등록</button>'+
+										'</div>'+
+										'</div>'+
+										'</div>'+
+										'</div>'+
 										'</div>'+
 										'</div>';
 						$('.comments-list').append(comments);
@@ -181,11 +251,11 @@ body {
 					$('.writer-wrapper .comments-info span').css('color, font-size', '#979797, 12px');
 				}
 			}); // end ajax()
-		} // end commentsGET()		
+		} // end commentsGET()
 		// 댓글 등록
 		$('.comments-options .commentsPOST').click(function(e) {
 			e.preventDefault();
-			commentsContent = $('#commentsContent').val();
+			var commentsContent = $('#commentsContent').val();
 			// 5글자 이상 작성해야 등록 가능
 			if (commentsContent.length >= 5) {
 				$.ajax({
@@ -277,7 +347,111 @@ body {
 				}
 			});
 		}); // end $('.comments-list').on('click', '.comments-options .commentsPUT', function(e) {})
-		/**********************************************************************************************************************************/
+		/******************************************************답글 관련 기능*****************************************************************/
+		// 해당 댓글의 답글 display toggle
+		$('.comments-list').on('click', '.comments-options .replyGET', function(e) {
+			e.preventDefault();
+			var replyList = $(this).closest('.comments-options').next();
+			replyList.toggle();
+			// 답글 불러오기
+			var commentsNumber = $(this).val();
+			$('#replyContent').val('');
+			$.ajax({
+				url: '/mbti/reply/list/'+commentsNumber,
+				type: 'GET',
+				success: function(replyGETResult) {
+					replyList.empty();
+					if (replyGETResult == 0) {
+						replyList.append('<hr><div style="text-align: center; font-weight: bold;">답글이 없습니다.</div>');
+					} else {
+						$(replyGETResult).each(function() {
+							var replyRegdate = new Date(this.replyRegdate);
+							replyRegdate = replyRegdate.getFullYear()+
+												'-'+(replyRegdate.getMonth() + 1).toString().padStart(2, '0')+
+												'-'+replyRegdate.getDate().toString().padStart(2, '0')+
+												' '+replyRegdate.getHours().toString().padStart(2, '0')+
+												':'+replyRegdate.getMinutes().toString().padStart(2, '0')+
+												':'+replyRegdate.getSeconds().toString().padStart(2, '0');
+							// 해당 답글 작성자만 수정/삭제 가능
+							if(memberNumber == this.memberNumber) {
+								var hidden = '';
+							} else {
+								hidden = 'hidden';								
+							};
+							reply = '<div class="display-flex">'+ //
+										'<div class="left-align">'+ //
+										'└&nbsp;'+
+										'</div>'+ // left-align
+										'<div class="right-align">'+
+										'<div class="reply">'+
+										'<div class="writer-wrapper">'+ //
+										'<div class="writer-picture">'+ //
+										'<img src="/mbti/member/display?memberPicture='+this.memberPicture+'">'+
+										'</div>'+ // writer-picture
+										'<div class="writer-area">'+ //
+										'<div class="writer-info">'+ //
+										'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
+										'</div>'+ // writer-info
+										'<div class="reply-info">'+
+										'<span class="replyRegdate">'+replyRegdate+'</span>'+
+										'</div>'+ // replyRegdate
+										'</div>'+ // reply-info
+										'</div>'+ //writer-wrapper
+										'<textarea rows="3" class="replyContent" name="replyContent" minlength="5" maxlength="2000" placeholder="답글을 남겨보세요" readonly>'+this.replyContent+'</textarea>'+
+										'<div class="reply-options">'+ //
+										'<div class="left-align">'+ //
+										'</div>'+ // left-align
+										'<div class="right-align">'+ //
+										'<button type="button" class="commentsPUT" value="'+this.replyNumber+'" '+hidden+'>수정</button>'+
+										'<button type="button" class="commentsDELETE" value="'+this.replyNumber+'" hidden>삭제</button>'+
+										'</div>'+ // right-align
+										'</div>'+ // reply-options
+										'</div>'; // display-flex
+						replyList.append(reply); // reply-list.append
+						}); // end replyGETResult.each(function() {})
+					}
+					// 추가되는 댓글 하위 요소 스타일
+					$('.writer-picture img').css('width, height, max-width, max-height, border-radius, margin-right', '34px, 34px, 100%, 100%, 30px, 10px');
+					$('.writer-wrapper button').css('border, background-color, font-weight, padding, cursor', 'none, #fff, bold, 0, pointer');
+					$('.writer-wrapper .reply-info span').css('color, font-size', '#979797, 12px');
+				}
+			}); // end ajax()
+			
+		}); // end $('.comments').on('click', '.comments-options .replyGET', function(e) {})
+		// 답글 등록
+		$('.reply-options .replyPOST').click(function(e) {
+			e.preventDefault();
+			var replyContent = $('#replyContent').val();
+			var commentsNumber = $(this).val();
+			// 5글자 이상 작성해야 등록 가능
+			if (commentsContent.length >= 5) {
+				$.ajax({
+					url: '/mbti/reply/post',
+					type: 'POST',
+					headers: {'Content-Type' : 'application/json'},
+					data: JSON.stringify({
+						commentsNumber : commentsNumber,
+						memberNumber : memberNumber,
+						replyContent : replyContent
+						}),
+					success: function(replyPOSTResult) {
+						if (replyPOSTResult == 1) {
+							alert('답글을 등록했습니다.');
+							$.ajax({
+								url: '/mbti/reply/'+commentsNumber,
+								type: 'GET',
+								success: function(commentsReplyGETResult) {
+									$('#commentsReply').html(commentsReplyGETResult);
+									replyGET();
+								}
+							}); // end ajax()
+						}
+					}
+				}); // end ajax()					
+			} else {
+				alert('5글자 이상 작성해주세요.');
+			}
+		}); // end $('.reply-options .replyPOST').click(function(e) {})
 		/*****************************************************게시글 관련 기능*****************************************************************/
 		// 게시글 추천 등록/취소
 		$('.detail-info #boardLikesToggle').click(function(e) {
@@ -429,7 +603,11 @@ body {
 						<textarea rows="2" id="commentsContent" name="commentsContent" minlength="5" maxlength="2000" placeholder="댓글을 남겨보세요(10글자 이상)"></textarea>
 					</div>
 					<div class="comments-options">
-						<button type="button" class="commentsPOST">등록</button>
+						<div class="left-align">
+						</div>
+						<div class="right-align">
+							<button type="button" class="commentsPOST">등록</button>
+						</div>
 					</div>
 				</div>
 				<div class="comments-list">

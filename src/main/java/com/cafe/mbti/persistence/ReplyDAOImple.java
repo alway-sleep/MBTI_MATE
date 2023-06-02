@@ -31,6 +31,12 @@ public class ReplyDAOImple implements ReplyDAO {
 		logger.info("selectAll() 호출");
 		return sqlSession.selectList(NAMESPACE + ".selectAll", commentsNumber);
 	}
+	
+	@Override
+	public int selectReplyCount(int commentsNumber) {
+		logger.info("selectReplyCount() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectReplyCount", commentsNumber);
+	}
 
 	@Override
 	public int update(String replyContent, int replyNumber) {
@@ -45,6 +51,12 @@ public class ReplyDAOImple implements ReplyDAO {
 	public int delete(int replyNumber) {
 		logger.info("delete() 호출");
 		return sqlSession.delete(NAMESPACE + ".delete", replyNumber);
+	}
+	
+	@Override
+	public int updateDeleteOnComments(int commentsNumber) {
+		logger.info("updateDeleteOnComments() 호출");
+		return sqlSession.update(NAMESPACE + ".updateDeleteOnComments", commentsNumber);
 	}
 
 	@Override

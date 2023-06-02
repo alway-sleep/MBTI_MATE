@@ -18,15 +18,21 @@ public class ReplyServiceImple implements ReplyService {
 	private ReplyDAO replyDAO;
 
 	@Override
-	public int create(ReplyVO vo) {
+	public int create(ReplyVO replyVO) {
 		logger.info("create() 호출");
-		return replyDAO.insert(vo);
+		return replyDAO.insert(replyVO);
 	}
 
 	@Override
 	public List<ReplyVO> readAll(int commentsNumber) {
 		logger.info("readAll() 호출");
 		return replyDAO.selectAll(commentsNumber);
+	}
+	
+	@Override
+	public int readReplyCount(int commentsNumber) {
+		logger.info("readReplyCount() 호출");
+		return replyDAO.selectReplyCount(commentsNumber);
 	}
 
 	@Override

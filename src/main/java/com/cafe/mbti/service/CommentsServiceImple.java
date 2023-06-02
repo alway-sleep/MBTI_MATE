@@ -18,9 +18,9 @@ public class CommentsServiceImple implements CommentsService {
 	private CommentsDAO commentDAO;
 
 	@Override
-	public int create(CommentsVO vo) {
+	public int create(CommentsVO commentsVO) {
 		logger.info("create() 호출");
-		return commentDAO.insert(vo);
+		return commentDAO.insert(commentsVO);
 	}
 
 	@Override
