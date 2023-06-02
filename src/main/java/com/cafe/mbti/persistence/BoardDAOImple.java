@@ -27,9 +27,9 @@ public class BoardDAOImple implements BoardDAO {
 	private SqlSession sqlSession;
 
 	@Override
-	public int insert(BoardVO vo) {
+	public int insert(BoardVO boardVO) {
 		logger.info("insert() 호출");
-		return sqlSession.insert(NAMESPACE + ".insert", vo);
+		return sqlSession.insert(NAMESPACE + ".insert", boardVO);
 	}
 	
 	@Override
@@ -60,11 +60,12 @@ public class BoardDAOImple implements BoardDAO {
 	}
 
 	@Override
-	public int update(int boardSection, int boardList, String boardTitle, String boardContent, int boardNumber) {
+	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
 		logger.info("update() 호출");
 		Map<String, Object> args = new HashMap<>();
 		args.put("boardSection", boardSection);
 		args.put("boardList", boardList);
+		args.put("boardName", boardName);
 		args.put("boardTitle", boardTitle);
 		args.put("boardContent", boardContent);
 		args.put("boardNumber",boardNumber);

@@ -82,6 +82,10 @@ a:hover {
 	text-decoration: underline;
 }
 
+.selected {
+	text-decoration: underline;
+}
+
 .container {
 	flex: 1;
 	display: flex;
@@ -170,7 +174,8 @@ footer {
 		</c:if>
 		// 왼쪽 게시판 목록에서 게시판 클릭 시 해당 게시판으로 target설정
 		$('.left-container').on('click', 'ul li a', function(e) {
-			e.preventDefault();
+			$('.board-category').find('.selected').removeClass('selected');
+			$(this).addClass('selected');
 			var boardSection = $(this).closest('section').index();
 			var boardList = $(this).closest('ul li').index();
 			var boardName = $(this).closest('ul li').find('span').text();
@@ -267,8 +272,8 @@ footer {
 				<div class="board-category">
 					<section>
 						<ul class="boards">
-							<li><a href="#"><span>전체 게시글</span>(${boardTotalCount})</a></li>
 							<li style="display: none;"><a href="#"><span>휴지통</span></a></li>
+							<li><a href="#"><span>전체 게시글</span>(${boardTotalCount})</a></li>
 						</ul>
 					</section>
 					<section>

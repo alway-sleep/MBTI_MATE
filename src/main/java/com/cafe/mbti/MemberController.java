@@ -23,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.service.MemberService;
 import com.cafe.mbti.util.MediaUtil;
-import com.cafe.mbti.util.Target;
 
 @Controller // @Component
 @RequestMapping(value = "/member")
@@ -47,7 +46,7 @@ public class MemberController {
 		memberVO.setMemberMBTI( memberVO.getMemberMBTI().split(":")[0]);
 		if (memberService.create(memberVO) == 1) {
 			redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다.\\n로그인해 주세요.");
-			return "redirect:/member/login";
+			return "redirect:..";
 		} else {
 			redirectAttributes.addFlashAttribute("message", "회원가입에 실패했습니다.\\n다시 한번 정확하게 작성해 주세요.");
 			return "redirect:/member/join";
@@ -58,25 +57,9 @@ public class MemberController {
 	public void loginGET(HttpServletRequest request, Model model) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 	}
-	
-	@GetMapping("/loginTargetURL")
-	public String loginGET(HttpServletRequest request, Model model, String targetURL) {
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		if (targetURL != null) {
-			if (targetURL.equals("list")) {
-				model.addAttribute("targetURL", targetURL);
-				return "/board/list";				
-			} else if (targetURL.equals("detail")) {
-				model.addAttribute("targetURL", targetURL);
-				return "/board/detail";
-			}
-		}
-		return "/loginTargetURL";
-	}
 
 	@PostMapping("/login")
 	public String loginPOST(HttpServletRequest request, RedirectAttributes redirectAttributes, String memberId, String memberPw) {
-		Target target = (Target) request.getSession().getAttribute("target");
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
 		if (memberService.login(memberId, memberPw) == 1) {
 			MemberVO memberVO =  memberService.read(memberService.readNumberById(memberId));
@@ -86,8 +69,7 @@ public class MemberController {
 		} else {
 			redirectAttributes.addFlashAttribute("message", "등록되지 않은 아이디 또는 비밀번호입니다.");
 		}
-		redirectAttributes.addFlashAttribute("targetURL", (target.getBoardNumber() == 0) ? "list" : "detail");
-		return "redirect:/member/loginTargetURL";			
+		return "redirect:/member/login";
 	}
 	
 	@GetMapping("/logout")
@@ -111,7 +93,7 @@ public class MemberController {
 		if (selectId != null) {
 			selectId = selectId.substring(0, selectId.length() - 3) + "***";
 			redirectAttributes.addFlashAttribute("message", "아이디 : " + selectId);
-			return "redirect:/member/login";
+			return "redirect:..";
 		} else {
 			redirectAttributes.addFlashAttribute("message", "입력하신 정보와 일치하는 아이디가 존재하지 않습니다.");
 			return "redirect:/member/selectId";
@@ -130,7 +112,7 @@ public class MemberController {
 			String resetPw = "reset123!@#";
 			if (memberService.resetPw(resetPw, memberId, memberName, memberRRN, memberPhone, memberEmail) == 1) {
 				redirectAttributes.addFlashAttribute("message", "비밀번호를 초기화하였습니다.\\n로그인 후 비밀변호를 변경해주세요.\\n비밀번호 : " + resetPw);
-				return "redirect:/member/login";				
+				return "redirect:..";				
 			} else {
 				redirectAttributes.addFlashAttribute("message", "비밀번호 찾기에 실패했습니다.\\n다시 시도해주세요.");
 				return "redirect:/member/selectPw";
@@ -173,13 +155,9 @@ public class MemberController {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		if (memberService.updatePw(memberPwNew, memberVO.getMemberNumber(), memberPwOri) == 1) {
 			redirectAttributes.addFlashAttribute("message", "비밀번호가 변경되었습니다. 다시 로그인해 주세요.");
-			if (request.getSession().getAttribute("memberVO") != null) {
-				request.getSession().removeAttribute("memberVO");
-			}
-			if (request.getSession().getAttribute("targetURL") != null) {
-				request.getSession().removeAttribute("targetURL");
-			}
-			return "redirect:/member/login";
+			request.getSession().removeAttribute("memberVO");			
+			request.getSession().removeAttribute("target");
+			return "redirect:..";
 		} else {
 			redirectAttributes.addFlashAttribute("message", "비밀번호 변경에 실패했습니다.");
 			return "redirect:/member/mypage";
@@ -192,12 +170,8 @@ public class MemberController {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		if (memberService.delete(memberVO.getMemberNumber()) == 1) {
 			redirectAttributes.addFlashAttribute("message", "정상적으로 탈퇴되었습니다.");
-			if (request.getSession().getAttribute("memberVO") != null) {
-				request.getSession().removeAttribute("memberVO");
-			}
-			if (request.getSession().getAttribute("targetURL") != null) {
-				request.getSession().removeAttribute("targetURL");
-			}
+			request.getSession().removeAttribute("memberVO");			
+			request.getSession().removeAttribute("target");
 		} else {
 			redirectAttributes.addFlashAttribute("message", "회원탈퇴에 실패했습니다.");
 		}

@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 				<property name="boardSection" value="BOARD_SECTION"/>
 				<property name="boardList" value="BOARD_LIST"/>
 				<property name="boardType" value="BOARD_TYPE"/>
+				<property name="boardName" value="BOARD_NAME"/>
 				<property name="boardTitle" value="BOARD_TITLE"/>
 				<property name="boardContent" value="BOARD_CONTENT"/>
 				<property name="boardViews" value="BOARD_VIEWS"/>

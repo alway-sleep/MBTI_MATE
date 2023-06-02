@@ -74,14 +74,11 @@ public class BoardController {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		if (boardNumber == null) {
-			boardNumber = target.getBoardNumber();
-		}
-		target.setBoardNumber(boardNumber);
+		target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
 		if (memberVO != null) {
-			BoardVO boardVO = boardService.read(boardNumber, memberVO.getMemberNumber());
-			logger.info(boardVO.toString());			
-			model.addAttribute("boardVO", boardVO);			
+			BoardVO boardVO = boardService.read(target.getBoardNumber(), memberVO.getMemberNumber());
+			logger.info(boardVO.toString());
+			model.addAttribute("boardVO", boardVO);
 		}
 	} // end detailGET()
 	
@@ -96,11 +93,12 @@ public class BoardController {
 	} // end updateGET()
 	
 	@PostMapping("/update")
-	public String updatePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, String boardTitle, String boardContent) {
+	public String updatePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, Integer boardSection, Integer boardList, String boardName, String boardTitle, String boardContent) {
 		Target target = (Target) request.getSession().getAttribute("target");
+		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		if (boardService.update(target.getBoardSection(), target.getBoardList(), boardTitle, boardContent, target.getBoardNumber()) == 1) {
+		if (boardService.update(boardSection, boardList, boardName, boardTitle, boardContent, target.getBoardNumber()) == 1) {
 			redirectAttributes.addFlashAttribute("message", "게시글이 수정되었습니다.");
 		} else {
 			redirectAttributes.addFlashAttribute("message", "게시글 수정을 실패했습니다.");
@@ -161,7 +159,6 @@ public class BoardController {
 		logger.info(target.toString());
 		return target;
 	}
-
 	
 	private String encodedString(String encodedString) {
 		try {

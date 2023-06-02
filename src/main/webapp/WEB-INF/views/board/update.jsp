@@ -93,7 +93,9 @@ body {
 	<div class="update-wrapper">
 		<h2>게시글 수정</h2>
 		<form class="update-form" action="/mbti/board/update" method="POST">
-			<input type="text" id="boardName" value="${sessionScope.target.boardName}" style="border: none;" onfocus="blur()" readonly>
+			<input type="hidden" id="boardSection" name="boardSection" value="${boardVO.boardSection}">
+			<input type="hidden" id="boardList" name="boardList" value="${boardVO.boardList}">
+			<input type="text" id="boardName" name="boardName" value="${boardVO.boardName}" style="border: none;" onfocus="blur()" readonly>
 			<input type="text" id="boardTitle" name="boardTitle" minlength="1" maxlength="40" placeholder="제목 입력" value="${boardVO.boardTitle}" required>
 			<textarea rows="20" cols="120" minlength="2" maxlength="2000" id="boardContent" name="boardContent" placeholder="내용 입력" style="resize: none;" required>${boardVO.boardContent}</textarea>
 			<div class="update-options">

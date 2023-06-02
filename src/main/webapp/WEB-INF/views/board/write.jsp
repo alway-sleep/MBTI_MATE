@@ -88,7 +88,7 @@ body {
 	<div class="write-wrapper">
 		<form class="write-form" action="/mbti/board/write" method="POST">
 			<h2>게시글 작성</h2>
-			<input type="text" id="boardName" value="${sessionScope.target.boardName}" style="border: none;" onfocus="blur()" readonly>
+			<input type="text" id="boardName" name="boardName" value="${sessionScope.target.boardName}" style="border: none;" onfocus="blur()" readonly>
 			<input type="text" id="boardTitle" name="boardTitle" minlength="1" maxlength="40" placeholder="제목 입력" required>
 			<textarea rows="20" cols="120" minlength="2" maxlength="2000" id="boardContent" name="boardContent" placeholder="내용 입력" style="resize: none;" required></textarea>
 			<div class="write-options">

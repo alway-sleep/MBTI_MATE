@@ -152,7 +152,7 @@ body {
 			<c:if test="${empty sessionScope.memberVO}">
 				window.open('/mbti/member/login','음티메이트 : 로그인', 'width=450px, height=260px').onbeforeunload =
 					function() {
-					location.reload();
+					location.href='/mbti';
 					}				
 			</c:if>
 			<c:if test="${not empty sessionScope.memberVO}">
@@ -173,7 +173,10 @@ body {
 		$('.list-options button[type="button"]').click(function(e) {
 			e.preventDefault();
 			<c:if test="${empty sessionScope.memberVO}">
-				window.open('/mbti/member/login','음티메이트 : 로그인', 'width=450px, height=260px').onbeforeunload = function(){location.reload();}				
+				window.open('/mbti/member/login','음티메이트 : 로그인', 'width=450px, height=260px').onbeforeunload =
+					function() {
+					location.href='/mbti';
+					}				
 			</c:if>
 			<c:if test="${not empty sessionScope.memberVO}">
 				// '공지사항' 이외의 모든 게시판

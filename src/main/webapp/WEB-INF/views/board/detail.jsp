@@ -378,6 +378,7 @@ body {
 	<div class="detail-wrapper">
 		<h2>${boardVO.boardTitle }</h2>
 		<form class="detail-form">
+			<input type="text" id="boardName" value="${boardVO.boardName}" style="border: none;" onfocus="blur()" readonly>
 			<div class="writer-wrapper">
 				<div class="writer-picture">
 					<img src="/mbti/member/display?memberPicture=${boardVO.memberPicture }">

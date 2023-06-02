@@ -16,9 +16,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insert">
 		INSERT
 		INTO ${board}
-		(${memberNumber}, ${boardSection}, ${boardList}, ${boardTitle}, ${boardContent})
+		(${memberNumber}, ${boardSection}, ${boardList}, ${boardName}, ${boardTitle}, ${boardContent})
 		VALUES
-		(#{memberNumber}, #{boardSection}, #{boardList}, #{boardTitle}, #{boardContent})
+		(#{memberNumber}, #{boardSection}, #{boardList}, #{boardName}, #{boardTitle}, #{boardContent})
 	</insert>
 	
 	<!-- 전체 게시글의 수 -->
@@ -148,7 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 게시글 수정 -->
 	<update id="update">
 		UPDATE ${board}
-		SET ${boardSection} = #{boardSection}, ${boardList} = #{boardList}, ${boardTitle} = #{boardTitle}, ${boardContent} = #{boardContent}, ${boardRegdate} = SYSDATE
+		SET ${boardSection} = #{boardSection}, ${boardList} = #{boardList}, ${boardName} = #{boardName}, ${boardTitle} = #{boardTitle}, ${boardContent} = #{boardContent}, ${boardRegdate} = SYSDATE
 		WHERE ${boardNumber} = #{boardNumber}
 	</update>
 	

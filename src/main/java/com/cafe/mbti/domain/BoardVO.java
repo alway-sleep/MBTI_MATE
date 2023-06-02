@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class BoardVO {
 	private int boardNumber, memberNumber, boardSection, boardList, boardType;
-	private String boardTitle, boardContent;
+	private String boardName, boardTitle, boardContent;
 	private int boardViews, boardLikes, boardComments;
 	private Date boardRegdate;
 	// JOIN
@@ -15,9 +15,9 @@ public class BoardVO {
 
 	public BoardVO() {}
 
-	public BoardVO(int boardNumber, int memberNumber, int boardSection, int boardList, int boardType, String boardTitle,
-			String boardContent, int boardViews, int boardLikes, int boardComments, Date boardRegdate,
-			String memberNickname, String memberPicture, int boardlikeNumber, String[] filesName) {
+	public BoardVO(int boardNumber, int memberNumber, int boardSection, int boardList, int boardType, String boardName,
+			String boardTitle, String boardContent, int boardViews, int boardLikes, int boardComments,
+			Date boardRegdate, String memberNickname, String memberPicture, int boardlikeNumber, String[] filesName) {
 		this.boardNumber = boardNumber;
 		this.memberNumber = memberNumber;
 		this.boardSection = boardSection;
@@ -73,6 +73,14 @@ public class BoardVO {
 
 	public void setBoardType(int boardType) {
 		this.boardType = boardType;
+	}
+
+	public String getBoardName() {
+		return boardName;
+	}
+
+	public void setBoardName(String boardName) {
+		this.boardName = boardName;
 	}
 
 	public String getBoardTitle() {
@@ -158,10 +166,10 @@ public class BoardVO {
 	@Override
 	public String toString() {
 		return "BoardVO [boardNumber=" + boardNumber + ", memberNumber=" + memberNumber + ", boardSection="
-				+ boardSection + ", boardList=" + boardList + ", boardType=" + boardType + ", boardTitle=" + boardTitle
-				+ ", boardContent=" + boardContent + ", boardViews=" + boardViews + ", boardLikes=" + boardLikes
-				+ ", boardComments=" + boardComments + ", boardRegdate=" + boardRegdate + ", memberNickname="
-				+ memberNickname + ", memberPicture=" + memberPicture + ", boardlikeNumber=" + boardlikeNumber
-				+ ", filesName=" + Arrays.toString(filesName) + "]";
+				+ boardSection + ", boardList=" + boardList + ", boardType=" + boardType + ", boardName=" + boardName
+				+ ", boardTitle=" + boardTitle + ", boardContent=" + boardContent + ", boardViews=" + boardViews
+				+ ", boardLikes=" + boardLikes + ", boardComments=" + boardComments + ", boardRegdate=" + boardRegdate
+				+ ", memberNickname=" + memberNickname + ", memberPicture=" + memberPicture + ", boardlikeNumber="
+				+ boardlikeNumber + ", filesName=" + Arrays.toString(filesName) + "]";
 	}
 }

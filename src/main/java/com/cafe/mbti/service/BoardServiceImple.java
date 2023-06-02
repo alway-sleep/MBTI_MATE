@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.persistence.BoardDAO;
@@ -35,9 +34,9 @@ public class BoardServiceImple implements BoardService {
 	private FilesDAO filesDAO;
 
 	@Override
-	public int create(BoardVO vo) {
+	public int create(BoardVO boardVO) {
 		logger.info("BOARD create() 호출");
-		return boardDAO.insert(vo);
+		return boardDAO.insert(boardVO);
 	}
 
 	@Override
@@ -65,9 +64,9 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Override
-	public int update(int boardSection, int boardList, String boardTitle, String boardContent, int boardNumber) {
+	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
 		logger.info("BOARD update() 호출");
-		return boardDAO.update(boardSection, boardList, boardTitle, boardContent, boardNumber);
+		return boardDAO.update(boardSection, boardList, boardName, boardTitle, boardContent, boardNumber);
 	}
 	
 	@Override
@@ -80,9 +79,6 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public int delete(int boardNumber) throws Exception {
 		logger.info("BOARD delete() 호출");
-		commentsDAO.updateDeleteOnBoard(boardNumber);
-		boardlikeDAO.deleteOnBoard(boardNumber);
-		filesDAO.deleteOnBoard(boardNumber);
 		return boardDAO.delete(boardNumber);
 	}
 }
