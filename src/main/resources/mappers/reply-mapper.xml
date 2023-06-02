@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.cafe.mbti.ReplyMapper">
+	<!-- 대댓글 등록 -->
+	<insert id="insert">
+		INSERT
+		INTO ${reply}
+		(${commentsNumber}, ${memberNickname}, ${replyContent})
+		VALUES
+		(#{commentsNumber}, #{memberNickname}, #{replyContent})
+	</insert>
+	<!-- 대댓글 정렬 후 출력 -->
+	<select id="selectAll" resultType="ReplyVO">
+		SELECT R.*, M.${memberNickname}, M.${memberPicture}
+		FROM ${comments} R
+		LEFT OUTER JOIN ${member} M ON R.${memberNumber} = M.${memberNumber}
+		WHERE C.${commentsNumber} = #{commentsNumber}
+		ORDER BY C.${replyNumber} ASC
+	</select>
+	<!-- 대댓글 수정 -->
+	<update id="update">
+		UPDATE ${reply} 
+		SET ${replyContent} = #{replyContent} 
+		WHERE ${replyNumber} = #{replyNumber}
+	</update>
+	<!-- 대댓글 삭제 -->
+	<delete id="delete">
+		DELETE 
+		FROM ${reply} 
+		WHERE ${replyNumber} = #{replyNumber}
+	</delete>
+	<!-- 게시글 삭제 시 게시글 번호 초기화 -->
+	<update id="updateDeleteOnBoard">
+		UPDATE ${reply}
+		SET ${commentsNumber} = 0
+		WHERE ${commentsNumber} = #{commentsNumber}
+	</update>
+	<!-- 회원탈퇴 시 해당 회원 대댓글 삭제 -->
+	<delete id="deleteOnMember">
+		DELETE
+		FROM ${reply}
+		WHERE ${memberNumber} = #{memberNumber}
+	</delete>
+</mapper>

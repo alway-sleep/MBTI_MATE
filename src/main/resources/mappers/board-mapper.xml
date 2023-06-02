@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace : dao 클래스의 sqlSession과 연결하기 위한 키로 사용 -->
+<mapper namespace = "com.cafe.mbti.BoardMapper">
+<!-- mapper 태그 -->
+<!-- <insert>, <select>, <update>, <delete> dao-sqlSession의 함수(insert, selectOne, selectList, update, delete)와 매핑되어 쿼리를 수행-->
+
+	<!-- id : dao.class의 sqlSession 특정 함수와 연결하기 위해 사용 -->
+	<!-- ${key} : mybatis-config.xml의 property.name의 value(DB테이블의 컬럼) -->
+	<!-- #{key} : dao.class의 sqlSession의 request.Parameter("name")의 value(입력받은 데이터) -->	
+	
+	<!-- 게시글 작성 -->
+	<insert id="insert">
+		INSERT
+		INTO ${board}
+		(${memberNumber}, ${boardSection}, ${boardList}, ${boardTitle}, ${boardContent})
+		VALUES
+		(#{memberNumber}, #{boardSection}, #{boardList}, #{boardTitle}, #{boardContent})
+	</insert>
+	
+	<!-- 전체 게시글의 수 -->
+	<select id="selectBoardCount" resultType="Integer">
+		SELECT COUNT(${boardNumber}) AS CNT
+		FROM ${board}
+		WHERE ${boardNumber} > 0
+	</select>
+	
+	<!-- 전체 게시글 정렬 후 출력 -->
+	<select id="selectAll" resultType="BoardVO">
+  		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT B.${boardNumber}, B.${boardType}, B.${boardTitle}, B.${boardViews}, B.${boardLikes}, B.${boardComments}, B.${boardRegdate}, M.${memberNickname}
+				FROM ${board} B
+				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+				WHERE ${boardNumber} > 0
+				ORDER BY B.${boardNumber} DESC
+			) B1
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- 게시판 정렬 후 출력 -->
+	<!-- #{boardSection} : criteria.getboardSection(), #{boardList} : criteria.getboardList() -->
+	<!-- #{start} : pageCriteria.getStart(), #{end} : pageCriteria.getEnd() -->
+	<select id="selectBoard" resultType="BoardVO">
+  		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT B.${boardNumber}, B.${boardType}, B.${boardTitle}, B.${boardViews}, B.${boardLikes}, B.${boardComments}, B.${boardRegdate}, M.${memberNickname}
+				FROM ${board} B
+				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+				WHERE B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
+				ORDER BY B.${boardNumber} DESC
+			) B1
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- 게시글 출력 -->
+	<select id="select" resultType="BoardVO">
+		SELECT B.*, M.${memberNickname}, M.${memberPicture}, BL.${boardlikeNumber}
+		FROM ${board} B
+		LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+		LEFT OUTER JOIN ${boardlike} BL ON B.${boardNumber} = BL.${boardNumber} AND BL.${memberNumber} = #{memberNumber}
+		WHERE B.${boardNumber} = #{boardNumber}
+	</select>
+	
+	<!-- 검색 기능 -->
+	<select id="selectByContent" resultType="BoardVO">
+		SELECT B.*
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT DISTINCT ${boardNumber}
+				FROM ${board} B, ${comments} C, ${reply} R
+				WHERE
+				B.${boardContent} LIKE #{keyword}
+				OR
+				C.${commentsContent} LIKE #{keyword}
+				OR
+				R.${replyContent} LIKE #{keyword}
+				ORDER BY ${boardNumber} DESC
+			) B1
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectByTitle" resultType="BoardVO">
+		SELECT B.*
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT DISTINCT ${boardNumber}
+				FROM ${board}
+				WHERE ${boardTitle} LIKE #{keyword}
+				ORDER BY ${boardNumber} DESC
+			) B1
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectByWriter" resultType="BoardVO">
+		SELECT B.*
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+				SELECT DISTINCT ${boardNumber}
+				FROM ${board}
+				WHERE ${memberNickname} LIKE #{keyword}
+				ORDER BY ${boardNumber} DESC
+			) B1
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectByReplier" resultType="BoardVO">
+		SELECT B.*
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+				SELECT DISTINCT ${boardNumber}
+				FROM ${comments} C, ${reply} R
+				WHERE
+				C.${memberNickname} LIKE #{keyword}
+				OR
+				R.${memberNickname} LIKE #{keyword}
+				ORDER BY ${boardNumber} DESC
+			) B1
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="update">
+		UPDATE ${board}
+		SET ${boardSection} = #{boardSection}, ${boardList} = #{boardList}, ${boardTitle} = #{boardTitle}, ${boardContent} = #{boardContent}, ${boardRegdate} = SYSDATE
+		WHERE ${boardNumber} = #{boardNumber}
+	</update>
+	
+	<!-- 인기글 업데이트 -->
+	<update id="updateType">
+		UPDATE ${board}
+		SET ${boardType} = #{boardType}
+		WHERE $[boardNumber} = #{boardNumber}
+	</update>
+
+	<!-- 게시글 삭제 -->
+	<delete id="delete">
+		DELETE
+		FROM ${board}
+		WHERE ${boardNumber} = #{boardNumber}
+	</delete>
+	
+	<!-- 회원탈퇴 시 해당 회원 게시글 삭제 -->
+	<delete id="deleteOnMember">
+		DELETE
+		FROM ${board}
+		WHERE ${memberNumber} = #{memberNumber}
+	</delete>
+	
+	<!-- 
+	<select id="boardPagination" resultType="BoardVO">
+		SELECT B.${boardNumber}, B.${memberNumber}, B.${boardTitle}, B.${boardContent}, B.${boardViews}, B.${boardLikes}, B.${boardComments}, B.{boardRegdate}
+		FROM (
+   			SELECT ROWNUM AS RN, A.*
+   			FROM (
+       			SELECT *
+       			FROM ${board}
+       			ORDER BY ${boardNumber} DESC
+  			) A
+  		) B
+  		WHERE B.RN BETWEEN #{start} AND #{end}
+	</select>
+	 -->
+</mapper>

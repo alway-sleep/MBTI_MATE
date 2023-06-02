@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.cafe.mbti.MessageMapper">
+	<!-- 쪽지 작성 -->
+	<insert id="insert">
+		INSERT 
+		INTO ${message}
+		(${messageSender}, ${messageRecipient}, ${messageTitle}, ${messageContent}) 
+		VALUES 
+		(#{memberNumber}, #{memberId}, #{messageTitle}, #{messageContent})
+	</insert>
+	<!-- 받은 쪽지함 -->
+	<select id="selectAllByRecipient" resultType="MessageVO">
+		SELECT *
+		FROM ${message}
+		WHERE ${messageRecipient} = #{memberId}
+		ORDER BY ${messageNumber} DESC
+	</select>
+	<!-- 보낸 쪽지함 -->
+	<select id="selectAllBySender" resultType="MessageVO">
+		SELECT *
+		FROM ${message}
+		WHERE ${messageSender} = #{memberNumber}
+		ORDER BY ${messageNumber} DESC
+	</select>
+	<!-- 쪽지 보관함 -->
+	<select id="selectAllByBox" resultType="MessageVO">
+		SELECT *
+		FROM ${message}
+		WHERE ${messageBox} = 1
+		ORDER BY ${messageNumber} DESC
+	</select>
+	<!-- 쪽지 일기 -->
+	<select id="select" resultType="MessageVO">
+		SELECT *
+		FROM ${message}
+		WHERE ${messageNumber} = #{messageNumber}
+	</select>
+	<!-- 쪽지 확인여부 -->
+	<update id="updateIsRead">
+		UPDATE ${message}
+		SET ${messageIsread} = 1
+		WHERE ${messageNumber} = #{messageNumber}
+	</update>
+	<!-- 발신회원 쪽지 삭제여부 -->
+	<update id="updateSenderIsDel">
+		UPDATE ${message}
+		SET ${messageSenderIsdel} = 1
+		WHERE ${messageNumber} = #{messageNumber}
+	</update>
+	<!-- 수신회원 쪽지 삭제여부 -->
+	<update id="updateRecipientIsDel">
+		UPDATE ${message}
+		SET ${messageRecipientIsdel} = 1
+		WHERE ${messageNumber} = #{messageNumber}
+	</update>
+	<!-- 쪽지 보관여부 -->
+	<update id="updateBox">
+		UPDATE ${message}
+		SET ${messageBox} = 1
+		WHERE ${messageNumber} = #{messageNumber}
+	</update>
+	<!-- 쪽지 삭제 -->
+	<delete id="delete">
+		DELETE 
+		FROM ${message}
+		WHERE ${messageNumber} = #{messageNumber}
+	</delete>
+</mapper>

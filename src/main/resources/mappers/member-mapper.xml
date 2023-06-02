@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.cafe.mbti.MemberMapper">
+	<!-- 회원가입 -->
+	<insert id="insert">
+		INSERT
+		INTO ${member}
+		(${memberId}, ${memberPw}, ${memberNickname}, ${memberName}, ${memberRRN}, ${memberPhone}, ${memberEmail}, ${memberRegion}, ${memberMBTI})
+		VALUES
+		(#{memberId}, #{memberPw}, #{memberNickname}, #{memberName}, #{memberRRN}, #{memberPhone}, #{memberEmail}, #{memberRegion}, #{memberMBTI})
+	</insert>
+	
+	<!-- 회원가입 유효성 검사(isUnique) -->
+	<select id="isDuplicatedId" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberId} = #{memberId}
+	</select>
+	<select id="isDuplicatedNickname" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberNickname} = #{memberNickname}
+	</select>
+	<select id="isDuplicatedRRN" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberRRN} = #{memberRRN}
+	</select>
+	<select id="isDuplicatedPhone" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberPhone} = #{memberPhone}
+	</select>
+	<select id="isDuplicatedEmail" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberEmail} = #{memberEmail}
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="login" resultType="Integer">
+		SELECT COUNT(*) AS CNT
+		FROM ${member}
+		WHERE
+		${memberId} = #{memberId}
+		AND
+		${memberPw} = #{memberPw}
+	</select>
+	
+	<!-- 아이디/비밀번호 찾기 -->
+	<select id="selectId" resultType="String">
+		SELECT ${memberId}
+		FROM ${member}
+		WHERE ${memberName} = #{memberName} AND ${memberRRN} = #{memberRRN} AND ${memberPhone} = #{memberPhone}
+	</select>
+	<select id="selectPw" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberId} = #{memberId} AND ${memberName} = #{memberName} AND ${memberRRN} = #{memberRRN} AND ${memberPhone} = #{memberPhone} AND ${memberEmail} = #{memberEmail}
+	</select>
+	<update id="resetPw">
+		UPDATE ${member}
+		SET ${memberPw} = #{memberPwReset}, ${memberUpdate} = SYSDATE
+		WHERE ${memberId} = #{memberId} AND ${memberName} = #{memberName} AND ${memberRRN} = #{memberRRN} AND ${memberPhone} = #{memberPhone} AND ${memberEmail} = #{memberEmail}
+	</update>
+	
+	<!-- 마이페이지 -->
+	<select id="select" resultType="memberVO">
+		SELECT *
+		FROM ${member}
+		WHERE ${memberNumber} = #{memberNumber}
+	</select>
+	
+	<!-- 회원정보 수정 -->
+	<update id="update">
+		UPDATE ${member}
+		SET ${memberNickname} = #{memberNickname}, ${memberPhone} = #{memberPhone},
+		${memberEmail} = #{memberEmail}, ${memberRegion} = #{memberRegion}, ${memberMBTI} = #{memberMBTI}, ${memberUpdate} = SYSDATE
+		WHERE ${memberNumber} = #{memberNumber}
+	</update>
+	<update id="updatePw">
+		UPDATE ${member}
+		SET ${memberPw} = #{memberPwNew}, ${memberUpdate} = SYSDATE
+		WHERE ${memberNumber} = #{memberNumber} AND ${memberPw} = #{memberPw}
+	</update>
+	
+	<!-- 회원정보 수정 유효성 검사(IsUnique) -->
+	<select id="selectNicknameStr" resultType="String">
+		SELECT ${memberNickname}
+		FROM ${member}
+		WHERE ${memberNickname} = #{memberNickname}
+	</select>
+	<select id="selectNicknameInt" resultType="Integer">
+		SELECT COUNT(${memberNickname}) AS CNT
+		FROM ${member}
+		WHERE ${memberNickname} = #{memberNickname} AND ${memberNumber} = #{memberNumber}
+	</select>
+	<select id="selectPhoneStr" resultType="String">
+		SELECT ${memberPhone}
+		FROM ${member}
+		WHERE ${memberPhone} = #{memberPhone}
+	</select>
+	<select id="selectPhoneInt" resultType="Integer">
+		SELECT COUNT(${memberPhone}) AS CNT
+		FROM ${member}
+		WHERE ${memberPhone} = #{memberPhone} AND ${memberNumber} = #{memberNumber}
+	</select>
+	<select id="selectEmailStr" resultType="String">
+		SELECT ${memberEmail}
+		FROM ${member}
+		WHERE ${memberEmail} = #{memberEmail}
+	</select>
+	<select id="selectEmailInt" resultType="Integer">
+		SELECT COUNT(${memberEmail}) AS CNT
+		FROM ${member}
+		WHERE ${memberEmail} = #{memberEmail} AND ${memberNumber} = #{memberNumber}
+	</select>
+	<select id="selectPwStr" resultType="String">
+		SELECT ${memberPw}
+		FROM ${member}
+		WHERE ${memberNumber} = #{memberNumber}
+	</select>
+	<select id="selectPwInt" resultType="Integer">
+		SELECT COUNT(${memberPw}) AS CNT
+		FROM ${member}
+		WHERE ${memberPw} = #{memberPw} AND ${memberNumber} = #{memberNumber}
+	</select>
+	<!-- 비밀번호 암호화
+	<select id="login" resultType="Integer">
+		SELECT COUNT(*) AS CNT 
+		FROM ${member} 
+		WHERE 
+		${memberId} = #{memberId} 
+		AND 
+		${memberPw} = (SELECT SHA2(CONCAT(#{memberPw}, ${salt}), 512) 
+		FROM ${member} 
+		WHERE ${memberId} = #{memberId})
+	</select>
+	 -->
+	 
+	<!-- 카페 정보 : 매니저 닉네임 -->
+	<select id="selectNicknameByGrade" resultType="String">
+		SELECT ${memberNickname}
+		FROM ${member}
+		WHERE ${memberGrade} = #{memberGrade}
+	</select>
+	
+	<!-- 전체 회원의 수 -->
+	<select id="selectMemberCount" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberNumber} > 0
+	</select>	
+	
+	<!-- 회원 등업 -->
+	<update id="updateGrade">
+		UPDATE ${member}
+		SET ${memberGrade} = ${memberGrade} + 1
+		WHERE ${memberNumber} = #{memberNumber}
+	</update>
+	
+	<!-- 서비스 결제 -->
+	<update id="updatePremium">
+		UPDATE ${member}
+		SET ${memberPremium} = 1
+		WHERE ${memberNumber} = #{memberNumber}
+	</update>
+	
+	<!-- 회원탈퇴 -->
+	<delete id="delete">
+		DELETE
+		FROM ${member}
+		WHERE ${memberNumber} = #{memberNumber}
+	</delete>
+	
+	<!-- 회원사진 -->
+	<update id="updatePicture">
+		<bind name="pictureMemberNumber" value="concat('picture', #{memberNumber})"/>
+		UPDATE ${member} 
+		SET ${memberPicture} = #{pictureMemberNumber} 
+		WHERE ${memberNumber} = #{memberNumber}
+	</update>
+	<update id="updatePictureDefault">
+		UPDATE ${member} 
+		SET ${memberPicture} = null 
+		WHERE ${memberNumber} = #{memberNumber}
+	</update>
+	
+	<!--  -->
+	<select id="selectNumberByNickname" resultType="Integer">
+		SELECT ${memberNumber}
+		FROM ${member}
+		WHERE ${memberNickname} = #{memberNickname}
+	</select>
+	<select id="selectNumberById" resultType="Integer">
+		SELECT ${memberNumber}
+		FROM ${member}
+		WHERE ${memberId} = #{memberId}
+	</select>
+</mapper>

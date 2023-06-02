@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- DB 테이블과 컬럼들을 mapper에 매핑하기 위한 변수 선언 -->
+<configuration>
+	<!-- property name : mapper.xml에서 사용될 이름, value : DB 테이블 및 컬럼 이름 -->
+	<properties>
+		<!-- name=VO 매칭, value=Oracle 매칭 -->
+		<!-- 중복값이 있어도 오류없음 (각 테이블마다 컬럼을 명시해주는게 가시성이 뛰어남) -->
+		
+		<!-- MemberVO | MEMBER -->
+		<property name="member" value="MEMBER"/>
+		<property name="memberNumber" value="MEMBER_NUMBER"/>
+				<property name="memberId" value="MEMBER_ID"/>
+				<property name="memberPw" value="MEMBER_PW"/>
+				<property name="memberNickname" value="MEMBER_NICKNAME"/>
+				<property name="memberName" value="MEMBER_NAME"/>
+				<property name="memberRRN" value="MEMBER_RRN"/>
+				<property name="memberPhone" value="MEMBER_PHONE"/>
+				<property name="memberEmail" value="MEMBER_EMAIL"/>
+				<property name="memberRegion" value="MEMBER_REGION"/>
+				<property name="memberMBTI" value="MEMBER_MBTI"/>
+				<property name="memberGrade" value="MEMBER_GRADE"/>
+				<property name="memberPremium" value="MEMBER_PREMIUM"/>
+				<property name="memberAge" value="MEMBER_AGE"/>
+				<property name="memberGender" value="MEMBER_GENDER"/>
+				<property name="memberPicture" value="MEMBER_PICTURE"/>
+				<property name="memberRegdate" value="MEMBER_REGDATE"/>
+				<property name="memberUpdate" value="MEMBER_UPDATE"/>
+		<!-- BoardVO | BOARD -->
+		<property name="board" value="BOARD"/>
+		<property name="boardNumber" value="BOARD_NUMBER"/>
+			<property name="memberNickname" value="MEMBER_NICKNAME"/>
+				<property name="boardSection" value="BOARD_SECTION"/>
+				<property name="boardList" value="BOARD_LIST"/>
+				<property name="boardType" value="BOARD_TYPE"/>
+				<property name="boardTitle" value="BOARD_TITLE"/>
+				<property name="boardContent" value="BOARD_CONTENT"/>
+				<property name="boardViews" value="BOARD_VIEWS"/>
+				<property name="boardLikes" value="BOARD_LIKES"/>
+				<property name="boardComments" value="BOARD_COMMENTS"/>
+				<property name="boardRegdate" value="BOARD_REGDATE"/>
+		<!-- BoardlikeVO | BOARDLIKE -->
+		<property name="boardlike" value="BOARDLIKE"/>
+		<property name="boardlikeNumber" value="BOARDLIKE_NUMBER"/>
+			<property name="boardNumber" value="BOARD_NUMBER"/>
+			<property name="memberNumber" value="MEMBER_NUMBER"/>
+		<!-- CommentsVO | COMMENTS -->
+		<property name="comments" value="COMMENTS"/>
+		<property name="commentsNumber" value="COMMENTS_NUMBER"/>
+			<property name="boardNumber" value="BOARD_NUMBER"/>
+			<property name="memberNumber" value="MEMBER_NUMBER"/>
+				<property name="commentsContent" value="COMMENTS_CONTENT"/>
+				<property name="commentsRegdate" value="COMMENTS_REGDATE"/>
+		<!-- ReplyVO | REPLY -->
+		<property name="reply" value="REPLY"/>
+		<property name="replyNumber" value="REPLY_NUMBER"/>
+			<property name="commentsNumber" value="COMMENTS_NUMBER"/>
+			<property name="memberNumber" value="MEMBER_NUMBER"/>
+				<property name="replyContent" value="REPLY_CONTENT"/>
+				<property name="replyRegdate" value="REPLY_REGDATE"/>
+		<!-- MessageVO | MESSAGE -->
+		<property name="message" value="MESSAGE"/>
+		<property name="messageNumber" value="MESSAGE_NUMBER"/>
+			<property name="messageSender" value="MESSAGE_SENDER"/>
+			<property name="messageRecipient" value="MESSAGE_RECIPIENT"/>
+				<property name="messageTitle" value="MESSAGE_TITLE"/>
+				<property name="messageContent" value="MESSAGE_CONTENT"/>
+				<property name="messageIsread" value="MESSAGE_ISREAD"/>
+				<property name="messageSenderIsdel" value="MESSAGE_SENDER_ISDEL"/>
+				<property name="messageRecipientIsdel" value="MESSAGE_RECIPIENT_ISDEL"/>
+				<property name="messageBox" value="MESSAGE_BOX"/>
+				<property name="messageRegdate" value="MESSAGE_REGDATE"/>
+		<!-- FilesVO | FILES -->
+		<property name="files" value="FILES"/>
+		<property name="filesNumber" value="FILES_NUMBER"/>
+			<property name="boardNumber" value="BOARD_NUMBER"/>
+				<property name="filesName" value="FILES_NAME"/>
+				<property name="filesRegdate" value="FILES_REGDATE"/>
+	</properties>
+	
+	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<!-- typeAliases : mapper.xml의 select 리턴 타입에 들어갈 클래스 경로를 설정-->
+	<typeAliases>
+		<package name="com.cafe.mbti.domain"/>
+	</typeAliases>
+</configuration>

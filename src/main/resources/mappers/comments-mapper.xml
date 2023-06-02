@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.cafe.mbti.CommentsMapper">
+	<!-- 댓글 등록 -->
+	<insert id="insert">
+		INSERT
+		INTO ${comments}
+		(${boardNumber}, ${memberNumber}, ${commentsContent})
+		VALUES
+		(#{boardNumber}, #{memberNumber}, #{commentsContent})
+	</insert>
+	<!-- 댓글 정렬 후 출력 -->
+	<select id="selectAll" resultType="CommentsVO">
+		SELECT C.*, M.${memberNickname}, M.${memberPicture}
+		FROM ${comments} C
+		LEFT OUTER JOIN ${member} M ON C.${memberNumber} = M.${memberNumber}
+		WHERE C.${boardNumber} = #{boardNumber}
+		ORDER BY C.${commentsNumber} ASC
+	</select>
+	<!-- 댓글 등록/삭제 후 카운트 -->
+	<select id="selectCommentsCount" resultType="Integer">
+		SELECT COUNT(${commentsNumber}) AS CNT
+		FROM ${comments}
+		WHERE ${boardNumber} = #{boadNumber}
+	</select>
+	<!-- 댓글 수정 -->
+	<update id="update">
+		UPDATE ${comments}
+		SET ${commentsContent} = #{commentsContent}, ${commentsRegdate} = SYSDATE
+		WHERE ${commentsNumber} = #{commentsNumber}
+	</update>
+	<!-- 댓글 삭제 -->
+	<delete id="delete">
+		DELETE
+		FROM ${comments}
+		WHERE ${commentsNumber} = #{commentsNumber}
+	</delete>
+	<!-- 게시글 삭제 시 게시글 번호 초기화 -->
+	<update id="updateDeleteOnBoard">
+		UPDATE ${comments}
+		SET ${boardNumber} = 0
+		WHERE ${boardNumber} = #{boardNumber}
+	</update>
+	<!-- 회원탈퇴 시 해당 회원 댓글 삭제 -->
+	<delete id="deleteOnMember">
+		DELETE
+		FROM ${comments}
+		WHERE ${memberNumber} = #{memberNumber}
+	</delete>
+</mapper>

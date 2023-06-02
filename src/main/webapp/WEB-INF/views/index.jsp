@@ -1,0 +1,350 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>음티메이트 : MBTI 카페</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f0f0f0;
+}
+
+.index-wrapper {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+    
+	margin: 0 auto;
+	width: 80%;
+	height: 90%;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+	overflow-y: auto;
+}
+
+.index-wrapper img{
+	max-width: 100%
+}
+
+header {
+	padding: 0;
+	margin: 0;
+}
+
+nav {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+nav .left-align {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	align-self: flex-start;
+}
+
+nav .right-align {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	align-self: flex-end;
+}
+
+nav ul li {
+	display: inline;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	font-weight: bold;
+}
+
+ul li {	
+	margin-bottom: 10px;
+}
+
+a {
+	text-decoration: none;
+	color: #333;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.container {
+	flex: 1;
+	display: flex;
+}
+
+.container h4 {
+	margin: 0;
+	color: #fff;
+	text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+}
+
+.right-container {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+}
+
+.container ul {
+	margin: 5px;
+}
+
+.container ul li {
+	font-size: 13px;
+}
+
+.board-category,
+.summary-info {
+	background-color: #f0f8ff;
+	border: 1px solid #c0c0c0;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.content {
+	flex: 2;
+	padding: 3px 10px;
+}
+
+.index-content {
+	text-align: center;
+}
+
+footer {
+	display: flex;
+	justify-content: space-between;
+	flex-shrink: 0;
+	background-color: #fff;
+	color: #000;
+	padding-top: 5px;
+	margin: 5px auto;
+	width: 100%;
+	border-top: 2px solid #000;
+	font-weight: bold;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+	$(document).ready(function() {
+		// redirectAttributes.addFlashAttribute 확인
+		<c:if test="${not empty message}">
+			alert("${message}");
+		</c:if>
+		<c:if test="${not empty targetURL}">
+		  <c:choose>
+		    <c:when test="${targetURL eq 'list'}">
+		        $.ajax({
+		          url: '/mbti/board/list',
+		          type: 'GET',
+		          success: function(includeJSP) {
+		            $('.content').html(includeJSP);
+		          }
+		        });
+		    </c:when>
+		    <c:when test="${targetURL eq 'detail'}">
+		      <c:if test="${not empty sessionScope.memberVO}">
+		          $.ajax({
+		            url: '/mbti/board/detail',
+		            type: 'GET',
+		            success: function(includeJSP) {
+		              $('.content').html(includeJSP);
+		            }
+		          });
+		      </c:if>
+		    </c:when>
+		  </c:choose>
+		</c:if>
+		// 왼쪽 게시판 목록에서 게시판 클릭 시 해당 게시판으로 target설정
+		$('.left-container').on('click', 'ul li a', function(e) {
+			e.preventDefault();
+			var boardSection = $(this).closest('section').index();
+			var boardList = $(this).closest('ul li').index();
+			var boardName = $(this).closest('ul li').find('span').text();
+			$.ajax({
+				url: '/mbti/board/list',
+				type: 'GET',
+			    data: {
+			    	boardSection : boardSection,
+			    	boardList : boardList,
+			    	boardName : boardName
+			    	},
+				success: function(includeJSP) {
+					$('.content').html(includeJSP);
+				}
+			});
+		}); // end $('.left-container').on('click', 'ul li a', function(e) {})
+		// login.jsp를 새 창에서 열고, 로그인이 완료되면 창을 닫고 index.jsp를 새로고침
+		$('.loginGET').click(function(e) {
+			e.preventDefault();
+			// login.jsp가 닫힐 때 이벤트 처리
+			window.open('/mbti/member/login','음티메이트 : 로그인', 'width=450px, height=260px').onbeforeunload = function() {
+				// 현재 페이지 새로고침
+				location.reload();
+				};
+		}); // end $('.loginGET').click(function(e) {})
+	}); // end $(document).ready(function() {})
+</script>
+</head>
+<body>
+	<div class="index-wrapper">
+		<header>
+			<nav>
+				<ul class="left-align">
+					<li><a href="/mbti">카페 홈</a></li>
+				</ul>
+				<ul class="right-align">
+					<c:if test="${empty sessionScope.memberVO}">
+						<li><a href="#" class="loginGET">로그인</a></li>
+					</c:if>
+					<c:if test="${not empty sessionScope.memberVO}">
+						<li style="color: #008800;">${sessionScope.memberVO.memberNickname}</li>
+						<li><a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}">마이페이지</a></li>
+						<li><a href="/mbti/message/received">쪽지</a></li>
+						<li><a href="/mbti/talk/channel">채팅</a></li>
+						<li><a href="/mbti/member/logout">로그아웃</a></li>
+					</c:if>
+				</ul>
+			</nav>
+		</header>	
+		<div class="banner">
+			<a href="/mbti">
+				<img src="display?filesName=${cafebanner}" alt="카페 배너" style="max-height: 400px; width: 100%; border-radius: 5px;">
+			</a>
+		</div>
+			
+		<div class="container">
+			<div class="left-container">			
+				<div class="summary-info">
+					<div class="cafe-info">
+						<img src="display?filesName=${cafelogo}" alt="카페 로고" style="border: 1px solid #000; border-radius: 5px;">
+						<h4>카페 정보</h4>								
+						<ul>
+							<li>└ 매니저 : ${manager}</li>
+							<li>└ 카페원 : ${memberTotalCount}명</li>
+						</ul>
+					</div>
+					<c:if test="${not empty sessionScope.memberVO}">
+						<div class="member-info">
+							<h4>나의 활동</h4>
+							<ul>
+								<li class="memberNickname">└ 닉네임 : ${sessionScope.memberVO.memberNickname}</li>
+								<li class="memberMBTI">└ MBTI : ${sessionScope.memberVO.memberMBTI}</li>
+								<c:choose>
+									<c:when test="${sessionScope.memberVO.memberGrade eq 0}"><li class="memberGrade">└ 등급 : 씨앗</li></c:when>
+									<c:when test="${sessionScope.memberVO.memberGrade eq 1}"><li class="memberGrade">└ 등급 : 새싹</li></c:when>
+									<c:when test="${sessionScope.memberVO.memberGrade eq 2}"><li class="memberGrade">└ 등급 : 꽃</li></c:when>
+									<c:when test="${sessionScope.memberVO.memberGrade eq 3}"><li class="memberGrade">└ 등급 : 열매</li></c:when>
+									<c:when test="${sessionScope.memberVO.memberGrade eq 4}"><li class="memberGrade">└ 등급 : 스탭</li></c:when>
+									<c:when test="${sessionScope.memberVO.memberGrade eq 5}"><li class="memberGrade">└ 등급 : 매니저</li></c:when>
+								</c:choose>
+								<c:choose>
+									<c:when test="${sessionScope.memberVO.memberPremium eq 0}"><li class="memberPremium">└ 회원 : 일반</li></c:when>
+									<c:when test="${sessionScope.memberVO.memberPremium eq 1}"><li class="memberPremium">└ 회원 : 프리미엄</li></c:when>
+								</c:choose>
+								<fmt:formatDate value="${sessionScope.memberVO.memberRegdate}" pattern="yyyy-MM-dd" var="memberRegdate" />
+								<li class="memberRegdate">└ 가입일 : ${memberRegdate}</li>
+								<li>└ 내가 쓴 글 보기 </li>
+								<li>└ 내가 쓴 댓글 보기 </li>
+							</ul>
+						</div>					
+					</c:if>
+				</div>
+				<!-- Category Boards content here -->
+				<div class="board-category">
+					<section>
+						<ul class="boards">
+							<li><a href="#"><span>전체 게시글</span>(${boardTotalCount})</a></li>
+							<li style="display: none;"><a href="#"><span>휴지통</span></a></li>
+						</ul>
+					</section>
+					<section>
+						<h4>광장</h4>
+						<ul class="boards">
+							<li>└ <a href="#"><span>공지사항</span></a></li>
+							<li>└ <a href="#"><span>건의사항</span></a></li>
+							<li>└ <a href="#"><span>자유 게시판</span></a></li>
+						</ul>
+					</section>
+					<section>
+					<h4>MBTI</h4>
+						<ul class="boards">
+							<li>└ <a href="#"><span>ISTJ: 논리주의자, 집중력이 강한 관리자</span></a></li>
+							<li>└ <a href="#"><span>ISFJ: 수호자, 세실한 도우미</span></a></li>
+							<li>└ <a href="#"><span>INFJ: 예언자, 비전을 가진 치유사</span></a></li>
+							<li>└ <a href="#"><span>INTJ: 건축가, 전략적인 비전을 가진 전문가</span></a></li>
+							<li>└ <a href="#"><span>ISTP: 모험가, 냉철한 분석가</span></a></li>
+							<li>└ <a href="#"><span>ISFP: 예술가, 자유로운 영혼의 예술가</span></a></li>
+							<li>└ <a href="#"><span>INFP: 중재자, 이상주의적인 장인</span></a></li>
+							<li>└ <a href="#"><span>INTP: 아이디어 뱅크, 논리적인 사색가</span></a></li>
+							<li>└ <a href="#"><span>ESTP: 사업가, 탐험을 즐기는 엔터테이너</span></a></li>
+							<li>└ <a href="#"><span>ESFP: 연예인, 생동감 넘치는 연예인</span></a></li>
+							<li>└ <a href="#"><span>ENFP: 발명가, 자유로운 영혼의 발명가</span></a></li>
+							<li>└ <a href="#"><span>ENTP: 변론가, 비평적인 천재</span></a></li>
+							<li>└ <a href="#"><span>ESTJ: 관리자, 체계적인 조직가</span></a></li>
+							<li>└ <a href="#"><span>ESFJ: 친선도모자, 사교적인 주최자</span></a></li>
+							<li>└ <a href="#"><span>ENFJ: 언변능숙자, 카리스마 있는 선도자</span></a></li>
+							<li>└ <a href="#"><span>ENTJ: 지도자, 비전을 가진 지도자</span></a></li>
+						</ul>
+					</section>
+					<section>					
+					<h4>지역</h4>
+						<ul class="boards">
+							<li>└ <a href="#"><span>서울특별시</span></a></li>
+							<li>└ <a href="#"><span>경기도</span></a></li>
+							<li>└ <a href="#"><span>인천광역시</span></a></li>
+							<li>└ <a href="#"><span>강원도</span></a></li>
+							<li>└ <a href="#"><span>충청북도</span></a></li>
+							<li>└ <a href="#"><span>충청남도</span></a></li>
+							<li>└ <a href="#"><span>대전광역시</span></a></li>
+							<li>└ <a href="#"><span>경상북도</span></a></li>
+							<li>└ <a href="#"><span>경상남도</span></a></li>
+							<li>└ <a href="#"><span>울산광역시</span></a></li>
+							<li>└ <a href="#"><span>부산광역시</span></a></li>
+							<li>└ <a href="#"><span>전라북도</span></a></li>
+							<li>└ <a href="#"><span>전라남도</span></a></li>
+							<li>└ <a href="#"><span>광주광역시</span></a></li>
+							<li>└ <a href="#"><span>제주특별자치도</span></a></li>
+						</ul>
+					</section>
+					<section>
+						<h4>기타</h4>
+						<ul class="boards">
+							<li>└ <a href="#"><span>가입인사</span></a></li>
+							<li>└ <a href="#"><span>출석체크</span></a></li>
+						</ul>
+					</section>
+				</div>
+			</div>
+			<div class="right-container">
+				<div class="content">
+					<div class="index-content">
+						<a href="https://www.16personalities.com/ko" target="_blank">
+							<img src="display?filesName=${cafeindex00}" alt="MBTI 테스트" style="width: 100%; height: 150px;">
+						</a>
+						<img src="display?filesName=${cafeindex01}" alt="MBTI 궁합표">
+					</div>
+				</div>
+			</div>
+		</div>	
+		<footer>
+			<span>MBTI MATE : 음티 메이트</span>
+			<span><a href="/mbti">localhost:8080/mbti</a></span>
+			<span>MBTI 카페</span>
+		</footer>
+	</div>
+</body>
+</html>

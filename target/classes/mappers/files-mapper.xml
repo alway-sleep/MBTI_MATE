@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.cafe.mbti.FilesMapper">
+	<!-- 게시글 삭제 시 게시글 번호 초기화 -->
+	<delete id="deleteOnBoard">
+		DELETE
+		FROM ${files}
+		WHERE ${boardNumber} = #{boardNumber}
+	</delete>
+</mapper>
