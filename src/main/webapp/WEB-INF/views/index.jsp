@@ -140,6 +140,123 @@ footer {
 	border-top: 2px solid #000;
 	font-weight: bold;
 }
+/* 모달 스타일 */
+.login-modal {
+	display: none; /* 기본적으로 모달은 숨김 처리 */
+	position: fixed; /* 화면에 고정 */
+	z-index: 1; /* 다른 요소 위에 표시 */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto; /* 스크롤 가능하도록 설정 */
+	background-color: rgba(0, 0, 0, 0.5); /* 배경은 반투명한 검정색 */
+}
+/* 모달 콘텐츠 스타일 */
+.login-modal-wrapper {
+	display: flex;
+	flex-direction: column;
+	background-color: #fefefe;
+	margin: 15% auto; /* 화면 중앙에 위치 */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 450px;
+	height: 260px;
+}
+
+.login-modal-wrapper h2 {
+	text-align: center;
+	margin-top: 0;
+}
+
+.login-modal-wrapper form {
+	display: flex;
+	flex-direction: column;
+}
+
+.login-modal-wrapper input[type="text"],
+.login-modal-wrapper input[type="password"] {
+	padding: 8px;
+	border-radius: 3px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	margin: 5px 0;
+	width: 80%;
+}
+
+.login-modal-wrapper input[placeholder] {
+	font-weight: bold;
+}
+
+.login-modal-wrapper input[type="submit"] {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 10px 10px;
+	cursor: pointer;
+	margin-top: 10px;
+	width: 100%;
+}
+
+.login-modal-wrapper input[type="submit"]:hover {
+	background-color: #00abff;
+}
+/* close 버튼 스타일 */
+.close {
+  	text-align: right;
+}
+
+.close button {
+	background-color: #fff;
+	color: #aaa;
+	font-size: 20px;
+	font-weight: bold;
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	border: 2px solid #aaa;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.close button:hover {
+	color: #000;
+	border-color: #000;
+}
+/* display-flex 스타일 */
+.display-flex {
+	display: flex;
+	font-weight: bold;
+}
+
+.display-flex label {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	width: 80px;
+	font-size: 15px;
+}
+/* login-options button 스타일 */
+.login-options {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-top: 5px;
+	border: 1px solid #fff;
+}
+.login-options button {
+	background-color: #fff;
+	color: #005bff;
+	border: none;
+	cursor: pointer;
+	font-size: 14px;
+	padding: 0;
+	margin: 0;
+}
+.login-options button:hover {
+	color: #00abff;
+}
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
@@ -150,10 +267,9 @@ footer {
 		</c:if>
 		<c:if test="${not empty targetURL}">
 			<c:choose>
-				<c:when test="${targetURL eq 'list'}">
-					window.location.reload();
+				<c:when test="${targetURL eq 'write'}">
 					$.ajax({
-						url: '/mbti/board/list',
+						url: '/mbti/board/write',
 						type: 'GET',
 						success: function(includeJSP) {
 							$('.content').html(includeJSP);
@@ -161,16 +277,13 @@ footer {
 					});
 				</c:when>
 				<c:when test="${targetURL eq 'detail'}">
-					window.location.reload();
-					<c:if test="${not empty sessionScope.memberVO}">
-						$.ajax({
-							url: '/mbti/board/detail',
-							type: 'GET',
-							success: function(includeJSP) {
-								$('.content').html(includeJSP);
-								}
-						});
-					</c:if>
+					$.ajax({
+						url: '/mbti/board/detail',
+						type: 'GET',
+						success: function(includeJSP) {
+							$('.content').html(includeJSP);
+							}
+					});
 				</c:when>
 			</c:choose>
 			</c:if>
@@ -194,14 +307,10 @@ footer {
 				}
 			});
 		}); // end $('.left-container').on('click', 'ul li a', function(e) {})
-		// login.jsp를 새 창에서 열고, 로그인이 완료되면 창을 닫고 index.jsp를 새로고침
+		// 로그인 모달
 		$('.loginGET').click(function(e) {
 			e.preventDefault();
-			// login.jsp가 닫힐 때 이벤트 처리
-			window.open('/mbti/member/login','음티메이트 : 로그인', 'width=450px, height=260px').onbeforeunload = function() {
-				// 현재 페이지 새로고침
-				location.reload();
-				};
+			$('.login-modal').css('display', 'block');
 		}); // end $('.loginGET').click(function(e) {})
 	}); // end $(document).ready(function() {})
 </script>
@@ -352,6 +461,10 @@ footer {
 			<span><a href="/mbti">localhost:8080/mbti</a></span>
 			<span>MBTI 카페</span>
 		</footer>
+		<!-- 로그인을 위한 Modal -->
+		<div class="modal">
+			<jsp:include page="member/login-modal.jsp"/>
+		</div>
 	</div>
 </body>
 </html>
