@@ -8,17 +8,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insert">
 		INSERT
 		INTO ${reply}
-		(${commentsNumber}, ${memberNickname}, ${replyContent})
+		(${commentsNumber}, ${memberNumber}, ${replyContent})
 		VALUES
-		(#{commentsNumber}, #{memberNickname}, #{replyContent})
+		(#{commentsNumber}, #{memberNumber}, #{replyContent})
 	</insert>
 	<!-- 답글 정렬 후 출력 -->
 	<select id="selectAll" resultType="ReplyVO">
 		SELECT R.*, M.${memberNickname}, M.${memberPicture}
 		FROM ${reply} R
 		LEFT OUTER JOIN ${member} M ON R.${memberNumber} = M.${memberNumber}
-		WHERE C.${commentsNumber} = #{commentsNumber}
-		ORDER BY C.${replyNumber} ASC
+		WHERE R.${commentsNumber} = #{commentsNumber}
+		ORDER BY R.${replyNumber} ASC
 	</select>
 	<!-- 답글 등록/삭제 후 카운트 -->
 	<select id="selectReplyCount" resultType="Integer">

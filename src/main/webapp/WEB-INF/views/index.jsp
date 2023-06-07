@@ -149,29 +149,31 @@ footer {
 			alert("${message}");
 		</c:if>
 		<c:if test="${not empty targetURL}">
-		  <c:choose>
-		    <c:when test="${targetURL eq 'list'}">
-		        $.ajax({
-		          url: '/mbti/board/list',
-		          type: 'GET',
-		          success: function(includeJSP) {
-		            $('.content').html(includeJSP);
-		          }
-		        });
-		    </c:when>
-		    <c:when test="${targetURL eq 'detail'}">
-		      <c:if test="${not empty sessionScope.memberVO}">
-		          $.ajax({
-		            url: '/mbti/board/detail',
-		            type: 'GET',
-		            success: function(includeJSP) {
-		              $('.content').html(includeJSP);
-		            }
-		          });
-		      </c:if>
-		    </c:when>
-		  </c:choose>
-		</c:if>
+			<c:choose>
+				<c:when test="${targetURL eq 'list'}">
+					window.location.reload();
+					$.ajax({
+						url: '/mbti/board/list',
+						type: 'GET',
+						success: function(includeJSP) {
+							$('.content').html(includeJSP);
+							}
+					});
+				</c:when>
+				<c:when test="${targetURL eq 'detail'}">
+					window.location.reload();
+					<c:if test="${not empty sessionScope.memberVO}">
+						$.ajax({
+							url: '/mbti/board/detail',
+							type: 'GET',
+							success: function(includeJSP) {
+								$('.content').html(includeJSP);
+								}
+						});
+					</c:if>
+				</c:when>
+			</c:choose>
+			</c:if>
 		// 왼쪽 게시판 목록에서 게시판 클릭 시 해당 게시판으로 target설정
 		$('.left-container').on('click', 'ul li a', function(e) {
 			$('.board-category').find('.selected').removeClass('selected');

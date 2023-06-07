@@ -29,25 +29,25 @@ public class ReplyRestController {
 	@Autowired
 	private ReplyService replyService;
 	
-	@PostMapping // INSERT
+	@PostMapping("/post") // INSERT
 	public ResponseEntity<Integer> replyPOST(HttpServletRequest request, @RequestBody ReplyVO replyVO) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 
 		return new ResponseEntity<Integer>(replyService.create(replyVO), HttpStatus.OK);
 	} // end replyPOST()
 	
-	@GetMapping("/list/{commentNumber}") // SELECT
-	public ResponseEntity<List<ReplyVO>> replyListGET(HttpServletRequest request, @PathVariable("commentNumber") int commentNumber) {
+	@GetMapping("/list/{commentsNumber}") // SELECT
+	public ResponseEntity<List<ReplyVO>> replyListGET(HttpServletRequest request, @PathVariable("commentsNumber") int commentsNumber) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		return new ResponseEntity<List<ReplyVO>>(replyService.readAll(commentNumber), HttpStatus.OK);
+		return new ResponseEntity<List<ReplyVO>>(replyService.readAll(commentsNumber), HttpStatus.OK);
 	} // end replyListGET()
 	
-	@GetMapping("/{commentNumber}") // SELECT
-	public ResponseEntity<List<ReplyVO>> replyCountGET(HttpServletRequest request, @PathVariable("commentNumber") int commentNumber) {
+	@GetMapping("/{commentsNumber}") // SELECT
+	public ResponseEntity<Integer> replyCountGET(HttpServletRequest request, @PathVariable("commentsNumber") int commentsNumber) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		return new ResponseEntity<List<ReplyVO>>(replyService.readAll(commentNumber), HttpStatus.OK);
+		return new ResponseEntity<Integer>(replyService.readReplyCount(commentsNumber), HttpStatus.OK);
 	} // end replyCountGET()
 	
 	@PutMapping("/update/{replyNumber}") // UPDATE

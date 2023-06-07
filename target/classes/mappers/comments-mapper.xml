@@ -22,9 +22,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	<!-- 댓글 등록/삭제 후 카운트 -->
 	<select id="selectCommentsCount" resultType="Integer">
-		SELECT COUNT(${commentsNumber}) AS CNT
-		FROM ${comments}
-		WHERE ${boardNumber} = #{boadNumber}
+		SELECT ${boardComments}
+		FROM ${board}
+		WHERE ${boardNumber} = #{boardNumber}
 	</select>
 	<!-- 댓글 수정 -->
 	<update id="update">
