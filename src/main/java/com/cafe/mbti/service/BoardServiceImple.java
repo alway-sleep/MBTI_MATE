@@ -115,6 +115,7 @@ public class BoardServiceImple implements BoardService {
 		logger.info("BOARD delete() 호출");
 		boardlikeDAO.deleteOnBoard(boardNumber);
 		commentsDAO.updateDeleteOnBoard(boardNumber);
+		replyDAO.updateDeleteOnBoard(boardNumber);
 		filesDAO.deleteOnBoard(boardNumber);
 		return boardDAO.delete(boardNumber);
 	}
