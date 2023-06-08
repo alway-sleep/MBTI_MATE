@@ -59,8 +59,9 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public String loginPOST(HttpServletRequest request, RedirectAttributes redirectAttributes, String memberId, String memberPw, String targetURL) {
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
+	public String loginPOST(HttpServletRequest request, RedirectAttributes redirectAttributes, String memberId, String memberPw, String targetURL, Integer targetNumber) {
+		logger.info("{} {}", targetURL, targetNumber);
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		if (memberService.login(memberId, memberPw) == 1) {
 			MemberVO memberVO =  memberService.read(memberService.readNumberById(memberId));
 			request.getSession().setAttribute("memberVO", memberVO);
@@ -68,6 +69,9 @@ public class MemberController {
 			redirectAttributes.addFlashAttribute("message", memberVO.getMemberNickname()+"님, 환영합니다.");
 			if (targetURL != "index") {
 				redirectAttributes.addFlashAttribute("targetURL", targetURL);
+				if (targetNumber != 0) {
+					redirectAttributes.addFlashAttribute("targetNumber", targetNumber);
+				}
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("message", "등록되지 않은 아이디 또는 비밀번호입니다.");

@@ -277,16 +277,19 @@ footer {
 					});
 				</c:when>
 				<c:when test="${targetURL eq 'detail'}">
-					$.ajax({
-						url: '/mbti/board/detail',
-						type: 'GET',
-						success: function(includeJSP) {
-							$('.content').html(includeJSP);
-							}
-					});
+				$.ajax({
+					url: '/mbti/board/detail',
+					type: 'GET',
+				    data: {
+				    	boardNumber : "${targetNumber}"
+				    	},
+					success: function(includeJSP) {
+						$('.content').html(includeJSP);
+					}
+				});
 				</c:when>
 			</c:choose>
-			</c:if>
+		</c:if>
 		// 왼쪽 게시판 목록에서 게시판 클릭 시 해당 게시판으로 target설정
 		$('.left-container').on('click', 'ul li a', function(e) {
 			$('.board-category').find('.selected').removeClass('selected');
@@ -311,6 +314,7 @@ footer {
 		$('.loginGET').click(function(e) {
 			e.preventDefault();
 			$('.login-modal').css('display', 'block');
+			$('#memberId').attr('autofocus', true);
 		}); // end $('.loginGET').click(function(e) {})
 	}); // end $(document).ready(function() {})
 </script>
@@ -320,7 +324,7 @@ footer {
 		<header>
 			<nav>
 				<ul class="left-align">
-					<li><a href="/mbti">카페 홈</a></li>
+					<li><a href="/mbti" >카페 홈</a></li>
 				</ul>
 				<ul class="right-align">
 					<c:if test="${empty sessionScope.memberVO}">
@@ -328,16 +332,16 @@ footer {
 					</c:if>
 					<c:if test="${not empty sessionScope.memberVO}">
 						<li style="color: #008800;">${sessionScope.memberVO.memberNickname}</li>
-						<li><a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}">마이페이지</a></li>
-						<li><a href="/mbti/message/received">쪽지</a></li>
-						<li><a href="/mbti/talk/channel">채팅</a></li>
-						<li><a href="/mbti/member/logout">로그아웃</a></li>
+						<li><a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}" >마이페이지</a></li>
+						<li><a href="/mbti/message/received" >쪽지</a></li>
+						<li><a href="/mbti/talk/channel" >채팅</a></li>
+						<li><a href="/mbti/member/logout" >로그아웃</a></li>
 					</c:if>
 				</ul>
 			</nav>
 		</header>	
 		<div class="banner">
-			<a href="/mbti">
+			<a href="/mbti" >
 				<img src="display?filesName=${cafebanner}" alt="카페 배너" style="max-height: 400px; width: 100%; border-radius: 5px;">
 			</a>
 		</div>
@@ -448,7 +452,7 @@ footer {
 			<div class="right-container">
 				<div class="content">
 					<div class="index-content">
-						<a href="https://www.16personalities.com/ko" target="_blank">
+						<a href="https://www.16personalities.com/ko" target="_blank" >
 							<img src="display?filesName=${cafeindex00}" alt="MBTI 테스트" style="width: 100%; height: 150px;">
 						</a>
 						<img src="display?filesName=${cafeindex01}" alt="MBTI 궁합표">
@@ -458,7 +462,7 @@ footer {
 		</div>	
 		<footer>
 			<span>MBTI MATE : 음티 메이트</span>
-			<span><a href="/mbti">localhost:8080/mbti</a></span>
+			<span><a href="/mbti" >localhost:8080/mbti</a></span>
 			<span>MBTI 카페</span>
 		</footer>
 		<!-- 로그인을 위한 Modal -->

@@ -65,6 +65,36 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Override
+	public List<BoardVO> readByBoardTitle(PageCriteria pageCriteria) {
+		logger.info("BOARD readByBoardTitle() 호출");
+		return boardDAO.selectByBoardTitle(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByBoardContent(PageCriteria pageCriteria) {
+		logger.info("BOARD readByBoardContent() 호출");
+		return boardDAO.selectByBoardContent(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByNicknameOnBoard(PageCriteria pageCriteria) {
+		logger.info("BOARD readByNicknameOnBoard() 호출");
+		return boardDAO.selectByNicknameOnBoard(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByCmRpContent(PageCriteria pageCriteria) {
+		logger.info("BOARD readByCmRpContent() 호출");
+		return boardDAO.selectByCmRpContent(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByNicknameOnCmRp(PageCriteria pageCriteria) {
+		logger.info("BOARD readByNicknameOnCmRp() 호출");
+		return boardDAO.selectByNicknameOnCmRp(pageCriteria);
+	}
+
+	@Override
 	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
 		logger.info("BOARD update() 호출");
 		return boardDAO.update(boardSection, boardList, boardName, boardTitle, boardContent, boardNumber);

@@ -60,6 +60,36 @@ public class BoardDAOImple implements BoardDAO {
 	}
 
 	@Override
+	public List<BoardVO> selectByBoardTitle(PageCriteria pageCriteria) {
+		logger.info("selectByBoardTitle()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByBoardTitle", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByBoardContent(PageCriteria pageCriteria) {
+		logger.info("selectByBoardContent()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByBoardContent", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByNicknameOnBoard(PageCriteria pageCriteria) {
+		logger.info("selectByNicknameOnBoard()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByNicknameOnBoard", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByCmRpContent(PageCriteria pageCriteria) {
+		logger.info("selectByCmRpContent()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByCmRpContent", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByNicknameOnCmRp(PageCriteria pageCriteria) {
+		logger.info("selectByNicknameOnCmRp()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByNicknameOnCmRp", pageCriteria);
+	}
+
+	@Override
 	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
 		logger.info("update() 호출");
 		Map<String, Object> args = new HashMap<>();

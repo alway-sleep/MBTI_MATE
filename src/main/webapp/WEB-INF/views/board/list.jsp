@@ -32,6 +32,7 @@ body {
 	background-color: #fff;
 	font-size: 15px;
 	font-weight: bold;
+	margin-bottom: 5px;
 }
 
 .list-wrapper th {
@@ -87,18 +88,18 @@ body {
 	justify-content: flex-end;
 }
 
-.list-wrapper button[type=button] {
+.list-wrapper button[type=button],
+.list-wrapper input[type=submit] {
 	background-color: #007bff;
 	color: #fff;
 	border: none;
 	border-radius: 3px;
 	padding: 5px 10px;
 	cursor: pointer;
-	margin-left: 5px;
-	margin-top: 3px;
 }
 
-.list-wrapper button[type="button"]:hover {
+.list-wrapper button[type=button]:hover,
+.list-wrapper input[type=submit]:hover {
 	background-color: #00abff;
 }
 
@@ -138,110 +139,20 @@ body {
 .list-wrapper .link_nextPage:hover {
 	background-color: lightgrey;
 }
-/* 모달 콘텐츠 스타일 */
-.login-modal-wrapper {
+/* 검색창 스타일 */
+.list-wrapper .search-form {
 	display: flex;
-	flex-direction: column;
-	background-color: #fefefe;
-	margin: 15% auto; /* 화면 중앙에 위치 */
-	padding: 20px;
-	border: 1px solid #888;
-	width: 450px;
-	height: 260px;
+	justify-content: center;
 }
 
-.login-modal-wrapper h2 {
-	text-align: center;
-	margin-top: 0;
-}
-
-.login-modal-wrapper form {
-	display: flex;
-	flex-direction: column;
-}
-
-.login-modal-wrapper input[type="text"],
-.login-modal-wrapper input[type="password"] {
+.list-wrapper .search-form input[type=text],
+.list-wrapper .search-form select,
+.list-wrapper .search-form select option {
 	padding: 8px;
 	border-radius: 3px;
 	border: 1px solid #ccc;
 	box-sizing: border-box;
-	margin: 5px 0;
-	width: 80%;
-}
-
-.login-modal-wrapper input[placeholder] {
 	font-weight: bold;
-}
-
-.login-modal-wrapper input[type="submit"] {
-	background-color: #007bff;
-	color: #fff;
-	border: none;
-	border-radius: 3px;
-	padding: 10px 10px;
-	cursor: pointer;
-	margin-top: 10px;
-	width: 100%;
-}
-
-.login-modal-wrapper input[type="submit"]:hover {
-	background-color: #00abff;
-}
-/* close 버튼 스타일 */
-.close {
-  	text-align: right;
-}
-
-.close button {
-	background-color: #fff;
-	color: #aaa;
-	font-size: 20px;
-	font-weight: bold;
-	padding: 0;
-	width: 30px;
-	height: 30px;
-	border: 2px solid #aaa;
-	border-radius: 50%;
-	cursor: pointer;
-}
-
-.close button:hover {
-	color: #000;
-	border-color: #000;
-}
-/* display-flex 스타일 */
-.display-flex {
-	display: flex;
-	font-weight: bold;
-}
-
-.display-flex label {
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	width: 80px;
-	font-size: 15px;
-}
-/* login-options button 스타일 */
-.login-options {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	margin-top: 5px;
-	border: 1px solid #fff;
-}
-.login-options button {
-	background-color: #fff;
-	color: #005bff;
-	border: none;
-	cursor: pointer;
-	font-size: 14px;
-	padding: 0;
-	margin: 0;
-}
-.login-options button:hover {
-	color: #00abff;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -254,12 +165,16 @@ body {
 		// 게시글 보기
 		$('tbody td').closest('tr').find('a').click(function(e) {
 			e.preventDefault();
+			var boardNumber = parseInt($(this).closest('tr').find('.boardNumber').text());
 			<c:if test="${empty sessionScope.memberVO}">
 				$('.login-modal').css('display', 'block');
+				$('#memberId').attr('autofocus', true);
 				$('#targetURL').val('detail');
+				$('#targetNumber').val(boardNumber);
+				console.log($('#targetURL').val());
+				console.log($('#targetNumber').val());
 			</c:if>
 			<c:if test="${not empty sessionScope.memberVO}">
-				var boardNumber = parseInt($(this).closest('tr').find('.boardNumber').text());
 				$.ajax({
 					url: '/mbti/board/detail',
 					type: 'GET',
@@ -277,7 +192,10 @@ body {
 			e.preventDefault();
 			<c:if test="${empty sessionScope.memberVO}">
 				$('.login-modal').css('display', 'block');
+				$('#memberId').attr('autofocus', true);
 				$('#targetURL').val('write');
+				console.log($('#targetURL').val());
+				console.log($('#targetNumber').val());
 			</c:if>
 			<c:if test="${not empty sessionScope.memberVO}">
 				// '공지사항' 이외의 모든 게시판
@@ -328,6 +246,21 @@ body {
 				$('.content').load(window.location.href + "board/list?page=${pageMaker.totalLinkNo}&boardSection=${sessionScope.target.boardSection}&boardList=${sessionScope.target.boardList}&boardName=${sessionScope.target.boardName}");
 			}
 		}); // end $('.list-page').on('click', 'li', function(e) {})
+		// 검색
+		$('.search-form input[type="submit"]').click(function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: '/mbti/board/list',
+				type: 'GET',
+			    data: {
+			    	searchOption : parseInt($('#searchOption').val()),
+			    	keyword : '%'+$('#keyword').val()+'%'
+			    	},
+				success: function(includeJSP) {
+					$('.content').html(includeJSP);
+				}
+			});
+		}) // end $('.search-form input[type="submit"]').click(function() {}) 
 	}); // end $(document).ready()
 </script>
 </head>
@@ -377,10 +310,20 @@ body {
 			</c:if>
 				<li><a href="#" class="listGET-end">끝</a></li>
 		</ul>
-	</div>
-	<!-- 로그인을 위한 Modal -->
-	<div class="modal">
-		<jsp:include page="../member/login-modal.jsp"/>
+			<form class="search-form">
+				<select id="searchOption">
+					<option value="0">게시글 제목</option>
+					<option value="1">게시글 내용</option>
+					<option value="2">글 작성자</option>
+					<option value="3">댓글 내용</option>
+					<option value="4">댓글 작성자</option>
+					<option value="5">게시글 작성일</option>
+				</select>
+				&nbsp;
+				<input type="text" id="keyword" minlength="1"/>
+				&nbsp;
+				<input type="submit" value="검색">
+			</form>
 	</div>
 </body>
 </html>

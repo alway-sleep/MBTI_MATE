@@ -7,17 +7,20 @@ public class PageCriteria {
 	private int page; // 현재 페이지 번호
 	private int numsPerPage; // 한 페이지의 게시글 개수
 	private int boardSection, boardList; // 접근한 게시판 구역, 위치
+	private String keyword;
 	
 	public PageCriteria() {
 		this.page = 1;
 		this.numsPerPage = 5;
+		this.keyword = "";
 	}
 	
-	public PageCriteria(int page, int numsPerPage, int boardSection, int boardList) {
+	public PageCriteria(int page, int numsPerPage, int boardSection, int boardList, String keyword) {
 		this.page = page;
 		this.numsPerPage = numsPerPage;
 		this.boardSection = boardSection;
 		this.boardList = boardList;
+		this.keyword = keyword;
 	}
 
 	// getter/setter
@@ -51,6 +54,14 @@ public class PageCriteria {
 
 	public void setBoardList(int boardList) {
 		this.boardList = boardList;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 	// 현재 보여지는 페이지의 시작 글 일련번호(rn)

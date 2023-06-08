@@ -16,6 +16,16 @@ public interface BoardDAO {
 	List<BoardVO> selectBoard(PageCriteria pageCriteria);
 	// 게시글 출력
 	BoardVO select(int boardNumber, int memberNumber);
+	// 검색 조건 : 게시글 제목
+	List<BoardVO> selectByBoardTitle(PageCriteria pageCriteria);
+	// 검색 조건 : 게시글 내용
+	List<BoardVO> selectByBoardContent(PageCriteria pageCriteria);
+	// 검색 조건 : 게시글 작성자
+	List<BoardVO> selectByNicknameOnBoard(PageCriteria pageCriteria);
+	// 검색 조건 : 댓글 내용
+	List<BoardVO> selectByCmRpContent(PageCriteria pageCriteria);
+	// 검색 조건 : 댓글 작성자
+	List<BoardVO> selectByNicknameOnCmRp(PageCriteria pageCriteria);
 	// 게시글 수정
 	int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber);
 	// 인기글 업데이트

@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   				SELECT B.${boardNumber}, B.${boardType}, B.${boardTitle}, B.${boardViews}, B.${boardLikes}, B.${boardComments}, B.${boardRegdate}, M.${memberNickname}
 				FROM ${board} B
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
-				WHERE ${boardNumber} > 0
+				WHERE B.${boardNumber} > 0
 				ORDER BY B.${boardNumber} DESC
 			) B1
 		) B2
@@ -76,71 +76,113 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<!-- 검색 기능 -->
-	<select id="selectByContent" resultType="BoardVO">
-		SELECT B.*
+	<select id="selectByBoardTitle" resultType="BoardVO">
+		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
   		FROM
   			(
   			SELECT ROWNUM AS RN, B1.*
   			FROM
   				(
-  				SELECT DISTINCT ${boardNumber}
-				FROM ${board} B, ${comments} C, ${reply} R
-				WHERE
-				B.${boardContent} LIKE #{keyword}
-				OR
-				C.${commentsContent} LIKE #{keyword}
-				OR
-				R.${replyContent} LIKE #{keyword}
-				ORDER BY ${boardNumber} DESC
+  				SELECT B.*, M.${memberNickname}
+				FROM ${board} B
+				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+				WHERE B.${boardNumber} > 0
+				ORDER BY B.${boardNumber} DESC
+			) B1
+			WHERE B1.${boardTitle} LIKE #{keyword}
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectByBoardContent" resultType="BoardVO">
+		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT B.*, M.${memberNickname}
+				FROM ${board} B
+				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+				WHERE B.${boardNumber} > 0
+				ORDER BY B.${boardNumber} DESC
+			) B1
+			WHERE B1.${boardContent} LIKE #{keyword}
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectByNicknameOnBoard" resultType="BoardVO">
+		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT B.*, M.${memberNickname}
+				FROM ${board} B
+				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+				WHERE B.${boardNumber} > 0
+				ORDER BY B.${boardNumber} DESC
+			) B1
+			WHERE B1.${memberNickname} LIKE #{keyword}
+		) B2
+		WHERE B2.RN BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectByCmRpContent" resultType="BoardVO">		
+		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+		FROM
+		(
+			SELECT ROWNUM AS RN, B1.*
+			FROM
+			(
+				SELECT B.*, M.${memberNickname}
+				FROM ${board} B
+				LEFT JOIN
+				(
+					SELECT C.${boardNumber}
+					FROM ${comments} C
+					LEFT JOIN
+					(
+						SELECT R.${commentsNumber}
+						FROM ${reply} R
+						WHERE R.${replyContent} LIKE #{keyword}
+					) R1 ON C.${commentsNumber} = R1.${commentsNumber}
+					WHERE C.${commentsContent} LIKE #{keyword}
+				) C1 ON B.${boardNumber} = C1.${boardNumber}
+				LEFT OUTER JOIN
+				${member} M ON B.${memberNumber} = M.${memberNumber}
+				WHERE B.${boardNumber} > 0
+				ORDER BY B.${boardNumber} DESC
 			) B1
 		) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
-	<select id="selectByTitle" resultType="BoardVO">
-		SELECT B.*
-  		FROM
-  			(
-  			SELECT ROWNUM AS RN, B1.*
-  			FROM
-  				(
-  				SELECT DISTINCT ${boardNumber}
-				FROM ${board}
-				WHERE ${boardTitle} LIKE #{keyword}
-				ORDER BY ${boardNumber} DESC
-			) B1
-		) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
-	</select>
-	<select id="selectByWriter" resultType="BoardVO">
-		SELECT B.*
-  		FROM
-  			(
-  			SELECT ROWNUM AS RN, B1.*
-  			FROM
-  				(
-				SELECT DISTINCT ${boardNumber}
-				FROM ${board}
-				WHERE ${memberNickname} LIKE #{keyword}
-				ORDER BY ${boardNumber} DESC
-			) B1
-		) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
-	</select>
-	<select id="selectByReplier" resultType="BoardVO">
-		SELECT B.*
-  		FROM
-  			(
-  			SELECT ROWNUM AS RN, B1.*
-  			FROM
-  				(
-				SELECT DISTINCT ${boardNumber}
-				FROM ${comments} C, ${reply} R
-				WHERE
-				C.${memberNickname} LIKE #{keyword}
-				OR
-				R.${memberNickname} LIKE #{keyword}
-				ORDER BY ${boardNumber} DESC
-			) B1
+	<select id="selectByNicknameOnCmRp" resultType="BoardVO">
+		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+		FROM
+		(
+		  SELECT ROWNUM AS RN, B1.*
+		  FROM
+		  (
+		    SELECT B.*, C1.${memberNickname}
+		    FROM ${board} B
+		    LEFT JOIN
+		    (
+		      SELECT C.${boardNumber}, R1.${memberNumber}, R1.${memberNickname}
+		      FROM ${comments} C
+		      LEFT JOIN
+		      (
+		        SELECT R.${commentsNumber}, M1.${memberNumber}, M1.${memberNickname}
+		        FROM ${reply} R
+		        LEFT JOIN
+		        (
+		          SELECT M.${memberNumber}, M.${memberNickname}
+		          FROM ${member} M
+		          WHERE M.${memberNickname} LIKE #{keyword}
+		        ) M1 ON R.${memberNumber} = M1.${memberNumber}
+		      ) R1 ON C.${commentsNumber} = R1.${commentsNumber}
+		    ) C1 ON B.${boardNumber} = C1.${boardNumber}
+		    ORDER BY B.${boardNumber} DESC
+		  ) B1
 		) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>

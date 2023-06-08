@@ -31,16 +31,39 @@ public class BoardController {
 	private BoardService boardService;
 	
 	@GetMapping("/list")
-	public void listGET(HttpServletRequest request, Model model, Integer page, Integer numsPerPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, String keyword) {
+	public void listGET(HttpServletRequest request, Model model, Integer page, Integer numsPerPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		Target target = target(request, numsPerPage, boardSection, boardList, boardName, boardNumber);
-		PageCriteria pageCriteria = pageCriteria(page, numsPerPage, target.getBoardSection(), target.getBoardList());
-		if (target.getBoardSection() == 0) {
-			// 전체 게시글
-			model.addAttribute("boardVO", boardService.readAll(pageCriteria));
+		PageCriteria pageCriteria = pageCriteria(page, numsPerPage, target.getBoardSection(), target.getBoardList(), keyword);
+		if (keyword != null) {
+			switch (searchOption) {
+			case 0:
+				model.addAttribute("boardVO", boardService.readByBoardTitle(pageCriteria));
+				break;
+			case 1:
+				model.addAttribute("boardVO", boardService.readByBoardContent(pageCriteria));
+				break;
+			case 2:
+				model.addAttribute("boardVO", boardService.readByNicknameOnBoard(pageCriteria));
+				break;
+			case 3:
+				model.addAttribute("boardVO", boardService.readByCmRpContent(pageCriteria));
+				break;
+			case 4:
+				model.addAttribute("boardVO", boardService.readByNicknameOnCmRp(pageCriteria));
+				break;
+			case 5:
+				//model.addAttribute("boardVO", boardService.readBoard(pageCriteria));
+				break;
+			}
 		} else {
-			// 해당 게시판
-			model.addAttribute("boardVO", boardService.readBoard(pageCriteria));
+			if (target.getBoardSection() == 0) {
+				// 전체 게시글
+				model.addAttribute("boardVO", boardService.readAll(pageCriteria));
+			} else {
+				// 해당 게시판
+				model.addAttribute("boardVO", boardService.readBoard(pageCriteria));
+			}
 		}
 		model.addAttribute("pageMaker", pageMaker(pageCriteria));
 	} // end listGET()
@@ -95,7 +118,6 @@ public class BoardController {
 	@PostMapping("/update")
 	public String updatePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, Integer boardSection, Integer boardList, String boardName, String boardTitle, String boardContent) {
 		Target target = (Target) request.getSession().getAttribute("target");
-		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
 		if (boardService.update(boardSection, boardList, boardName, boardTitle, boardContent, target.getBoardNumber()) == 1) {
@@ -104,6 +126,7 @@ public class BoardController {
 			redirectAttributes.addFlashAttribute("message", "게시글 수정을 실패했습니다.");
 		}
 		redirectAttributes.addFlashAttribute("targetURL", "detail");
+		redirectAttributes.addFlashAttribute("targetNumber", target.getBoardNumber());
 		return "redirect:..";
 	} // end updatePOST()
 	
@@ -120,12 +143,13 @@ public class BoardController {
 		return "redirect:..";
 	} // end deletePOST()
 	
-	private PageCriteria pageCriteria(Integer page, Integer numsPerPage, Integer boardSection, Integer boardList) {
+	private PageCriteria pageCriteria(Integer page, Integer numsPerPage, Integer boardSection, Integer boardList, String keyword) {
 		PageCriteria pageCriteria = new PageCriteria();
 		pageCriteria.setPage(page != null ? page : pageCriteria.getPage());
 		pageCriteria.setNumsPerPage(numsPerPage != null ? numsPerPage : pageCriteria.getNumsPerPage());
 		pageCriteria.setBoardSection(boardSection);
 		pageCriteria.setBoardList(boardList);
+		pageCriteria.setKeyword(keyword != null ? keyword : pageCriteria.getKeyword());
 		return pageCriteria;
 	} // end pageCriteria()
 	
