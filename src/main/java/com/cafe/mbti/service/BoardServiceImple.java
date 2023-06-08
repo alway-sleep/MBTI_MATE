@@ -13,6 +13,7 @@ import com.cafe.mbti.persistence.BoardDAO;
 import com.cafe.mbti.persistence.BoardlikeDAO;
 import com.cafe.mbti.persistence.CommentsDAO;
 import com.cafe.mbti.persistence.FilesDAO;
+import com.cafe.mbti.persistence.ReplyDAO;
 import com.cafe.mbti.util.PageCriteria;
 
 @Service // @Component
@@ -31,6 +32,8 @@ public class BoardServiceImple implements BoardService {
 	private BoardlikeDAO boardlikeDAO;
 	@Autowired
 	private CommentsDAO commentsDAO;
+	@Autowired
+	private ReplyDAO replyDAO;
 	@Autowired
 	private FilesDAO filesDAO;
 
