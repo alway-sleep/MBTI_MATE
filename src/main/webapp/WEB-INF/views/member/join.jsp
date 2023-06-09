@@ -174,7 +174,7 @@ body {
 		var memberNicknameIsValid = 0;
 		var memberPwIsValid = 0;
 		var memberPw2IsValid = 0;
-		var memberRRNIsValid = 0;
+		//var memberRRNIsValid = 0;
 		var memberPhoneIsValid = 0;
 		var memberEmailIsValid = 0;
 		
@@ -259,15 +259,22 @@ body {
 		}); // end #memberPw2.keyup()
 		
 		$('.memberRRN input').keyup(function() {
+			var fullYear = new Date().getFullYear().toString();
+			var currentYear = parseInt(fullYear.substring(fullYear.length - 2)); 
 			var memberRRN1 = $('#memberRRN1').val();
 			var memberRRN2 = $('#memberRRN2').val();
 			var memberRRN = memberRRN1 + '-' + memberRRN2;
-			const memberRRN1Pattern = new RegExp(/^[0-9]{6}$/);
+			const memberRRN1Pattern = new RegExp(/^\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[01])$/);
 			const memberRRN2Pattern = new RegExp(/^[1-4]{1}$/);
-			if (memberRRN1 == "" || memberRRN2 == "") {
-				$('.memberRRNIsDuplicated').html("<label id='memberRRNIsDuplicated'>본인의 주민등록번호를 양식에 맞게 입력해 주세요.</label>");
+			if (parseInt(memberRRN1.substring(0, 2)) > currentYear) {
+				$('#memberRRN2').attr("pattern", "^[1-2]{1}$");
+			} else {
+				$('#memberRRN2').attr("pattern", "^[3-4]{1}$");
+			}
+			/* if (memberRRN1 == "" || memberRRN2 == "") {
+				$('.memberRRNIsDuplicated').html("<label id='memberRRNIsDuplicated'>본인의 주민등록번호를 입력해 주세요.</label>");
 			} else if (!memberRRN1Pattern.test(memberRRN1) || !memberRRN2Pattern.test(memberRRN2)) {
-				$('.memberRRNIsDuplicated').html("<label id='memberRRNIsDuplicated1'>양식에 맞게 다시 입력해 주세요.</label>");
+				$('.memberRRNIsDuplicated').html("<label id='memberRRNIsDuplicated1'>잘못된 주민등록번호입니다. 다시 입력해 주세요.</label>");
 			} else {
 				$.ajax({
 					url: '../memberrest/memberRRN',
@@ -283,8 +290,8 @@ body {
 							memberRRNIsValid = 1;
 						}
 					}						
-				}); // end ajax()				
-			}
+				}); // end ajax()
+			} */
 		}); // end #memberRRN.keyup()
 		
 		$('.memberPhone input').keyup(function() {
@@ -348,8 +355,8 @@ body {
 			$('#memberRRN').val($('#memberRRN1').val() + '-' + $('#memberRRN2').val());
 			$('#memberPhone').val($('#memberPhone1').val() + '-' + $('#memberPhone2').val() + '-' + $('#memberPhone3').val());
 			
-			var isValidResult = memberIdIsValid + memberNicknameIsValid + memberPwIsValid + memberPw2IsValid + memberRRNIsValid + memberPhoneIsValid + memberEmailIsValid;
-			if (isValidResult == 7) {
+			var isValidResult = memberIdIsValid + memberNicknameIsValid + memberPwIsValid + memberPw2IsValid + memberPhoneIsValid + memberEmailIsValid;
+			if (isValidResult == 6) {
 				return true;
 			} else {
 				return false;
@@ -398,14 +405,16 @@ body {
 			<div class="display-flex">
 				<label for="memberRRN">주민등록번호</label>
 				<div class="memberRRN">
-					<input type="text" id="memberRRN1" minlength="6" maxlength="6" placeholder="생년월일 (YYMMDD)" pattern="^[0-9]{6}$" required>&nbsp;<b>-</b>&nbsp;
-					<input type="text" id="memberRRN2" minlength="1" maxlength="1" placeholder="＊"pattern="^[1-4]{1}$" required><b>＊＊＊＊＊＊</b>
+					<input type="text" id="memberRRN1" minlength="6" maxlength="6" placeholder="생년월일 (YYMMDD)" pattern="^\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[01])$" required>&nbsp;<b>-</b>&nbsp;
+					<input type="text" id="memberRRN2" minlength="1" maxlength="1" placeholder="＊" required><b>＊＊＊＊＊＊</b>
 					<input type="hidden" id="memberRRN" name="memberRRN" minlength="8" maxlength="8" value="" required>
 				</div>
 			</div>
+			<!-- 
 			<div class="memberRRNIsDuplicated">
-				<label id='memberRRNIsDuplicated'>본인의 주민등록번호를 양식에 맞게 입력해 주세요.</label>
-			</div>
+				<label id='memberRRNIsDuplicated'>본인의 주민등록번호를 입력해 주세요.</label>
+			</div>		
+			 -->
 			<div class="display-flex">
 				<label for="memberPhone">휴대폰 번호</label>
 				<div class="memberPhone">

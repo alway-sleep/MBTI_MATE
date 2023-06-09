@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 				<property name="boardLikes" value="BOARD_LIKES"/>
 				<property name="boardComments" value="BOARD_COMMENTS"/>
 				<property name="boardRegdate" value="BOARD_REGDATE"/>
+					<property name="totalCount" value="TOTAL_COUNT"/>
 		<!-- BoardlikeVO | BOARDLIKE -->
 		<property name="boardlike" value="BOARDLIKE"/>
 		<property name="boardlikeNumber" value="BOARDLIKE_NUMBER"/>

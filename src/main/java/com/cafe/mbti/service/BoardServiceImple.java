@@ -39,80 +39,145 @@ public class BoardServiceImple implements BoardService {
 
 	@Override
 	public int create(BoardVO boardVO) {
-		logger.info("BOARD create() 호출");
+		logger.info("create() 호출");
 		return boardDAO.insert(boardVO);
 	}
 
 	@Override
-	public int readBoardCount() {
-		logger.info("BOARD readBoardTotalCount() 호출");
-		return boardDAO.selectBoardCount();
+	public int readCountOnBoard() {
+		logger.info("readCountOnBoard() 호출");
+		return boardDAO.selectCountOnBoard();
+	}
+
+	@Override
+	public int readCountByBoardName(PageCriteria pageCriteria) {
+		logger.info("readCountByBoardName() 호출");
+		return boardDAO.selectCountByBoardName(pageCriteria);
+	}
+
+	@Override
+	public int readCountByBoardTitle(PageCriteria pageCriteria) {
+		logger.info("readCountByBoardTitle() 호출");
+		return boardDAO.selectCountByBoardTitle(pageCriteria);
+	}
+
+	@Override
+	public int readCountByBoardContent(PageCriteria pageCriteria) {
+		logger.info("readCountByBoardContent() 호출");
+		return boardDAO.selectCountByBoardContent(pageCriteria);
+	}
+
+	@Override
+	public int readCountByNicknameOnBoard(PageCriteria pageCriteria) {
+		logger.info("readCountByNicknameOnBoard() 호출");
+		return boardDAO.selectCountByNicknameOnBoard(pageCriteria);
+	}
+
+	@Override
+	public int readCountByCmRpContent(PageCriteria pageCriteria) {
+		logger.info("readCountByCmRpContent() 호출");
+		return boardDAO.selectCountByCmRpContent(pageCriteria);
+	}
+
+	@Override
+	public int readCountByNicknameOnCmRp(PageCriteria pageCriteria) {
+		logger.info("readCountByNicknameOnCmRp() 호출");
+		return boardDAO.selectCountByNicknameOnCmRp(pageCriteria);
 	}
 
 	@Override
 	public List<BoardVO> readAll(PageCriteria pageCriteria) {
-		logger.info("BOARD readAll() 호출");	
+		logger.info("readAll() 호출");	
 		return boardDAO.selectAll(pageCriteria);
 	}
 	
 	@Override
 	public List<BoardVO> readBoard(PageCriteria pageCriteria) {
-		logger.info("BOARD readBoard() 호출");
+		logger.info("readBoard() 호출");
 		return boardDAO.selectBoard(pageCriteria);
 	}
 
 	@Override
 	public BoardVO read(int boardNumber, int memberNumber) {
-		logger.info("BOARD read() 호출");
+		logger.info("read() 호출");
 		return boardDAO.select(boardNumber, memberNumber);
 	}
 
 	@Override
 	public List<BoardVO> readByBoardTitle(PageCriteria pageCriteria) {
-		logger.info("BOARD readByBoardTitle() 호출");
+		logger.info("readByBoardTitle() 호출");
 		return boardDAO.selectByBoardTitle(pageCriteria);
 	}
 
 	@Override
 	public List<BoardVO> readByBoardContent(PageCriteria pageCriteria) {
-		logger.info("BOARD readByBoardContent() 호출");
+		logger.info("readByBoardContent() 호출");
 		return boardDAO.selectByBoardContent(pageCriteria);
 	}
 
 	@Override
 	public List<BoardVO> readByNicknameOnBoard(PageCriteria pageCriteria) {
-		logger.info("BOARD readByNicknameOnBoard() 호출");
+		logger.info("readByNicknameOnBoard() 호출");
 		return boardDAO.selectByNicknameOnBoard(pageCriteria);
 	}
 
 	@Override
 	public List<BoardVO> readByCmRpContent(PageCriteria pageCriteria) {
-		logger.info("BOARD readByCmRpContent() 호출");
+		logger.info("readByCmRpContent() 호출");
 		return boardDAO.selectByCmRpContent(pageCriteria);
 	}
 
 	@Override
 	public List<BoardVO> readByNicknameOnCmRp(PageCriteria pageCriteria) {
-		logger.info("BOARD readByNicknameOnCmRp() 호출");
+		logger.info("readByNicknameOnCmRp() 호출");
 		return boardDAO.selectByNicknameOnCmRp(pageCriteria);
+	}
+	@Override
+	public List<BoardVO> readByBoardTitle2(PageCriteria pageCriteria) {
+		logger.info("readByBoardTitle2() 호출");
+		return boardDAO.selectByBoardTitle2(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByBoardContent2(PageCriteria pageCriteria) {
+		logger.info("readByBoardContent2() 호출");
+		return boardDAO.selectByBoardContent2(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByNicknameOnBoard2(PageCriteria pageCriteria) {
+		logger.info("readByNicknameOnBoard2() 호출");
+		return boardDAO.selectByNicknameOnBoard2(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByCmRpContent2(PageCriteria pageCriteria) {
+		logger.info("readByCmRpContent2() 호출");
+		return boardDAO.selectByCmRpContent2(pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> readByNicknameOnCmRp2(PageCriteria pageCriteria) {
+		logger.info("readByNicknameOnCmRp2() 호출");
+		return boardDAO.selectByNicknameOnCmRp2(pageCriteria);
 	}
 
 	@Override
 	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
-		logger.info("BOARD update() 호출");
+		logger.info("update() 호출");
 		return boardDAO.update(boardSection, boardList, boardName, boardTitle, boardContent, boardNumber);
 	}
 	
 	@Override
 	public int updateType(int boardType, int boardNumber) {
-		logger.info("BOARD updateType() 호출");
+		logger.info("updateType() 호출");
 		return boardDAO.updateType(boardType, boardNumber);
 	}
 
 	@Transactional(value = "transactionManager") // - root-context.xml에서 설정
 	@Override
 	public int delete(int boardNumber) throws Exception {
-		logger.info("BOARD delete() 호출");
+		logger.info("delete() 호출");
 		boardlikeDAO.deleteOnBoard(boardNumber);
 		commentsDAO.updateDeleteOnBoard(boardNumber);
 		replyDAO.updateDeleteOnBoard(boardNumber);

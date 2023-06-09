@@ -64,6 +64,11 @@ public class PageCriteria {
 		this.keyword = keyword;
 	}
 
+	// 검색 키워드
+	public String getSqlKeyword() {
+		return "%"+keyword+"%";
+	}
+
 	// 현재 보여지는 페이지의 시작 글 일련번호(rn)
 	public int getStart() {
 		return (this.page - 1) * this.numsPerPage + 1;

@@ -281,7 +281,21 @@ footer {
 					url: '/mbti/board/detail',
 					type: 'GET',
 				    data: {
-				    	boardNumber : "${targetNumber}"
+				    	boardNumber : "${sessionScope.target.boardNumber}"
+				    	},
+					success: function(includeJSP) {
+						$('.content').html(includeJSP);
+					}
+				});
+				</c:when>
+				<c:when test="${targetURL eq 'list'}">
+				$.ajax({
+					url: '/mbti/board/list',
+					type: 'GET',
+				    data: {
+				    	boardSection : "${sessionScope.target.boardSection}",
+				    	boardList : "${sessionScope.target.boardList}",
+				    	boardName : "${sessionScope.target.boardName}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -354,7 +368,7 @@ footer {
 						<h4>카페 정보</h4>								
 						<ul>
 							<li>└ 매니저 : ${manager}</li>
-							<li>└ 카페원 : ${memberTotalCount}명</li>
+							<li>└ 회원 : ${memberTotalCount}명</li>
 						</ul>
 					</div>
 					<c:if test="${not empty sessionScope.memberVO}">
@@ -388,7 +402,7 @@ footer {
 					<section>
 						<ul class="boards">
 							<li style="display: none;"><a href="#"><span>휴지통</span></a></li>
-							<li><a href="#"><span>전체 게시글</span>(${boardTotalCount})</a></li>
+							<li><a href="#"><span>전체 게시글</span></a>&nbsp;&nbsp;[${countOnBoard}]</li>
 						</ul>
 					</section>
 					<section>

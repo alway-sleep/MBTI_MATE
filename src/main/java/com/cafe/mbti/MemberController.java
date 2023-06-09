@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.service.MemberService;
 import com.cafe.mbti.util.MediaUtil;
+import com.cafe.mbti.util.Target;
 
 @Controller // @Component
 @RequestMapping(value = "/member")
@@ -59,8 +60,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public String loginPOST(HttpServletRequest request, RedirectAttributes redirectAttributes, String memberId, String memberPw, String targetURL, Integer targetNumber) {
-		logger.info("{} {}", targetURL, targetNumber);
+	public String loginPOST(HttpServletRequest request, RedirectAttributes redirectAttributes, String memberId, String memberPw, String targetURL, Integer boardNumber) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		if (memberService.login(memberId, memberPw) == 1) {
 			MemberVO memberVO =  memberService.read(memberService.readNumberById(memberId));
@@ -69,8 +69,9 @@ public class MemberController {
 			redirectAttributes.addFlashAttribute("message", memberVO.getMemberNickname()+"님, 환영합니다.");
 			if (targetURL != "index") {
 				redirectAttributes.addFlashAttribute("targetURL", targetURL);
-				if (targetNumber != 0) {
-					redirectAttributes.addFlashAttribute("targetNumber", targetNumber);
+				if (boardNumber != 0) {
+					Target target = (Target) request.getSession().getAttribute("target");
+					target.setBoardNumber(boardNumber);
 				}
 			}
 		} else {

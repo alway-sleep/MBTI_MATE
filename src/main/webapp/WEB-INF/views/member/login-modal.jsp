@@ -6,7 +6,7 @@
 		<h2>로그인</h2>
 		<form class="login-form" action="/mbti/member/login" method="POST">
 			<input type="hidden" id="targetURL" name="targetURL" value="index">
-			<input type="hidden" id="targetNumber" name="targetNumber" value="0">
+			<input type="hidden" id="boardNumber" name="boardNumber" value="0">
 			<div class="display-flex">
 			<label for="memberId">아이디</label>
 			<input type="text" id="memberId" name="memberId" minlength="5" maxlength="20" pattern="^[a-z][a-z0-9_\-]{4,19}$" placeholder="아이디" required>
@@ -18,9 +18,9 @@
 			<input type="submit" value="로그인">
 		</form>
 		<div class="login-options">
-			<button type="button" onclick="window.open('/mbti/member/selectId', '_blank')" class="selectIdGET">아이디 찾기</button>
-			<button type="button" onclick="window.open('/mbti/member/selectPw', '_blank')" class="selectPwGET">비밀번호 찾기</button>
-			<button type="button" onclick="window.open('/mbti/member/join', '_blank')" class="joinGET">회원가입</button>
+			<button type="button" onclick="window.open('/mbti/member/selectId', '_blank');$('.login-modal').css('display', 'none');$('#memberId').val('');$('#memberPw').val('');$('#memberId').removeAttr('autofocus');" class="selectIdGET">아이디 찾기</button>
+			<button type="button" onclick="window.open('/mbti/member/selectPw', '_blank');$('.login-modal').css('display', 'none');$('#memberId').val('');$('#memberPw').val('');$('#memberId').removeAttr('autofocus');" class="selectPwGET">비밀번호 찾기</button>
+			<button type="button" onclick="window.open('/mbti/member/join', '_blank');$('.login-modal').css('display', 'none');$('#memberId').val('');$('#memberPw').val('');$('#memberId').removeAttr('autofocus');" class="joinGET">회원가입</button>
 		</div>
 	</div>
 </div>

@@ -33,9 +33,45 @@ public class BoardDAOImple implements BoardDAO {
 	}
 	
 	@Override
-	public int selectBoardCount() {
-		logger.info("selectBoardCount()  호출");
-		return sqlSession.selectOne(NAMESPACE + ".selectBoardCount");
+	public int selectCountOnBoard() {
+		logger.info("selectCountOnBoard()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountOnBoard");
+	}
+
+	@Override
+	public int selectCountByBoardName(PageCriteria pageCriteria) {
+		logger.info("selectCountByBoardName()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByBoardName", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByBoardTitle(PageCriteria pageCriteria) {
+		logger.info("selectCountByBoardTitle()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByBoardTitle", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByBoardContent(PageCriteria pageCriteria) {
+		logger.info("selectCountByBoardContent()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByBoardContent", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByNicknameOnBoard(PageCriteria pageCriteria) {
+		logger.info("selectCountByNicknameOnBoard()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByNicknameOnBoard", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByCmRpContent(PageCriteria pageCriteria) {
+		logger.info("selectCountByCmRpContent()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByCmRpContent", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByNicknameOnCmRp(PageCriteria pageCriteria) {
+		logger.info("selectCountByNicknameOnCmRp()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByNicknameOnCmRp", pageCriteria);
 	}
 	
 	@Override
@@ -87,6 +123,36 @@ public class BoardDAOImple implements BoardDAO {
 	public List<BoardVO> selectByNicknameOnCmRp(PageCriteria pageCriteria) {
 		logger.info("selectByNicknameOnCmRp()  호출");
 		return sqlSession.selectList(NAMESPACE + ".selectByNicknameOnCmRp", pageCriteria);
+	}
+	
+	@Override
+	public List<BoardVO> selectByBoardTitle2(PageCriteria pageCriteria) {
+		logger.info("selectByBoardTitle2()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByBoardTitle2", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByBoardContent2(PageCriteria pageCriteria) {
+		logger.info("selectByBoardContent2()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByBoardContent2", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByNicknameOnBoard2(PageCriteria pageCriteria) {
+		logger.info("selectByNicknameOnBoard2()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByNicknameOnBoard2", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByCmRpContent2(PageCriteria pageCriteria) {
+		logger.info("selectByCmRpContent2()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByCmRpContent2", pageCriteria);
+	}
+
+	@Override
+	public List<BoardVO> selectByNicknameOnCmRp2(PageCriteria pageCriteria) {
+		logger.info("selectByNicknameOnCmRp2()  호출");
+		return sqlSession.selectList(NAMESPACE + ".selectByNicknameOnCmRp2", pageCriteria);
 	}
 
 	@Override

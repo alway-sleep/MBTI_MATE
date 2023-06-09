@@ -2,24 +2,25 @@ package com.cafe.mbti.util;
 
 public class Target {
 	private int page, boardSection, boardList;
-	private String boardName, encodedBoardName;
-	private int boardNumber;
+	private String boardName;
+	private int boardNumber, searchOption;
 	
 	public Target() {
 		page = 1;
 		boardSection = 0;
 		boardList = 0;
 		boardName = "";
-		encodedBoardName = "";
 		boardNumber = 0;
+		searchOption = 0;
 	}
 
-	public Target(int page, int boardSection, int boardList, String boardName, int boardNumber) {
+	public Target(int page, int boardSection, int boardList, String boardName, int boardNumber, int searchOption) {
 		this.page = page;
 		this.boardSection = boardSection;
 		this.boardList = boardList;
 		this.boardName = boardName;
 		this.boardNumber = boardNumber;
+		this.searchOption = searchOption;
 	}
 
 	public int getPage() {
@@ -54,14 +55,6 @@ public class Target {
 		this.boardName = boardName;
 	}
 
-	public String getEncodedBoardName() {
-		return encodedBoardName;
-	}
-
-	public void setEncodedBoardName(String encodedBoardName) {
-		this.encodedBoardName = encodedBoardName;
-	}
-
 	public int getBoardNumber() {
 		return boardNumber;
 	}
@@ -70,9 +63,17 @@ public class Target {
 		this.boardNumber = boardNumber;
 	}
 
+	public int getSearchOption() {
+		return searchOption;
+	}
+
+	public void setSearchOption(int searchOption) {
+		this.searchOption = searchOption;
+	}
+
 	@Override
 	public String toString() {
 		return "Target [page=" + page + ", boardSection=" + boardSection + ", boardList=" + boardList + ", boardName="
-				+ boardName + ", encodedBoardName=" + encodedBoardName + ", boardNumber=" + boardNumber + "]";
+				+ boardName + ", boardNumber=" + boardNumber + ", searchOption=" + searchOption + "]";
 	}
 }

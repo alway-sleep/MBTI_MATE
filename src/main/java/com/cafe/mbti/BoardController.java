@@ -1,7 +1,6 @@
 package com.cafe.mbti;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,39 +32,75 @@ public class BoardController {
 	@GetMapping("/list")
 	public void listGET(HttpServletRequest request, Model model, Integer page, Integer numsPerPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		Target target = target(request, numsPerPage, boardSection, boardList, boardName, boardNumber);
+		Target target = target(request, numsPerPage, boardSection, boardList, boardName, boardNumber, searchOption);
 		PageCriteria pageCriteria = pageCriteria(page, numsPerPage, target.getBoardSection(), target.getBoardList(), keyword);
-		if (keyword != null) {
-			switch (searchOption) {
-			case 0:
-				model.addAttribute("boardVO", boardService.readByBoardTitle(pageCriteria));
-				break;
-			case 1:
-				model.addAttribute("boardVO", boardService.readByBoardContent(pageCriteria));
-				break;
-			case 2:
-				model.addAttribute("boardVO", boardService.readByNicknameOnBoard(pageCriteria));
-				break;
-			case 3:
-				model.addAttribute("boardVO", boardService.readByCmRpContent(pageCriteria));
-				break;
-			case 4:
-				model.addAttribute("boardVO", boardService.readByNicknameOnCmRp(pageCriteria));
-				break;
-			case 5:
-				//model.addAttribute("boardVO", boardService.readBoard(pageCriteria));
-				break;
-			}
-		} else {
-			if (target.getBoardSection() == 0) {
-				// 전체 게시글
-				model.addAttribute("boardVO", boardService.readAll(pageCriteria));
+		List<BoardVO> boardVO = null;
+		// 전체 게시글
+		if (target.getBoardSection() == 0) {			
+			if (keyword != null && keyword != "") {
+				switch (searchOption) {
+				case 0: // 게시글 제목
+					boardVO = boardService.readByBoardTitle(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardTitle(pageCriteria)));
+					break;
+				case 1: // 게시글 내용
+					boardVO = boardService.readByBoardContent(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardContent(pageCriteria)));
+					break;
+				case 2: // 게시글 작성자
+					boardVO = boardService.readByNicknameOnBoard(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnBoard(pageCriteria)));
+					break;
+				case 3: // 댓글 내용
+					boardVO = boardService.readByCmRpContent(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByCmRpContent(pageCriteria)));
+					break;
+				case 4: // 댓글 작성자
+					boardVO = boardService.readByNicknameOnCmRp(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnCmRp(pageCriteria)));
+					break;
+				case 5: // 게시글 작성일
+					//boardVO = boardService.readAll(pageCriteria);
+					break;
+				}
 			} else {
-				// 해당 게시판
-				model.addAttribute("boardVO", boardService.readBoard(pageCriteria));
+				boardVO = boardService.readAll(pageCriteria);
+				model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountOnBoard()));
+			}
+		// 해당 게시판
+		} else {
+			if (keyword != null && keyword != "") {
+				switch (searchOption) {
+				case 0: // 게시글 제목
+					boardVO = boardService.readByBoardTitle2(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardTitle(pageCriteria)));
+					break;
+				case 1: // 게시글 내용
+					boardVO = boardService.readByBoardContent2(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardContent(pageCriteria)));
+					break;
+				case 2: // 게시글 작성자
+					boardVO = boardService.readByNicknameOnBoard2(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnBoard(pageCriteria)));
+					break;
+				case 3: // 댓글 내용
+					boardVO = boardService.readByCmRpContent2(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByCmRpContent(pageCriteria)));
+					break;
+				case 4: // 댓글 작성자
+					boardVO = boardService.readByNicknameOnCmRp2(pageCriteria);
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnCmRp(pageCriteria)));
+					break;
+				case 5: // 게시글 작성일
+					//boardVO = boardService.readAll(pageCriteria);
+					break;
+				}
+			} else {
+				boardVO = boardService.readBoard(pageCriteria);
+				model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardName(pageCriteria)));
 			}
 		}
-		model.addAttribute("pageMaker", pageMaker(pageCriteria));
+		model.addAttribute("boardVO", boardVO);
 	} // end listGET()
 	
 	@GetMapping("/write")
@@ -153,15 +188,15 @@ public class BoardController {
 		return pageCriteria;
 	} // end pageCriteria()
 	
-	private PageMaker pageMaker(PageCriteria pageCriteria) {
+	private PageMaker pageMaker(PageCriteria pageCriteria, int totalCount) {
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCriteria(pageCriteria);
-		pageMaker.setTotalCount(boardService.readBoardCount());
+		pageMaker.setTotalCount(totalCount);
 		pageMaker.setPageData();
 		return pageMaker;
 	} // end pageMaker()
 	
-	private Target target(HttpServletRequest request, Integer page, Integer boardSection, Integer boardList, String boardName, Integer boardNumber) {
+	private Target target(HttpServletRequest request, Integer page, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption) {
 		Target target = (Target) request.getSession().getAttribute("target");
 		if (target == null) {
 			request.getSession().setAttribute("target", new Target());
@@ -170,26 +205,17 @@ public class BoardController {
 			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
 			target.setBoardList(boardList != null ? boardList : target.getBoardList());
 			target.setBoardName(boardName != null ? boardName : target.getBoardName());
-			target.setEncodedBoardName(boardName != null ? encodedString(boardName) : target.getBoardName());
 			target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
+			target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
 		} else {
 			target.setPage(page != null ? page : target.getPage());
 			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
 			target.setBoardList(boardList != null ? boardList : target.getBoardList());
 			target.setBoardName(boardName != null ? boardName : target.getBoardName());
-			target.setEncodedBoardName(boardName != null ? encodedString(boardName) : target.getBoardName());
 			target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
+			target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
 		}
 		logger.info(target.toString());
 		return target;
 	}
-	
-	private String encodedString(String encodedString) {
-		try {
-			encodedString = URLEncoder.encode(encodedString, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return encodedString;
-	} // end encodedString()
 } // end BoardController

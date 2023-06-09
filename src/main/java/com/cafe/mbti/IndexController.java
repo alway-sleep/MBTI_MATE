@@ -45,7 +45,7 @@ public class IndexController {
 		model.addAttribute("cafebanner", "cafebanner.png"); // 카페 배너 이미지
 		model.addAttribute("cafeindex00", "cafeindex00.png"); // 카페 인덱스 이미지 00
 		model.addAttribute("cafeindex01", "cafeindex01.png"); // 카페 인덱스 이미지 01
-		model.addAttribute("boardTotalCount", boardService.readBoardCount()); // 전체 게시글의 수
+		model.addAttribute("countOnBoard", boardService.readCountOnBoard()); // 전체 게시글의 수
 		return "index";
 	}
 	

@@ -114,6 +114,7 @@ body {
 .close button:hover {
 	color: #000;
 	border-color: #000;
+	background-color: #fff;
 }
 /* display-flex 스타일 */
 .display-flex {

@@ -11,7 +11,7 @@ public class BoardVO {
 	// JOIN
 	private String memberNickname, memberPicture;
 	private int boardlikeNumber;
-	private String[] filesName;	
+	private String[] filesName;
 
 	public BoardVO() {}
 
