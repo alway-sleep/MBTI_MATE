@@ -73,23 +73,23 @@ public class BoardController {
 				switch (searchOption) {
 				case 0: // 게시글 제목
 					boardVO = boardService.readByBoardTitle2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardTitle(pageCriteria)));
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardTitle2(pageCriteria)));
 					break;
 				case 1: // 게시글 내용
 					boardVO = boardService.readByBoardContent2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardContent(pageCriteria)));
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardContent2(pageCriteria)));
 					break;
 				case 2: // 게시글 작성자
 					boardVO = boardService.readByNicknameOnBoard2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnBoard(pageCriteria)));
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnBoard2(pageCriteria)));
 					break;
 				case 3: // 댓글 내용
 					boardVO = boardService.readByCmRpContent2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByCmRpContent(pageCriteria)));
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByCmRpContent2(pageCriteria)));
 					break;
 				case 4: // 댓글 작성자
 					boardVO = boardService.readByNicknameOnCmRp2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnCmRp(pageCriteria)));
+					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnCmRp2(pageCriteria)));
 					break;
 				case 5: // 게시글 작성일
 					//boardVO = boardService.readAll(pageCriteria);
@@ -97,7 +97,7 @@ public class BoardController {
 				}
 			} else {
 				boardVO = boardService.readBoard(pageCriteria);
-				model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardName(pageCriteria)));
+				model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountOnBoard2(pageCriteria)));
 			}
 		}
 		model.addAttribute("boardVO", boardVO);

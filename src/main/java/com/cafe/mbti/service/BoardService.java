@@ -12,7 +12,7 @@ public interface BoardService {
 	// 전체 게시글의 수
 	int readCountOnBoard();
 	// 해당 게시판의 게시글의 수
-	int readCountByBoardName(PageCriteria pageCriteria);
+	int readCountOnBoard2(PageCriteria pageCriteria);
 	// 게시글 제목으로 검색된 게시글의 수
 	int readCountByBoardTitle(PageCriteria pageCriteria);
 	// 게시글 내용으로 검색된 게시글의 수
@@ -23,6 +23,16 @@ public interface BoardService {
 	int readCountByCmRpContent(PageCriteria pageCriteria);
 	// 댓글 작성자로 검색된 게시글의 수
 	int readCountByNicknameOnCmRp(PageCriteria pageCriteria);
+	// 게시글 제목으로 검색된 게시글의 수
+	int readCountByBoardTitle2(PageCriteria pageCriteria);
+	// 게시글 내용으로 검색된 게시글의 수
+	int readCountByBoardContent2(PageCriteria pageCriteria);
+	// 게시글 작성자로 검색된 게시글의 수
+	int readCountByNicknameOnBoard2(PageCriteria pageCriteria);
+	// 댓글 내용으로 검색된 게시글의 수
+	int readCountByCmRpContent2(PageCriteria pageCriteria);
+	// 댓글 작성자로 검색된 게시글의 수
+	int readCountByNicknameOnCmRp2(PageCriteria pageCriteria);
 	// 전체 게시글 정렬 후 출력
 	List<BoardVO> readAll(PageCriteria pageCriteria);
 	// 게시판 정렬 후 출력
@@ -39,15 +49,15 @@ public interface BoardService {
 	List<BoardVO> readByCmRpContent(PageCriteria pageCriteria);
 	// 검색 조건 : 댓글 작성자
 	List<BoardVO> readByNicknameOnCmRp(PageCriteria pageCriteria);
-	// 검색 조건 : 게시글 제목
+	// 검색 조건 : 게시글 제목2
 	List<BoardVO> readByBoardTitle2(PageCriteria pageCriteria);
-	// 검색 조건 : 게시글 내용
+	// 검색 조건 : 게시글 내용2
 	List<BoardVO> readByBoardContent2(PageCriteria pageCriteria);
-	// 검색 조건 : 게시글 작성자
+	// 검색 조건 : 게시글 작성자2
 	List<BoardVO> readByNicknameOnBoard2(PageCriteria pageCriteria);
-	// 검색 조건 : 댓글 내용
+	// 검색 조건 : 댓글 내용2
 	List<BoardVO> readByCmRpContent2(PageCriteria pageCriteria);
-	// 검색 조건 : 댓글 작성자
+	// 검색 조건 : 댓글 작성자2
 	List<BoardVO> readByNicknameOnCmRp2(PageCriteria pageCriteria);
 	// 게시글 수정
 	int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber);

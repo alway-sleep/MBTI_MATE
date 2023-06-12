@@ -29,28 +29,116 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<!-- 해당 게시판 게시글의 수 -->
-	<select id="selectCountByBoardName" resultType="Integer">
+	<select id="selectCountOnBoard2" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${boardSection} = #{boardSection} AND ${boardList} = #{boardList}
 	</select>
 	
-	<!-- 게시글 제목으로 검색한 게시글의 수 -->
+	<!-- 전체 게시판 게시글 제목으로 검색한 게시글의 수 -->
 	<select id="selectCountByBoardTitle" resultType="Integer">
+		SELECT COUNT(${boardNumber}) AS CNT
+		FROM ${board}
+		WHERE ${boardNumber} > 0 AND ${boardTitle} LIKE #{sqlKeyword}
+	</select>
+	
+	<!-- 전체 게시판 게시글 내용으로 검색한 게시글의 수 -->
+	<select id="selectCountByBoardContent" resultType="Integer">
+		SELECT COUNT(${boardNumber}) AS CNT
+		FROM ${board}
+		WHERE ${boardNumber} > 0 AND ${boardContent} LIKE #{sqlKeyword}
+	</select>
+	
+	<!-- 전체 게시판 게시글 작성자으로 검색한 게시글의 수 -->
+	<select id="selectCountByNicknameOnBoard" resultType="Integer">
+		SELECT COUNT(B1.${boardNumber}) AS CNT
+		FROM
+			(
+			SELECT B.${boardNumber}, M.${memberNickname}
+			FROM ${board} B
+			LEFT OUTER JOIN ${member} M ON M.${memberNumber} = B.${memberNumber}
+			WHERE B.${boardNumber} > 0
+			) B1
+		WHERE B1.${memberNickname} LIKE #{sqlKeyword}
+	</select>
+	
+	<!-- 전체 게시판 댓글 내용으로 검색한 게시글의 수 -->
+	<select id="selectCountByCmRpContent" resultType="Integer">
+		SELECT COUNT(B.${boardNumber}) AS CNT
+		FROM ${board} B
+		WHERE B.${boardNumber} > 0
+		AND
+		B.${boardNumber} IN
+		(
+		SELECT DISTINCT C.${boardNumber}
+		FROM ${comments} C
+		WHERE C.${commentsNumber} IN
+			(
+			SELECT DISTINCT R.${commentsNumber}
+			FROM ${reply} R
+			WHERE R.${replyContent} LIKE #{sqlKeyword} AND R.${replyNumber} > 0
+			)
+			OR
+			(
+			C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
+			)
+		)
+	</select>
+	
+	<!-- 전체 게시판 댓글 작성자으로 검색한 게시글의 수 -->
+	<select id="selectCountByNicknameOnCmRp" resultType="Integer">
+		SELECT COUNT(B.${boardNumber}) AS CNT
+		FROM ${board} B
+		WHERE B.${boardNumber} > 0
+		AND
+		B.${boardNumber} IN
+			(
+			SELECT DISTINCT C.${boardNumber}
+			FROM ${comments} C
+			WHERE C.${commentsNumber} IN
+				(
+				SELECT DISTINCT R.${commentsNumber}
+				FROM ${reply} R
+				WHERE
+					(
+					R.${memberNumber} IN
+						(
+						SELECT M.${memberNumber}
+						FROM ${member} M
+						WHERE M.${memberNickname} LIKE #{sqlKeyword}
+						)
+					AND R.${replyNumber} > 0
+					)
+				)
+			OR
+				(
+				C.${memberNumber} IN
+					(
+					SELECT M.${memberNumber}
+					FROM ${member} M
+					WHERE M.${memberNickname} LIKE #{sqlKeyword}
+					)
+				AND C.${commentsNumber} > 0
+				)
+			)
+	</select>
+	
+	<!-- 해당 게시판 게시글 제목으로 검색한 게시글의 수 -->
+	<select id="selectCountByBoardTitle2" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${boardSection} = #{boardSection} AND ${boardList} = #{boardList} AND ${boardTitle} LIKE #{sqlKeyword}
 	</select>
 	
-	<!-- 게시글 내용으로 검색한 게시글의 수 -->
-	<select id="selectCountByBoardContent" resultType="Integer">
+	<!-- 해당 게시판 게시글 내용으로 검색한 게시글의 수 -->
+	<select id="selectCountByBoardContent2" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${boardSection} = #{boardSection} AND ${boardList} = #{boardList} AND ${boardContent} LIKE #{sqlKeyword}
 	</select>
 	
-	<!-- 게시글 작성자으로 검색한 게시글의 수 -->
-	<select id="selectCountByNicknameOnBoard" resultType="Integer">
+	<!-- 해당 게시판 게시글 작성자으로 검색한 게시글의 수 -->
+	<select id="selectCountByNicknameOnBoard2" resultType="Integer">
 		SELECT COUNT(B1.${boardNumber}) AS CNT
 		FROM
 			(
@@ -62,8 +150,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE B1.${memberNickname} LIKE #{sqlKeyword}
 	</select>
 	
-	<!-- 댓글 내용으로 검색한 게시글의 수 -->
-	<select id="selectCountByCmRpContent" resultType="Integer">
+	<!-- 해당 게시판 댓글 내용으로 검색한 게시글의 수 -->
+	<select id="selectCountByCmRpContent2" resultType="Integer">
 		SELECT COUNT(B.${boardNumber}) AS CNT
 		FROM ${board} B
 		WHERE B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
@@ -76,17 +164,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			(
 			SELECT DISTINCT R.${commentsNumber}
 			FROM ${reply} R
-			WHERE R.${replyContent} LIKE ${sqlKeyword} AND R.${replyNumber} > 0
+			WHERE R.${replyContent} LIKE #{sqlKeyword} AND R.${replyNumber} > 0
 			)
 			OR
 			(
-			C.${commentsContent} LIKE ${sqlKeyword} AND C.${commentsNumber} > 0
+			C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
 			)
 		)
 	</select>
 	
-	<!-- 댓글 작성자으로 검색한 게시글의 수 -->
-	<select id="selectCountByNicknameOnCmRp" resultType="Integer">
+	<!--  해당 게시판댓글 작성자으로 검색한 게시글의 수 -->
+	<select id="selectCountByNicknameOnCmRp2" resultType="Integer">
 		SELECT COUNT(B.${boardNumber}) AS CNT
 		FROM ${board} B
 		WHERE B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
@@ -100,26 +188,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				SELECT DISTINCT R.${commentsNumber}
 				FROM ${reply} R
 				WHERE
+					(
+					R.${memberNumber} IN
+						(
+						SELECT M.${memberNumber}
+						FROM ${member} M
+						WHERE M.${memberNickname} LIKE #{sqlKeyword}
+						)
+					AND R.${replyNumber} > 0
+					)
+				)
+			OR
 				(
-				R.${memberNumber} IN
+				C.${memberNumber} IN
 					(
 					SELECT M.${memberNumber}
 					FROM ${member} M
-					WHERE M.${memberNickname} LIKE ${sqlKeyword}
+					WHERE M.${memberNickname} LIKE #{sqlKeyword}
 					)
-				AND R.${replyNumber} > 0
+				AND C.${commentsNumber} > 0
 				)
-				)
-			OR
-			(
-			C.${memberNumber} IN
-			(
-			SELECT M.${memberNumber}
-			FROM ${member} M
-			WHERE M.${memberNickname} LIKE ${sqlKeyword}
-			)
-			AND C.${commentsNumber} > 0
-			)
 			)
 	</select>
 	
@@ -183,9 +271,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} > 0
 				ORDER BY B.${boardNumber} DESC
-			) B1
+				) B1
 			WHERE B1.${boardTitle} LIKE #{sqlKeyword}
-		) B2
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByBoardContent" resultType="BoardVO">
@@ -200,9 +288,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} > 0
 				ORDER BY B.${boardNumber} DESC
-			) B1
+				) B1
 			WHERE B1.${boardContent} LIKE #{sqlKeyword}
-		) B2
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByNicknameOnBoard" resultType="BoardVO">
@@ -217,9 +305,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} > 0
 				ORDER BY B.${boardNumber} DESC
-			) B1
+				) B1
 			WHERE B1.${memberNickname} LIKE #{sqlKeyword}
-		) B2
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByCmRpContent" resultType="BoardVO">		
@@ -233,30 +321,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				FROM ${board} B
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} IN
-				(
-				SELECT DISTINCT C.${boardNumber}
-				FROM ${comments} C
-				WHERE C.${commentsNumber} IN
-				(
-				SELECT DISTINCT R.${commentsNumber}
-				FROM ${reply} R
-				WHERE R.${replyContent} LIKE #{sqlKeyword} AND R.${replyNumber} > 0
-			)
-			OR
-			(
-			C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
-			)
-			)
-			AND B.${boardNumber} > 0
-			ORDER BY B.${boardNumber} DESC
-			) B1
-		) B2
+					(
+					SELECT DISTINCT C.${boardNumber}
+					FROM ${comments} C
+					WHERE C.${commentsNumber} IN
+						(
+						SELECT DISTINCT R.${commentsNumber}
+						FROM ${reply} R
+						WHERE R.${replyContent} LIKE #{sqlKeyword} AND R.${replyNumber} > 0
+						)
+					OR
+						(
+						C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
+						)
+					)
+				AND B.${boardNumber} > 0
+				ORDER BY B.${boardNumber} DESC
+				) B1
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByNicknameOnCmRp" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
 		FROM
-		(
+			(
 			SELECT ROWNUM AS RN, B1.*
 			FROM
 				(
@@ -272,26 +360,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						SELECT DISTINCT R.${commentsNumber}
 						FROM ${reply} R
 						WHERE
+							(
+							R.${memberNumber} IN
+								(
+								SELECT M.${memberNumber}
+								FROM ${member} M
+								WHERE M.${memberNickname} LIKE #{sqlKeyword}
+								)
+							AND R.${replyNumber} > 0
+							)
+						)
+					OR
 						(
-						R.${memberNumber} IN
+						C.${memberNumber} IN
 							(
 							SELECT M.${memberNumber}
 							FROM ${member} M
 							WHERE M.${memberNickname} LIKE #{sqlKeyword}
 							)
-						AND R.${replyNumber} > 0
+						AND C.${commentsNumber} > 0
 						)
-						)
-					OR
-					(
-					C.${memberNumber} IN
-					(
-					SELECT M.${memberNumber}
-					FROM ${member} M
-					WHERE M.${memberNickname} LIKE #{sqlKeyword}
-					)
-					AND C.${commentsNumber} > 0
-					)
 					)
 				AND B.${boardNumber} > 0
 				ORDER BY B.${boardNumber} DESC
@@ -313,9 +401,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
 				ORDER BY B.${boardNumber} DESC
-			) B1
+				) B1
 			WHERE B1.${boardTitle} LIKE #{sqlKeyword}
-		) B2
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByBoardContent2" resultType="BoardVO">
@@ -330,9 +418,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
 				ORDER BY B.${boardNumber} DESC
-			) B1
+				) B1
 			WHERE B1.${boardContent} LIKE #{sqlKeyword}
-		) B2
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByNicknameOnBoard2" resultType="BoardVO">
@@ -347,9 +435,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
 				ORDER BY B.${boardNumber} DESC
-			) B1
+				) B1
 			WHERE B1.${memberNickname} LIKE #{sqlKeyword}
-		) B2
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByCmRpContent2" resultType="BoardVO">		
@@ -363,30 +451,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				FROM ${board} B
 				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 				WHERE B.${boardNumber} IN
-				(
-				SELECT DISTINCT C.${boardNumber}
-				FROM ${comments} C
-				WHERE C.${commentsNumber} IN
-				(
-				SELECT DISTINCT R.${commentsNumber}
-				FROM ${reply} R
-				WHERE R.${replyContent} LIKE #{sqlKeyword} AND R.${replyNumber} > 0
-			)
-			OR
-			(
-			C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
-			)
-			)
-			AND B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
-			ORDER BY B.${boardNumber} DESC
-			) B1
-		) B2
+					(
+					SELECT DISTINCT C.${boardNumber}
+					FROM ${comments} C
+					WHERE C.${commentsNumber} IN
+						(
+						SELECT DISTINCT R.${commentsNumber}
+						FROM ${reply} R
+						WHERE R.${replyContent} LIKE #{sqlKeyword} AND R.${replyNumber} > 0
+						)
+					OR
+						(
+						C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
+						)
+					)
+				AND B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
+				ORDER BY B.${boardNumber} DESC
+				) B1
+			) B2
 		WHERE B2.RN BETWEEN #{start} AND #{end}
 	</select>
 	<select id="selectByNicknameOnCmRp2" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
 		FROM
-		(
+			(
 			SELECT ROWNUM AS RN, B1.*
 			FROM
 				(
@@ -402,26 +490,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						SELECT DISTINCT R.${commentsNumber}
 						FROM ${reply} R
 						WHERE
+							(
+							R.${memberNumber} IN
+								(
+								SELECT M.${memberNumber}
+								FROM ${member} M
+								WHERE M.${memberNickname} LIKE #{sqlKeyword}
+								)
+							AND R.${replyNumber} > 0
+							)
+						)
+					OR
 						(
-						R.${memberNumber} IN
+						C.${memberNumber} IN
 							(
 							SELECT M.${memberNumber}
 							FROM ${member} M
 							WHERE M.${memberNickname} LIKE #{sqlKeyword}
 							)
-						AND R.${replyNumber} > 0
+						AND C.${commentsNumber} > 0
 						)
-						)
-					OR
-					(
-					C.${memberNumber} IN
-					(
-					SELECT M.${memberNumber}
-					FROM ${member} M
-					WHERE M.${memberNickname} LIKE #{sqlKeyword}
-					)
-					AND C.${commentsNumber} > 0
-					)
 					)
 				AND B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
 				ORDER BY B.${boardNumber} DESC

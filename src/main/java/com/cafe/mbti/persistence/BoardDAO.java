@@ -11,7 +11,7 @@ public interface BoardDAO {
 	// 전체 게시글의 수
 	int selectCountOnBoard();
 	// 해당 게시판 게시글의 수
-	int selectCountByBoardName(PageCriteria pageCriteria);
+	int selectCountOnBoard2(PageCriteria pageCriteria);
 	// 게시글 제목으로 검색된 게시글의 수
 	int selectCountByBoardTitle(PageCriteria pageCriteria);
 	// 게시글 내용으로 검색된 게시글의 수
@@ -22,6 +22,16 @@ public interface BoardDAO {
 	int selectCountByCmRpContent(PageCriteria pageCriteria);
 	// 댓글 작성자로 검색된 게시글의 수
 	int selectCountByNicknameOnCmRp(PageCriteria pageCriteria);
+	// 게시글 제목으로 검색된 게시글의 수
+	int selectCountByBoardTitle2(PageCriteria pageCriteria);
+	// 게시글 내용으로 검색된 게시글의 수
+	int selectCountByBoardContent2(PageCriteria pageCriteria);
+	// 게시글 작성자로 검색된 게시글의 수
+	int selectCountByNicknameOnBoard2(PageCriteria pageCriteria);
+	// 댓글 내용으로 검색된 게시글의 수
+	int selectCountByCmRpContent2(PageCriteria pageCriteria);
+	// 댓글 작성자로 검색된 게시글의 수
+	int selectCountByNicknameOnCmRp2(PageCriteria pageCriteria);
 	// 전체 게시글 정렬 후 출력
 	List<BoardVO> selectAll(PageCriteria pageCriteria);
 	// 게시판 정렬 후 출력
@@ -38,15 +48,15 @@ public interface BoardDAO {
 	List<BoardVO> selectByCmRpContent(PageCriteria pageCriteria);
 	// 검색 조건 : 댓글 작성자
 	List<BoardVO> selectByNicknameOnCmRp(PageCriteria pageCriteria);
-	// 검색 조건 : 게시글 제목
+	// 검색 조건 : 게시글 제목2
 	List<BoardVO> selectByBoardTitle2(PageCriteria pageCriteria);
-	// 검색 조건 : 게시글 내용
+	// 검색 조건 : 게시글 내용2
 	List<BoardVO> selectByBoardContent2(PageCriteria pageCriteria);
-	// 검색 조건 : 게시글 작성자
+	// 검색 조건 : 게시글 작성자2
 	List<BoardVO> selectByNicknameOnBoard2(PageCriteria pageCriteria);
-	// 검색 조건 : 댓글 내용
+	// 검색 조건 : 댓글 내용2
 	List<BoardVO> selectByCmRpContent2(PageCriteria pageCriteria);
-	// 검색 조건 : 댓글 작성자
+	// 검색 조건 : 댓글 작성자2
 	List<BoardVO> selectByNicknameOnCmRp2(PageCriteria pageCriteria);
 	// 게시글 수정
 	int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber);

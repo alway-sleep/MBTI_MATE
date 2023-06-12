@@ -411,7 +411,7 @@ body {
 				<select id="searchOption">
 					<option value="0">게시글 제목</option>
 					<option value="1">게시글 내용</option>
-					<option value="2">글 작성자</option>
+					<option value="2">게시글 작성자</option>
 					<option value="3">댓글 내용</option>
 					<option value="4">댓글 작성자</option>
 					<option value="5">게시글 작성일</option>

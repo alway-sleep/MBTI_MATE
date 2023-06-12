@@ -39,9 +39,9 @@ public class BoardDAOImple implements BoardDAO {
 	}
 
 	@Override
-	public int selectCountByBoardName(PageCriteria pageCriteria) {
-		logger.info("selectCountByBoardName()  호출");
-		return sqlSession.selectOne(NAMESPACE + ".selectCountByBoardName", pageCriteria);
+	public int selectCountOnBoard2(PageCriteria pageCriteria) {
+		logger.info("selectCountOnBoard2()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountOnBoard2", pageCriteria);
 	}
 
 	@Override
@@ -72,6 +72,36 @@ public class BoardDAOImple implements BoardDAO {
 	public int selectCountByNicknameOnCmRp(PageCriteria pageCriteria) {
 		logger.info("selectCountByNicknameOnCmRp()  호출");
 		return sqlSession.selectOne(NAMESPACE + ".selectCountByNicknameOnCmRp", pageCriteria);
+	}
+	
+	@Override
+	public int selectCountByBoardTitle2(PageCriteria pageCriteria) {
+		logger.info("selectCountByBoardTitle2()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByBoardTitle2", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByBoardContent2(PageCriteria pageCriteria) {
+		logger.info("selectCountByBoardContent2()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByBoardContent2", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByNicknameOnBoard2(PageCriteria pageCriteria) {
+		logger.info("selectCountByNicknameOnBoard2()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByNicknameOnBoard2", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByCmRpContent2(PageCriteria pageCriteria) {
+		logger.info("selectCountByCmRpContent2()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByCmRpContent2", pageCriteria);
+	}
+
+	@Override
+	public int selectCountByNicknameOnCmRp2(PageCriteria pageCriteria) {
+		logger.info("selectCountByNicknameOnCmRp2()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByNicknameOnCmRp2", pageCriteria);
 	}
 	
 	@Override

@@ -50,9 +50,9 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Override
-	public int readCountByBoardName(PageCriteria pageCriteria) {
-		logger.info("readCountByBoardName() 호출");
-		return boardDAO.selectCountByBoardName(pageCriteria);
+	public int readCountOnBoard2(PageCriteria pageCriteria) {
+		logger.info("readCountOnBoard2() 호출");
+		return boardDAO.selectCountOnBoard2(pageCriteria);
 	}
 
 	@Override
@@ -83,6 +83,36 @@ public class BoardServiceImple implements BoardService {
 	public int readCountByNicknameOnCmRp(PageCriteria pageCriteria) {
 		logger.info("readCountByNicknameOnCmRp() 호출");
 		return boardDAO.selectCountByNicknameOnCmRp(pageCriteria);
+	}
+	
+	@Override
+	public int readCountByBoardTitle2(PageCriteria pageCriteria) {
+		logger.info("readCountByBoardTitle2() 호출");
+		return boardDAO.selectCountByBoardTitle2(pageCriteria);
+	}
+
+	@Override
+	public int readCountByBoardContent2(PageCriteria pageCriteria) {
+		logger.info("readCountByBoardContent2() 호출");
+		return boardDAO.selectCountByBoardContent2(pageCriteria);
+	}
+
+	@Override
+	public int readCountByNicknameOnBoard2(PageCriteria pageCriteria) {
+		logger.info("readCountByNicknameOnBoard2() 호출");
+		return boardDAO.selectCountByNicknameOnBoard2(pageCriteria);
+	}
+
+	@Override
+	public int readCountByCmRpContent2(PageCriteria pageCriteria) {
+		logger.info("readCountByCmRpContent2() 호출");
+		return boardDAO.selectCountByCmRpContent2(pageCriteria);
+	}
+
+	@Override
+	public int readCountByNicknameOnCmRp2(PageCriteria pageCriteria) {
+		logger.info("readCountByNicknameOnCmRp2() 호출");
+		return boardDAO.selectCountByNicknameOnCmRp2(pageCriteria);
 	}
 
 	@Override
