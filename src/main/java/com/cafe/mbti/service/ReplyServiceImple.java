@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.cafe.mbti.domain.ReplyVO;
 import com.cafe.mbti.persistence.ReplyDAO;
+import com.cafe.mbti.util.ReplyPageCriteria;
 
 @Service
 public class ReplyServiceImple implements ReplyService {
@@ -24,15 +25,15 @@ public class ReplyServiceImple implements ReplyService {
 	}
 
 	@Override
-	public List<ReplyVO> readAll(int commentsNumber) {
+	public List<ReplyVO> readAll(ReplyPageCriteria replyPageCriteria) {
 		logger.info("readAll() 호출");
-		return replyDAO.selectAll(commentsNumber);
+		return replyDAO.selectAll(replyPageCriteria);
 	}
 	
 	@Override
-	public int readReplyCount(int commentsNumber) {
-		logger.info("readReplyCount() 호출");
-		return replyDAO.selectReplyCount(commentsNumber);
+	public int readCountOnComments(int commentsNumber) {
+		logger.info("readCountOnComments() 호출");
+		return replyDAO.selectCountOnComments(commentsNumber);
 	}
 
 	@Override

@@ -38,21 +38,13 @@ public class CommentsRestController {
 		return new ResponseEntity<Integer>(commentsService.create(commentsVO), HttpStatus.OK);
 	} // end commentsPOST()
 	
-	@GetMapping("/list/{boardNumber}") // SELECT
-	public ResponseEntity<List<CommentsVO>> commentsListGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		
-		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(1, boardNumber);
-		return new ResponseEntity<List<CommentsVO>>(commentsService.readAll(commentsPageCriteria), HttpStatus.OK);
-	} // end commentsGET()
-	
 	@GetMapping("/list/{boardNumber}/{page}") // SELECT
-	public ResponseEntity<List<CommentsVO>> commentsListPageGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, @PathVariable("page") Integer page) {
+	public ResponseEntity<List<CommentsVO>> commentsListGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, @PathVariable("page") Integer page) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
 		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(page, boardNumber);
 		return new ResponseEntity<List<CommentsVO>>(commentsService.readAll(commentsPageCriteria), HttpStatus.OK);
-	} // end commentsListPageGET()
+	} // end commentsListGET()
 	
 	@GetMapping("/count/{boardNumber}") // SELECT
 	public ResponseEntity<Integer> commentsCountGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
@@ -62,12 +54,12 @@ public class CommentsRestController {
 	} // end commentsCountGET()
 	
 	@GetMapping("/pagemaker/{boardNumber}") // SELECT
-	public ResponseEntity<CommentsPageMaker> pageMakerGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, Integer page) {
+	public ResponseEntity<CommentsPageMaker> commentsPageMakerGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, Integer page) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
 		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(page, boardNumber);
 		return new ResponseEntity<CommentsPageMaker>(commentsPageMaker(commentsPageCriteria, commentsService.readCountOnBoard(boardNumber)), HttpStatus.OK);
-	} // end pageMakerGET()
+	} // end commentsPageMakerGET()
 	
 	@GetMapping("/{boardNumber}") // SELECT
 	public ResponseEntity<Integer> boardCommentsGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
@@ -95,7 +87,7 @@ public class CommentsRestController {
 		commentsPageCriteria.setPage(page != null ? page : commentsPageCriteria.getPage());
 		commentsPageCriteria.setBoardNumber(boardNumber);
 		return commentsPageCriteria;
-	} // end pageCriteria()
+	} // end commentsPageCriteria()
 	
 	private CommentsPageMaker commentsPageMaker(CommentsPageCriteria commentsPageCriteria, int totalCount) {
 		CommentsPageMaker commentsPageMaker = new CommentsPageMaker();
@@ -103,5 +95,5 @@ public class CommentsRestController {
 		commentsPageMaker.setTotalCount(totalCount);
 		commentsPageMaker.setPageData();
 		return commentsPageMaker;
-	} // end pageMaker()
+	} // end commentsPageMaker()
 } // end CommentRestController

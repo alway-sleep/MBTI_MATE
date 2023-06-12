@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cafe.mbti.domain.ReplyVO;
+import com.cafe.mbti.util.ReplyPageCriteria;
 
 @Repository
 public class ReplyDAOImple implements ReplyDAO {
@@ -27,15 +28,15 @@ public class ReplyDAOImple implements ReplyDAO {
 	}
 
 	@Override
-	public List<ReplyVO> selectAll(int commentsNumber) {
+	public List<ReplyVO> selectAll(ReplyPageCriteria replyPageCriteria) {
 		logger.info("selectAll() 호출");
-		return sqlSession.selectList(NAMESPACE + ".selectAll", commentsNumber);
+		return sqlSession.selectList(NAMESPACE + ".selectAll", replyPageCriteria);
 	}
 	
 	@Override
-	public int selectReplyCount(int commentsNumber) {
-		logger.info("selectReplyCount() 호출");
-		return sqlSession.selectOne(NAMESPACE + ".selectReplyCount", commentsNumber);
+	public int selectCountOnComments(int commentsNumber) {
+		logger.info("selectCountOnComments() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountOnComments", commentsNumber);
 	}
 
 	@Override

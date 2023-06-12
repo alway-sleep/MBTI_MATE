@@ -347,9 +347,9 @@ footer {
 						<c:if test="${not empty sessionScope.memberVO}">
 							<li><img src="resource?resource=member/${sessionScope.memberVO.memberPicture}" style="width: 34px; height: 34px; max-height: 100%; border-radius: 30px; margin-right: 10px;"></li>
 							<li style="color: #008800;">${sessionScope.memberVO.memberNickname}</li>
-							<li><a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}" >마이페이지</a></li>
+							<li>&nbsp;|&nbsp;<a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}" >마이페이지</a>&nbsp;|&nbsp;</li>
 							<li><a href="/mbti/message/received" >쪽지</a></li>
-							<li><a href="/mbti/talk/channel" >채팅</a></li>
+							<li>&nbsp;|&nbsp;<a href="/mbti/talk/channel" >채팅</a>&nbsp;|&nbsp;</li>
 							<li><a href="/mbti/member/logout" >로그아웃</a></li>
 						</c:if>
 					</ul>
