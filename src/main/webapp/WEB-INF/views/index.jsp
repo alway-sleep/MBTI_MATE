@@ -21,7 +21,7 @@ body {
 	margin: 0 auto;
 	width: 80%;
 	height: 90%;
-	padding: 20px;
+	padding: 5px 20px;
 	background-color: #fff;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
@@ -41,26 +41,23 @@ nav {
 	display: flex;
 	justify-content: space-between;
 	padding: 0;
-	margin-bottom: 10px;
 	font-weight: bold;
 }
 
 nav .left-align {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-	align-self: flex-start;
+	align-self: flex-start;	
 }
 
 nav .right-align {
+	align-self: flex-end;	
+}
+
+nav ul {
+	display: flex;
+	align-items: center;
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
-	align-self: flex-end;
-}
-
-nav ul li {
-	display: inline;
 }
 
 ul {
@@ -69,8 +66,8 @@ ul {
 	font-weight: bold;
 }
 
-ul li {	
-	margin-bottom: 10px;
+ul li {
+	margin-bottom: 3px;
 }
 
 a {
@@ -337,26 +334,31 @@ footer {
 	<div class="index-wrapper">
 		<header>
 			<nav>
-				<ul class="left-align">
-					<li><a href="/mbti" >카페 홈</a></li>
-				</ul>
-				<ul class="right-align">
-					<c:if test="${empty sessionScope.memberVO}">
-						<li><a href="#" class="loginGET">로그인</a></li>
-					</c:if>
-					<c:if test="${not empty sessionScope.memberVO}">
-						<li style="color: #008800;">${sessionScope.memberVO.memberNickname}</li>
-						<li><a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}" >마이페이지</a></li>
-						<li><a href="/mbti/message/received" >쪽지</a></li>
-						<li><a href="/mbti/talk/channel" >채팅</a></li>
-						<li><a href="/mbti/member/logout" >로그아웃</a></li>
-					</c:if>
-				</ul>
+				<div class="left-align">
+					<ul>
+						<li><a href="/mbti"><img src="resource?resource=index/cafelogo.png" alt="카페 로고" style="height: 34px; max-height: 100%; border: 1px solid #ccc; border-radius: 10px;"></a></li>
+					</ul>
+				</div>
+				<div class="right-align">
+					<ul>
+						<c:if test="${empty sessionScope.memberVO}">
+							<li><a href="#" class="loginGET">로그인</a></li>
+						</c:if>
+						<c:if test="${not empty sessionScope.memberVO}">
+							<li><img src="resource?resource=member/${sessionScope.memberVO.memberPicture}" style="width: 34px; height: 34px; max-height: 100%; border-radius: 30px; margin-right: 10px;"></li>
+							<li style="color: #008800;">${sessionScope.memberVO.memberNickname}</li>
+							<li><a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}" >마이페이지</a></li>
+							<li><a href="/mbti/message/received" >쪽지</a></li>
+							<li><a href="/mbti/talk/channel" >채팅</a></li>
+							<li><a href="/mbti/member/logout" >로그아웃</a></li>
+						</c:if>
+					</ul>
+				</div>
 			</nav>
-		</header>	
+		</header>
 		<div class="banner">
 			<a href="/mbti" >
-				<img src="display?filesName=${cafebanner}" alt="카페 배너" style="max-height: 400px; width: 100%; border-radius: 5px;">
+				<img src="resource?resource=index/cafebanner.png" alt="카페 배너" style="max-height: 400px; width: 100%; border-radius: 5px;">
 			</a>
 		</div>
 			
@@ -364,7 +366,7 @@ footer {
 			<div class="left-container">			
 				<div class="summary-info">
 					<div class="cafe-info">
-						<img src="display?filesName=${cafelogo}" alt="카페 로고" style="border: 1px solid #000; border-radius: 5px;">
+						<img src="resource?resource=index/cafelogo.png" alt="카페 로고" style="border: 1px solid #000; border-radius: 5px;">
 						<h4>카페 정보</h4>								
 						<ul>
 							<li>└ 매니저 : ${manager}</li>
@@ -467,9 +469,9 @@ footer {
 				<div class="content">
 					<div class="index-content">
 						<a href="https://www.16personalities.com/ko" target="_blank" >
-							<img src="display?filesName=${cafeindex00}" alt="MBTI 테스트" style="width: 100%; height: 150px;">
+							<img src="resource?resource=index/mbtitest.png" alt="MBTI 테스트" style="width: 100%; height: 150px;">
 						</a>
-						<img src="display?filesName=${cafeindex01}" alt="MBTI 궁합표">
+						<img src="resource?resource=index/mbticompat.png" alt="MBTI 궁합표">
 					</div>
 				</div>
 			</div>

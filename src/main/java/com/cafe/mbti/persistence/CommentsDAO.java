@@ -3,14 +3,17 @@ package com.cafe.mbti.persistence;
 import java.util.List;
 
 import com.cafe.mbti.domain.CommentsVO;
+import com.cafe.mbti.util.CommentsPageCriteria;
 
 public interface CommentsDAO {
 	// 댓글 등록
 	int insert(CommentsVO vo);
 	// 댓글 정렬 후 출력
-	List<CommentsVO> selectAll(int boardNumber);
+	List<CommentsVO> selectAll(CommentsPageCriteria commentsPageCriteria);
+	// 해당 게시글 댓글 카운트
+	int selectCountOnBoard(int boardNumber);
 	// 댓글 등록/삭제 후 카운트
-	int selectCommentsCount(int boardNumber);
+	int selectBoardComments(int boardNumber);
 	// 댓글 수정
 	int update(String commentsContent, int commentsNumber);
 	// 댓글 삭제

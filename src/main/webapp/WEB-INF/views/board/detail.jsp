@@ -20,7 +20,7 @@ body {
 	padding: 20px;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
-	height: 100%;
+	max-height: 97%;
 	overflow-y: auto;
 }
 
@@ -143,6 +143,21 @@ body {
 	flex: 1;
 	margin: 5px 10px;
 }
+/* 댓글, 답글 페이징 처리 */
+.comments-page ul {
+	list-style-type: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.comments-page .commentsGET-page {
+	margin: 5px;
+}
+
+.comments-page .commentsGET-page:hover {
+}
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
@@ -157,8 +172,8 @@ body {
 		commentsGET();
 		/******************************************************댓글 관련 기능*****************************************************************/
 		// 댓글 불러오기
-		function commentsGET() {			
-			$('#commentsContent').val('');		
+		function commentsGET() {
+			$('#commentsContent').val('');
 			$.ajax({
 				url: '/mbti/comments/list/'+boardNumber,
 				type: 'GET',
@@ -184,7 +199,7 @@ body {
 							var comments = '<div class="comments">'+ // div .comments
 											'<div class="writer-wrapper">'+ // div .writer-wrapper
 											'<div class="writer-picture">'+ // div .writer-picture
-											'<img src="/mbti/member/display?memberPicture='+this.memberPicture+'">'+
+											'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
 											'</div>'+ // \div .writer-picture
 											'<div class="writer-area">'+ // div .writer-area
 											'<div class="writer-info">'+ // div .writer-info
@@ -217,9 +232,152 @@ body {
 					$('.writer-wrapper button').css('border, background-color, font-weight, padding, cursor', 'none, #fff, bold, 0, pointer');
 					$('.writer-wrapper .comments-info span').css('color, font-size', '#979797, 12px');
 					$('.comments').css('margin-bottom', '10px');
+					$.ajax({
+						url: '/mbti/comments/count/'+boardNumber,
+						type: 'GET',
+						success: function(commentsCountGETResult) {
+							if (commentsCountGETResult > 5) {
+								$('.comments-page ul').empty();
+								$.ajax({
+									url: '/mbti/comments/pagemaker/'+boardNumber,
+									type: 'GET',
+									data: {
+										page : 1
+									},
+									success: function(commentsPageMaker) {
+										$('.comments-page ul').append('<li><a href="#" class="commentsGET-start">처음</a></li>');
+										$('.commentsGET-start').data('page', 1);
+										if (commentsPageMaker.hasPrev) {
+											$('.comments-page ul').append('<li><a href="#" class="commentsGET-prev">이전</a></li>');
+											$('.commentsGET-prev').data('page', commentsPageMaker.endPageNo - 1);
+										}
+										for (var i = 1; i <= commentsPageMaker.endPageNo; i++) {
+											if (commentsPageMaker.commentsPageCriteria.page == i) {
+												$('.comments-page ul').append('<li><a href="#" class="commentsGET-page selected">'+i+'</a></li>');
+											} else {
+												$('.comments-page ul').append('<li><a href="#" class="commentsGET-page">'+i+'</a></li>');
+											}
+										}
+										if (commentsPageMaker.hasNext) {
+											$('.comments-page ul').append('<li><a href="#" class="commentsGET-next">다음</a></li>');
+											$('.commentsGET-next').data('page', commentsPageMaker.endPageNo + 1);
+										}
+										$('.comments-page ul').append('<li><a href="#" class="commentsGET-end">끝</a></li>');
+										$('.commentsGET-end').data('page', commentsPageMaker.totalLinkNo);
+									}
+								}); // end ajax()
+							}
+						} // end success()
+					}); // end ajax()
 				} // end success()
 			}); // end ajax()
 		} // end commentsGET()
+		// 댓글 페이지 이동
+		$('.comments-page').on('click', 'ul li a', function(e) {
+			e.preventDefault();
+			if ($(this).hasClass('commentsGET-page')) {
+				var page = parseInt($(this).text());
+			} else {
+				page = parseInt($(this).data('page'));
+			}
+			$.ajax({
+				url: '/mbti/comments/list/'+boardNumber+'/'+page,
+				type: 'GET',
+				success: function(commentsGETResult) {
+					$('.comments-list').empty();
+					if (commentsGETResult == 0) {
+						$('.comments-list').append('<hr><div style="text-align: center; font-weight: bold;">댓글이 없습니다.</div>');
+					} else {
+						$(commentsGETResult).each(function() {
+							var commentsRegdate = new Date(this.commentsRegdate);
+							commentsRegdate = commentsRegdate.getFullYear()+
+												'-'+(commentsRegdate.getMonth() + 1).toString().padStart(2, '0')+
+												'-'+commentsRegdate.getDate().toString().padStart(2, '0')+
+												' '+commentsRegdate.getHours().toString().padStart(2, '0')+
+												':'+commentsRegdate.getMinutes().toString().padStart(2, '0')+
+												':'+commentsRegdate.getSeconds().toString().padStart(2, '0');
+							// 해당 댓글 작성자만 수정/삭제 가능
+							if(memberNumber == this.memberNumber) {
+								var hidden = '';
+							} else {
+								hidden = 'hidden';								
+							};
+							var comments = '<div class="comments">'+ // div .comments
+											'<div class="writer-wrapper">'+ // div .writer-wrapper
+											'<div class="writer-picture">'+ // div .writer-picture
+											'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+											'</div>'+ // \div .writer-picture
+											'<div class="writer-area">'+ // div .writer-area
+											'<div class="writer-info">'+ // div .writer-info
+											'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
+											'</div>'+ // \div .writer-info
+											'<div class="comments-info">'+ // div .comments-info
+											'<span class="commentsRegdate">'+commentsRegdate+'</span>'+
+											'</div>'+ // \div .comments-info
+											'</div>'+ // \div .writer-area
+											'</div>'+ // \div .writer-wrapper
+											'<textarea rows="3" class="commentsContent" name="commentsContent" minlength="5" maxlength="2000" placeholder="댓글을 남겨보세요(5글자 이상)" readonly>'+this.commentsContent+'</textarea>'+
+											'<div class="comments-options">'+ // div .comments-options
+											'<div class="left-align">'+ // div .left-align
+											'<button type="button" class="replyGET" value="'+this.commentsNumber+'">답글</button>'+
+											'</div>'+ // \div .left-align
+											'<div class="right-align">'+ // div .right-align
+											'<button type="button" class="commentsPUT" value="'+this.commentsNumber+'" '+hidden+'>수정</button>'+
+											'&nbsp;'+
+											'<button type="button" class="commentsDELETE" value="'+this.commentsNumber+'" hidden>삭제</button>'+
+											'</div>'+ // \div .right-align
+											'</div>'+ // \div .comments-options
+											// 답글 목록
+											'<div class="reply-list">'+ // div .reply-list
+											'</div>'; // \div .reply-list
+											$('.comments-list').append(comments);
+						}); // end commentsPOSTResult.each(function() {})
+					} // end else()
+					// 추가되는 댓글 하위 요소 스타일
+					$('.writer-picture img').css('width, height, max-width, max-height, border-radius, margin-right', '34px, 34px, 100%, 100%, 30px, 10px');
+					$('.writer-wrapper button').css('border, background-color, font-weight, padding, cursor', 'none, #fff, bold, 0, pointer');
+					$('.writer-wrapper .comments-info span').css('color, font-size', '#979797, 12px');
+					$('.comments').css('margin-bottom', '10px');
+					$.ajax({
+						url: '/mbti/comments/count/'+boardNumber,
+						type: 'GET',
+						success: function(commentsCountGETResult) {
+							if (commentsCountGETResult > 5) {
+								$('.comments-page ul').empty();
+								$.ajax({
+									url: '/mbti/comments/pagemaker/'+boardNumber,
+									type: 'GET',
+									data: {
+										page : page
+									},
+									success: function(commentsPageMaker) {
+										$('.comments-page ul').append('<li><a href="#" class="commentsGET-start">처음</a></li>');
+										$('.commentsGET-start').data('page', 1);
+										if (commentsPageMaker.hasPrev) {
+											$('.comments-page ul').append('<li><a href="#" class="commentsGET-prev">이전</a></li>');
+											$('.commentsGET-prev').data('page', commentsPageMaker.endPageNo - 1);
+										}
+										for (var i = 1; i <= commentsPageMaker.endPageNo; i++) {
+											if (commentsPageMaker.commentsPageCriteria.page == i) {
+												$('.comments-page ul').append('<li><a href="#" class="commentsGET-page selected">'+i+'</a></li>');
+											} else {
+												$('.comments-page ul').append('<li><a href="#" class="commentsGET-page">'+i+'</a></li>');
+											}
+										}
+										if (commentsPageMaker.hasNext) {
+											$('.comments-page ul').append('<li><a href="#" class="commentsGET-next">다음</a></li>');
+											$('.commentsGET-next').data('page', commentsPageMaker.endPageNo + 1);
+										}
+										$('.comments-page ul').append('<li><a href="#" class="commentsGET-end">끝</a></li>');
+										$('.commentsGET-end').data('page', commentsPageMaker.totalLinkNo);
+									}
+								}); // end ajax()
+							}
+						} // end success()
+					}); // end ajax()
+				} // end success()
+			}); // end ajax()
+		})// end $('.comments-page').on('click', 'ul li a', function(e) {});
 		// 댓글 등록
 		$('.comments-options .commentsPOST').click(function(e) {
 			e.preventDefault();
@@ -252,7 +410,7 @@ body {
 			} else {
 				alert('5글자 이상 작성해주세요.');
 			}
-		}); // end $('.comments-options .commentsPOST').click()		
+		}); // end $('.comments-options .commentsPOST').click()
 		// 댓글 수정
 		$('.comments-list').on('click', '.comments-options .commentsPUT', function(e) {
 			e.preventDefault();
@@ -383,7 +541,7 @@ body {
 										'<div class="right-align">'+ // div .right-align
 										'<div class="writer-wrapper">'+ // div .writer-wrapper
 										'<div class="writer-picture">'+ // div .writer-picture
-										'<img src="/mbti/member/display?memberPicture='+this.memberPicture+'">'+
+										'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
 										'</div>'+ // \div .writer-picture
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
@@ -643,20 +801,20 @@ body {
 			<input type="text" id="boardName" value="${boardVO.boardName}" style="border: none;" onfocus="blur()" readonly>
 			<div class="writer-wrapper">
 				<div class="writer-picture">
-					<img src="/mbti/member/display?memberPicture=${boardVO.memberPicture }">
+					<img src="/mbti/member/resource?resource=member/${boardVO.memberPicture}">
 				</div>
 				<div class="writer-area">
 					<div class="writer-info">
-						<button id="memberNickname">${boardVO.memberNickname }</button>
+						<button id="memberNickname">${boardVO.memberNickname}</button>
 					</div>
 					<div class="board-info">
-						<fmt:formatDate value="${boardVO.boardRegdate }" pattern="yyyy-MM-dd HH:mm:ss" var="boardRegdate"/>
-						<span id="boardRegdate">${boardRegdate }</span>
-						<span id="boardViews">조회 ${boardVO.boardViews }</span>
+						<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd HH:mm:ss" var="boardRegdate"/>
+						<span id="boardRegdate">${boardRegdate}</span>
+						<span id="boardViews">조회 ${boardVO.boardViews}</span>
 					</div>
 				</div>
 			</div>
-			<textarea rows="20" cols="80" id="boardContent" name="boardContent" readonly>${boardVO.boardContent }</textarea>
+			<textarea rows="20" cols="80" id="boardContent" name="boardContent" readonly>${boardVO.boardContent}</textarea>
 			<div class="detail-options">
 				<button type="button" class="listGET">목록</button>
 				&nbsp;
@@ -666,16 +824,16 @@ body {
 			</div>		
 			<div class="detail-info">
 				<div>
-					댓글 <span id="boardComments">${boardVO.boardComments }</span>
+					댓글 <span id="boardComments">${boardVO.boardComments}</span>
 				</div>
 				&nbsp;&nbsp;
 				<div>
 					추천 
 					<c:if test="${boardVO.boardlikeNumber == 0}">
-						<span id="boardLikes" style="color: rgb(0, 0, 0)">${boardVO.boardLikes }</span>
+						<span id="boardLikes" style="color: rgb(0, 0, 0)">${boardVO.boardLikes}</span>
 					</c:if>
 					<c:if test="${boardVO.boardlikeNumber != 0}">
-						<span id="boardLikes" style="color: rgb(255, 0, 0)">${boardVO.boardLikes }</span>
+						<span id="boardLikes" style="color: rgb(255, 0, 0)">${boardVO.boardLikes}</span>
 					</c:if>
 					<button id="boardLikesToggle">&#x1F44D;</button>
 				</div>
@@ -686,7 +844,7 @@ body {
 					<div class="writer-wrapper">
 						<div class="writer-area">
 							<div class="writer-info">
-								<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>
+								<button id="memberNickname">${sessionScope.memberVO.memberNickname}</button>
 							</div>
 						</div>
 					</div>
@@ -700,6 +858,10 @@ body {
 					</div>
 				</div>
 				<div class="comments-list">
+				</div>
+				<div class="comments-page">
+					<ul>
+					</ul>
 				</div>
 			</div>
 		</form>

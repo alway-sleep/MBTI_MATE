@@ -109,28 +109,6 @@ body {
 .list-wrapper input[type=submit]:hover {
 	background-color: #00abff;
 }
-
-.list-wrapper .link_startPage,
-.list-wrapper .link_endPage,
-.list-wrapper .link_listPage,
-.list-wrapper .link_prevPage,
-.list-wrapper .link_nextPage {
-	background-color: #fff;
-	color: #000;
-	border: none;
-	border-radius: 3px;
-	padding: 2px 0;
-	margin: 0 4px;
-	font-weight: 700;
-}
-
-.list-wrapper .link_startPage:hover, 
-.list-wrapper .link_endPage:hover,
-.list-wrapper .link_listPage:hover,
-.list-wrapper .link_prevPage:hover,
-.list-wrapper .link_nextPage:hover {
-	background-color: lightgrey;
-}
 /* 검색창 스타일 */
 .list-wrapper .search-form {
 	display: flex;
@@ -218,7 +196,7 @@ body {
 		$('.list-page').on('click', 'ul li a', function(e) {
 			e.preventDefault();
 			// 처음 페이지 목록
-			if ($(this).hasClass("listGET-start")) {
+			if ($(this).hasClass('listGET-start')) {
 				$.ajax({
 					url: '/mbti/board/list',
 					type: 'GET',
@@ -236,7 +214,7 @@ body {
 				});
 			}
 			// 이전 페이지 목록
-			if ($(this).hasClass("listGET-prev")) {
+			if ($(this).hasClass('listGET-prev')) {
 				$.ajax({
 					url: '/mbti/board/list',
 					type: 'GET',
@@ -254,7 +232,7 @@ body {
 				});
 			}
 			// 현재 페이지
-			if ($(this).hasClass("listGET-page")) {
+			if ($(this).hasClass('listGET-page')) {
 				$.ajax({
 					url: '/mbti/board/list',
 					type: 'GET',
@@ -272,7 +250,8 @@ body {
 				});
 			}
 			// 다음 페이지 목록
-			if ($(this).hasClass("listGET-next")) {$.ajax({
+			if ($(this).hasClass('listGET-next')) {
+				$.ajax({				
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
@@ -289,7 +268,7 @@ body {
 				});
 			}
 			// 마지막 페이지 목록
-			if ($(this).hasClass("listGET-end")) {
+			if ($(this).hasClass('listGET-end')) {
 				$.ajax({
 					url: '/mbti/board/list',
 					type: 'GET',
@@ -399,7 +378,12 @@ body {
 				<li><a href="#" class="listGET-prev">이전</a></li>
 				</c:if>
 				<c:forEach var="num" begin="${pageMaker.startPageNo}" end="${pageMaker.endPageNo}">
-				<li><a href="#" class="listGET-page">${num}</a></li>
+				<c:if test="${pageMaker.criteria.page eq num}">
+					<li><a href="#" class="listGET-page selected">${num}</a></li>
+				</c:if>
+				<c:if test="${pageMaker.criteria.page ne num}">
+					<li><a href="#" class="listGET-page">${num}</a></li>
+				</c:if>
 				</c:forEach>
 				<c:if test="${pageMaker.hasNext}">
 				<li><a href="#"	class="listGET-next">다음</a></li>

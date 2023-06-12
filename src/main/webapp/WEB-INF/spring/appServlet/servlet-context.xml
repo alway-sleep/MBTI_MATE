@@ -23,14 +23,8 @@
 	
 	<!-- 문자열 리소스를 bean으로 추가 -->
 	<!-- String filesPath = new String("경로"); -->
-	<beans:bean id="indexPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\Users\goott\Desktop\SPRING_CODES\MBTI_CAFE\src\main\webapp\WEB-INF\views\"/>
-	</beans:bean>
-	<beans:bean id="picturePath" class="java.lang.String">
-		<beans:constructor-arg value="C:\Users\goott\Desktop\SPRING_CODES\MBTI_CAFE\src\main\webapp\WEB-INF\views\member\picture\"/>
-	</beans:bean>
-	<beans:bean id="filesPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\Users\goott\Desktop\SPRING_CODES\MBTI_CAFE\src\main\webapp\WEB-INF\views\board\files\"/>
+	<beans:bean id="resourcesPath" class="java.lang.String">
+		<beans:constructor-arg value="C:/Users/goott/Desktop/SPRING_CODES/MBTI_CAFE/src/main/webapp/resources/"/>
 	</beans:bean>
 	
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

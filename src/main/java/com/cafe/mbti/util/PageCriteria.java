@@ -12,6 +12,8 @@ public class PageCriteria {
 	public PageCriteria() {
 		this.page = 1;
 		this.numsPerPage = 5;
+		this.boardSection=0;
+		this.boardList=0;
 		this.keyword = "";
 	}
 	

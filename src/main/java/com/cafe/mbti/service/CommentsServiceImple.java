@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.cafe.mbti.domain.CommentsVO;
 import com.cafe.mbti.persistence.CommentsDAO;
+import com.cafe.mbti.util.CommentsPageCriteria;
 
 @Service
 public class CommentsServiceImple implements CommentsService {
@@ -24,15 +25,21 @@ public class CommentsServiceImple implements CommentsService {
 	}
 
 	@Override
-	public List<CommentsVO> readAll(int boardNumber) {
+	public List<CommentsVO> readAll(CommentsPageCriteria commentsPageCriteria) {
 		logger.info("readAll() 호출");
-		return commentDAO.selectAll(boardNumber);
+		return commentDAO.selectAll(commentsPageCriteria);
 	}
 	
 	@Override
-	public int readCommentsCount(int boardNumber) {
-		logger.info("readCommentsCount() 호출");
-		return commentDAO.selectCommentsCount(boardNumber);
+	public int readCountOnBoard(int boardNumber) {
+		logger.info("readCountOnBoard() 호출");
+		return commentDAO.selectCountOnBoard(boardNumber);
+	}
+	
+	@Override
+	public int readBoardComments(int boardNumber) {
+		logger.info("readBoardComments() 호출");
+		return commentDAO.selectBoardComments(boardNumber);
 	}
 
 	@Override

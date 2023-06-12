@@ -14,14 +14,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	<!-- 댓글 정렬 후 출력 -->
 	<select id="selectAll" resultType="CommentsVO">
-		SELECT C.*, M.${memberNickname}, M.${memberPicture}
-		FROM ${comments} C
-		LEFT OUTER JOIN ${member} M ON C.${memberNumber} = M.${memberNumber}
-		WHERE C.${boardNumber} = #{boardNumber}
-		ORDER BY C.${commentsNumber} ASC
+	SELECT C2.${commentsNumber}, C2.${boardNumber}, C2.${memberNumber}, C2.${commentsContent}, C2.${commentsRegdate}, C2.${memberNickname}, C2.${memberPicture}
+	FROM
+		(
+		SELECT ROWNUM AS RN, C1.*
+		FROM
+			(
+			SELECT C.*, M.${memberNickname}, M.${memberPicture}
+			FROM ${comments} C
+			LEFT OUTER JOIN ${member} M ON C.${memberNumber} = M.${memberNumber}
+			WHERE C.${boardNumber} = #{boardNumber}
+			ORDER BY C.${commentsNumber} ASC
+			) C1
+		) C2
+	WHERE C2.RN BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 해당 게시글 댓글 카운트 -->
+	<select id="selectCountOnBoard" resultType="Integer">
+		SELECT COUNT(${commentsNumber}) AS CNT
+		FROM ${comments}
+		WHERE ${boardNumber} = #{boardNumber}
 	</select>
 	<!-- 댓글 등록/삭제 후 카운트 -->
-	<select id="selectCommentsCount" resultType="Integer">
+	<select id="selectBoardComments" resultType="Integer">
 		SELECT ${boardComments}
 		FROM ${board}
 		WHERE ${boardNumber} = #{boardNumber}

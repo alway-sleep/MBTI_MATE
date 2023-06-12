@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cafe.mbti.domain.CommentsVO;
+import com.cafe.mbti.util.CommentsPageCriteria;
 
 // TODO @Repository @Component : 영속 계층(Persistence Layer)의 DB 관련 기능을 담당
 @Repository // 저장소
@@ -28,15 +29,21 @@ public class CommentsDAOImple implements CommentsDAO {
 	}
 
 	@Override
-	public List<CommentsVO> selectAll(int boardNumber) {
+	public List<CommentsVO> selectAll(CommentsPageCriteria commentsPageCriteria) {
 		logger.info("selectAll() 호출");
-		return sqlSession.selectList(NAMESPACE + ".selectAll", boardNumber);
+		return sqlSession.selectList(NAMESPACE + ".selectAll", commentsPageCriteria);
+	}
+	
+	@Override
+	public int selectCountOnBoard(int boardNumber) {
+		logger.info("selectCountOnBoard() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountOnBoard", boardNumber);
 	}
 
 	@Override
-	public int selectCommentsCount(int boardNumber) {
-		logger.info("selectCommentsCount() 호출");
-		return sqlSession.selectOne(NAMESPACE + ".selectCommentsCount", boardNumber);
+	public int selectBoardComments(int boardNumber) {
+		logger.info("selectBoardComments() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectBoardComments", boardNumber);
 	}
 	
 	@Override

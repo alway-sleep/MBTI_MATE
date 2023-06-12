@@ -32,8 +32,8 @@ public class IndexController {
 	@Autowired
 	private BoardService boardService;
 	
-	@Resource(name = "indexPath")
-	private String indexPath;
+	@Resource(name = "resourcesPath")
+	private String resourcesPath;
 	
 	@GetMapping
 	public String index(HttpServletRequest request, Model model) {
@@ -49,17 +49,18 @@ public class IndexController {
 		return "index";
 	}
 	
-	@GetMapping("/display")
-	private ResponseEntity<byte[]> display(String filesName) {		
+	@GetMapping("/resource")
+	private ResponseEntity<byte[]> resource(String resource) {		
 		ResponseEntity<byte[]> entity = null;
 		InputStream in = null;
 		
-		String filePath = indexPath + filesName;
+		String resourcePath = resourcesPath + resource;
+		logger.info("{}",resourcePath);
 		try {
-			in = new FileInputStream(filePath);
+			in = new FileInputStream(resourcePath);
 			
 			// 파일 확장자
-			String extension = filePath.substring(filePath.lastIndexOf(".") + 1);
+			String extension = resourcePath.substring(resourcePath.lastIndexOf(".") + 1);
 			
 			// 응답 헤더(response header)에 Content-Type 설정
 			HttpHeaders httpHeaders = new HttpHeaders();

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cafe.mbti.domain.CommentsVO;
 import com.cafe.mbti.service.CommentsService;
+import com.cafe.mbti.util.CommentsPageCriteria;
+import com.cafe.mbti.util.CommentsPageMaker;
 
 @RestController
 @RequestMapping(value="/comments")
@@ -40,14 +42,38 @@ public class CommentsRestController {
 	public ResponseEntity<List<CommentsVO>> commentsListGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		return new ResponseEntity<List<CommentsVO>>(commentsService.readAll(boardNumber), HttpStatus.OK);
+		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(1, boardNumber);
+		return new ResponseEntity<List<CommentsVO>>(commentsService.readAll(commentsPageCriteria), HttpStatus.OK);
 	} // end commentsGET()
 	
-	@GetMapping("/{boardNumber}") // SELECT
-	public ResponseEntity<Integer> commentsCountGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
+	@GetMapping("/list/{boardNumber}/{page}") // SELECT
+	public ResponseEntity<List<CommentsVO>> commentsListPageGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, @PathVariable("page") Integer page) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		return new ResponseEntity<Integer>(commentsService.readCommentsCount(boardNumber), HttpStatus.OK);
+		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(page, boardNumber);
+		return new ResponseEntity<List<CommentsVO>>(commentsService.readAll(commentsPageCriteria), HttpStatus.OK);
+	} // end commentsListPageGET()
+	
+	@GetMapping("/count/{boardNumber}") // SELECT
+	public ResponseEntity<Integer> commentsCountGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+
+		return new ResponseEntity<Integer>(commentsService.readCountOnBoard(boardNumber), HttpStatus.OK);
+	} // end commentsCountGET()
+	
+	@GetMapping("/pagemaker/{boardNumber}") // SELECT
+	public ResponseEntity<CommentsPageMaker> pageMakerGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, Integer page) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		
+		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(page, boardNumber);
+		return new ResponseEntity<CommentsPageMaker>(commentsPageMaker(commentsPageCriteria, commentsService.readCountOnBoard(boardNumber)), HttpStatus.OK);
+	} // end pageMakerGET()
+	
+	@GetMapping("/{boardNumber}") // SELECT
+	public ResponseEntity<Integer> boardCommentsGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		
+		return new ResponseEntity<Integer>(commentsService.readBoardComments(boardNumber), HttpStatus.OK);
 	} // end commentsGET()
 	
 	@PutMapping("/update/{commentsNumber}") // UPDATE
@@ -63,4 +89,19 @@ public class CommentsRestController {
 
 		return new ResponseEntity<Integer>(commentsService.delete(commentsNumber), HttpStatus.OK);
 	} // end commentsDELETE()
+	
+	private CommentsPageCriteria commentsPageCriteria(Integer page, int boardNumber) {
+		CommentsPageCriteria commentsPageCriteria = new CommentsPageCriteria();
+		commentsPageCriteria.setPage(page != null ? page : commentsPageCriteria.getPage());
+		commentsPageCriteria.setBoardNumber(boardNumber);
+		return commentsPageCriteria;
+	} // end pageCriteria()
+	
+	private CommentsPageMaker commentsPageMaker(CommentsPageCriteria commentsPageCriteria, int totalCount) {
+		CommentsPageMaker commentsPageMaker = new CommentsPageMaker();
+		commentsPageMaker.setCriteria(commentsPageCriteria);
+		commentsPageMaker.setTotalCount(totalCount);
+		commentsPageMaker.setPageData();
+		return commentsPageMaker;
+	} // end pageMaker()
 } // end CommentRestController

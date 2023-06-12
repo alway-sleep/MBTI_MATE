@@ -14,11 +14,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	<!-- 답글 정렬 후 출력 -->
 	<select id="selectAll" resultType="ReplyVO">
-		SELECT R.*, M.${memberNickname}, M.${memberPicture}
-		FROM ${reply} R
-		LEFT OUTER JOIN ${member} M ON R.${memberNumber} = M.${memberNumber}
-		WHERE R.${commentsNumber} = #{commentsNumber}
-		ORDER BY R.${replyNumber} ASC
+	SELECT R2.${replyNumber}, R2.${commentsNumber}, R2.${memberNumber}, R2.${replyContent}, R2.${replyRegdate}, R2.${memberNickname}, R2.${memberPicture}
+	FROM
+		(
+		SELECT ROWNUM AS RN, R1.*
+		FROM
+			(
+			SELECT R.*, M.${memberNickname}, M.${memberPicture}
+			FROM ${reply} R
+			LEFT OUTER JOIN ${member} M ON R.${memberNumber} = M.${memberNumber}
+			WHERE R.${commentsNumber} = #{commentsNumber}
+			ORDER BY R.${replyNumber} ASC
+			) R1
+		) R2
+	WHERE R2.RN BETWEEN 1 AND 5
 	</select>
 	<!-- 답글 등록/삭제 후 카운트 -->
 	<select id="selectReplyCount" resultType="Integer">

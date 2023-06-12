@@ -33,8 +33,8 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@Resource(name = "picturePath")
-	private String picturePath;
+	@Resource(name = "resourcesPath")
+	private String resourcesPath;
 
 	@GetMapping("/join")
 	public void joinGET(HttpServletRequest request) {
@@ -186,17 +186,18 @@ public class MemberController {
 		return "redirect:..";
 	}
 	
-	@GetMapping("/display")
-	private ResponseEntity<byte[]> display(String memberPicture) {		
+	@GetMapping("/resource")
+	private ResponseEntity<byte[]> resource(String resource) {		
 		ResponseEntity<byte[]> entity = null;
 		InputStream in = null;
 		
-		String filePath = picturePath + memberPicture;
+		String resourcePath = resourcesPath + resource;
+		logger.info("{}",resourcePath);
 		try {
-			in = new FileInputStream(filePath);
+			in = new FileInputStream(resourcePath);
 			
 			// 파일 확장자
-			String extension = filePath.substring(filePath.lastIndexOf(".") + 1);
+			String extension = resourcePath.substring(resourcePath.lastIndexOf(".") + 1);
 			
 			// 응답 헤더(response header)에 Content-Type 설정
 			HttpHeaders httpHeaders = new HttpHeaders();
