@@ -33,6 +33,10 @@ public interface MemberDAO {
 	int selectPwInt(String memberPw, int memberNumber);
 	// 카페 정보 : 매니저 닉네임
 	String selectNicknameByGrade(int memberGrade);
+	// 내가 쓴 게시글의 수
+	int selectByNumberOnBoard(int memberNumber);
+	// 내가 쓴 댓글의 수
+	int selectByNumberOnCmRp(int memberNumber);
 	// 전체 회원의 수
 	int selectMemberCount();
 	// 회원 등업

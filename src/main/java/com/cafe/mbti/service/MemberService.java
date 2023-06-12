@@ -33,6 +33,10 @@ public interface MemberService {
 	int readPwInt(String memberPw, int memberNumber);
 	// 카페 정보 : 매니저 닉네임
 	String readNicknameByGrade(int memberGrade);
+	// 내가 쓴 게시글의 수
+	int readByNumberOnBoard(int memberNumber);
+	// 내가 쓴 댓글의 수
+	int readByNumberOnCmRp(int memberNumber);
 	// 전체 회원의 수
 	int readMemberCount();
 	// 회원 등업

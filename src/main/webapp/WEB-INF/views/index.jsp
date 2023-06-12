@@ -70,6 +70,43 @@ ul li {
 	margin-bottom: 3px;
 }
 
+.member-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.member-info .member-profile {
+	display: flex;
+	justify-content: center;
+	align-self: center;
+	width: 85%;
+	margin-bottom: 3px;
+}
+
+.member-info .member-profile div {
+	align-self: center;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.member-info table {
+	border-collapse: collapse;
+	width: 65%;
+	background-color: #f0f8ff;
+	font-size: 13px;
+	align-self: center;
+}
+
+.member-info table tbody th:nth-child(1) {
+	width: 50%;
+	text-align: left;
+}
+
+.member-info table tbody th:nth-child(2) {
+	width: 50%;
+	text-align: right;
+}
+
 a {
 	text-decoration: none;
 	color: #333;
@@ -111,7 +148,7 @@ a:hover {
 .board-category,
 .summary-info {
 	background-color: #f0f8ff;
-	border: 1px solid #c0c0c0;
+	border: 1px solid #ccc;
 	border-radius: 10px;
 	padding: 10px;
 }
@@ -321,6 +358,14 @@ footer {
 				}
 			});
 		}); // end $('.left-container').on('click', 'ul li a', function(e) {})
+		// 내가 쓴 게시글 보기
+		$('.countByNumberOnBoard').click(function(e) {
+			e.preventDefault();
+		}); // end $('.countByNumberOnBoard').click(function(e) {})
+		// 내가 쓴 댓글 보기
+		$('.countByNumberOnCmRp').click(function(e) {
+			e.preventDefault();
+		}); // end $('.countByNumberOnCmRp').click(function(e) {})
 		// 로그인 모달
 		$('.loginGET').click(function(e) {
 			e.preventDefault();
@@ -336,7 +381,7 @@ footer {
 			<nav>
 				<div class="left-align">
 					<ul>
-						<li><a href="/mbti"><img src="resource?resource=index/cafelogo.png" alt="카페 로고" style="height: 34px; max-height: 100%; border: 1px solid #ccc; border-radius: 10px;"></a></li>
+						<li><a href="/mbti">카페 홈</a></li>
 					</ul>
 				</div>
 				<div class="right-align">
@@ -345,11 +390,9 @@ footer {
 							<li><a href="#" class="loginGET">로그인</a></li>
 						</c:if>
 						<c:if test="${not empty sessionScope.memberVO}">
-							<li><img src="resource?resource=member/${sessionScope.memberVO.memberPicture}" style="width: 34px; height: 34px; max-height: 100%; border-radius: 30px; margin-right: 10px;"></li>
-							<li style="color: #008800;">${sessionScope.memberVO.memberNickname}</li>
-							<li>&nbsp;|&nbsp;<a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}" >마이페이지</a>&nbsp;|&nbsp;</li>
-							<li><a href="/mbti/message/received" >쪽지</a></li>
-							<li>&nbsp;|&nbsp;<a href="/mbti/talk/channel" >채팅</a>&nbsp;|&nbsp;</li>
+							<li><a href="/mbti/member/mypage?memberNumber=${sessionScope.memberVO.memberNumber}" >마이페이지</a>&nbsp;|&nbsp;</li>
+							<li><a href="/mbti/message/received" >쪽지</a>&nbsp;|&nbsp;</li>
+							<li><a href="/mbti/talk/channel" >채팅</a>&nbsp;|&nbsp;</li>
 							<li><a href="/mbti/member/logout" >로그아웃</a></li>
 						</c:if>
 					</ul>
@@ -376,26 +419,53 @@ footer {
 					<c:if test="${not empty sessionScope.memberVO}">
 						<div class="member-info">
 							<h4>나의 활동</h4>
-							<ul>
-								<li class="memberNickname">└ 닉네임 : ${sessionScope.memberVO.memberNickname}</li>
-								<li class="memberMBTI">└ MBTI : ${sessionScope.memberVO.memberMBTI}</li>
-								<c:choose>
-									<c:when test="${sessionScope.memberVO.memberGrade eq 0}"><li class="memberGrade">└ 등급 : 씨앗</li></c:when>
-									<c:when test="${sessionScope.memberVO.memberGrade eq 1}"><li class="memberGrade">└ 등급 : 새싹</li></c:when>
-									<c:when test="${sessionScope.memberVO.memberGrade eq 2}"><li class="memberGrade">└ 등급 : 꽃</li></c:when>
-									<c:when test="${sessionScope.memberVO.memberGrade eq 3}"><li class="memberGrade">└ 등급 : 열매</li></c:when>
-									<c:when test="${sessionScope.memberVO.memberGrade eq 4}"><li class="memberGrade">└ 등급 : 스탭</li></c:when>
-									<c:when test="${sessionScope.memberVO.memberGrade eq 5}"><li class="memberGrade">└ 등급 : 매니저</li></c:when>
-								</c:choose>
-								<c:choose>
-									<c:when test="${sessionScope.memberVO.memberPremium eq 0}"><li class="memberPremium">└ 회원 : 일반</li></c:when>
-									<c:when test="${sessionScope.memberVO.memberPremium eq 1}"><li class="memberPremium">└ 회원 : 프리미엄</li></c:when>
-								</c:choose>
-								<fmt:formatDate value="${sessionScope.memberVO.memberRegdate}" pattern="yyyy-MM-dd" var="memberRegdate" />
-								<li class="memberRegdate">└ 가입일 : ${memberRegdate}</li>
-								<li>└ 내가 쓴 글 보기 </li>
-								<li>└ 내가 쓴 댓글 보기 </li>
-							</ul>
+							<div class="member-profile">
+								<img src="resource?resource=member/${sessionScope.memberVO.memberPicture}" style="width: 56px; height: 56px; max-height: 100%; border-radius: 30px; margin-right: 10px; align-self: flex-start;">
+								<fmt:formatDate value="${sessionScope.memberVO.memberRegdate}" pattern="yyyy-MM-dd" var="memberRegdate"/>
+								<div>
+									<span>${sessionScope.memberVO.memberNickname}</span>
+									<br>
+									<span style="color: #979797;">가입일 ${memberRegdate}</span>
+								</div>
+							</div>
+							<table>
+								<tbody>
+									<tr>
+										<th>MBTI</th>
+										<th>${sessionScope.memberVO.memberMBTI}</th>
+									</tr>
+									<tr>
+										<th>등급</th>
+										<th>
+											<c:choose>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 0}">씨앗</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 1}">새싹</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 2}">꽃</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 3}">열매</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 4}">스탭</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 5}">매니저</c:when>
+											</c:choose>
+										</th>
+									</tr>
+									<tr>
+										<th>회원</th>
+										<th>
+											<c:choose>
+												<c:when test="${sessionScope.memberVO.memberPremium eq 0}">일반</c:when>
+												<c:when test="${sessionScope.memberVO.memberPremium eq 1}">프리미엄</c:when>
+											</c:choose>
+										</th>
+									</tr>
+									<tr>
+										<th>내가 쓴 게시글</th>
+										<th><a href="#" class="countByNumberOnBoard">${countByNumberOnBoard}</a>개</th>
+									</tr>
+									<tr>
+										<th>내가 쓴 댓글</th>
+										<th><a href="#" class="countByNumberOnCmRp">${countByNumberOnCmRp}</a>개</th>
+									</tr>
+								</tbody>
+							</table>
 						</div>					
 					</c:if>
 				</div>

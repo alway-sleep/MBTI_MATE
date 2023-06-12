@@ -196,6 +196,18 @@ public class MemberDAOImple implements MemberDAO {
 		logger.info("selectNicknameByGrade() 호출");
 		return sqlSession.selectOne(NAMESPACE + ".selectNicknameByGrade", memberGrade);
 	}
+
+	@Override
+	public int selectByNumberOnBoard(int memberNumber) {
+		logger.info("selectByNumberOnBoard() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectByNumberOnBoard", memberNumber);
+	}
+
+	@Override
+	public int selectByNumberOnCmRp(int memberNumber) {
+		logger.info("selectByNumberOnCmRp() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectByNumberOnCmRp", memberNumber);
+	}
 	
 	@Override
 	public int selectMemberCount() {

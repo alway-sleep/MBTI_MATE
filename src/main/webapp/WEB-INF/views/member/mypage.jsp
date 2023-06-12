@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>마이페이지</title>
+<title>음티메이트 : 마이페이지</title>
 <style type="text/css">
 body {
 	font-family: Arial, sans-serif;

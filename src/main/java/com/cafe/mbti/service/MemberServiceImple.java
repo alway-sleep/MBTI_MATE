@@ -160,6 +160,18 @@ public class MemberServiceImple implements MemberService {
 		logger.info("readNicknameByGrade() 호출");
 		return memberDAO.selectNicknameByGrade(memberGrade);
 	}
+	
+	@Override
+	public int readByNumberOnBoard(int memberNumber) {
+		logger.info("readByNumberOnBoard() 호출");
+		return memberDAO.selectByNumberOnBoard(memberNumber);
+	}
+
+	@Override
+	public int readByNumberOnCmRp(int memberNumber) {
+		logger.info("readByNumberOnCmRp() 호출");
+		return memberDAO.selectByNumberOnCmRp(memberNumber);
+	}
 
 	@Override
 	public int readMemberCount() {

@@ -148,6 +148,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE ${memberGrade} = #{memberGrade}
 	</select>
 	
+	<!-- 내가 쓴 게시글의 수 -->
+	<select id="selectByNumberOnBoard" resultType="Integer">
+		SELECT COUNT(${boardNumber}) AS CNT
+		FROM ${board}
+		WHERE ${memberNumber} = #{memberNumber}
+	</select>
+	
+	<!-- 내가 쓴 댓글의 수 -->
+	<select id="selectByNumberOnCmRp" resultType="Integer">
+		SELECT
+			(
+			SELECT COUNT (${commentsNumber})
+			FROM ${comments}
+			WHERE ${memberNumber} = #{memberNumber}
+			)
+			+
+			(
+			SELECT COUNT (${replyNumber})
+			FROM ${reply}
+			WHERE ${memberNumber} = #{memberNumber}
+			) AS TOTAL
+		FROM DUAL
+	</select>
+	
 	<!-- 전체 회원의 수 -->
 	<select id="selectMemberCount" resultType="Integer">
 		SELECT COUNT(${memberNumber}) AS CNT
