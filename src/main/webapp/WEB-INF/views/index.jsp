@@ -70,16 +70,18 @@ ul li {
 	margin-bottom: 3px;
 }
 
+.cafe-info,
 .member-info {
 	display: flex;
 	flex-direction: column;
 }
 
+.cafe-info .cafe-logo,
 .member-info .member-profile {
 	display: flex;
 	justify-content: center;
 	align-self: center;
-	width: 85%;
+	width: 65%;
 	margin-bottom: 3px;
 }
 
@@ -89,6 +91,7 @@ ul li {
 	font-weight: bold;
 }
 
+.cafe-info table,
 .member-info table {
 	border-collapse: collapse;
 	width: 65%;
@@ -97,11 +100,13 @@ ul li {
 	align-self: center;
 }
 
+.cafe-info table tbody th:nth-child(1),
 .member-info table tbody th:nth-child(1) {
 	width: 50%;
 	text-align: left;
 }
 
+.cafe-info table tbody th:nth-child(2),
 .member-info table tbody th:nth-child(2) {
 	width: 50%;
 	text-align: right;
@@ -409,12 +414,22 @@ footer {
 			<div class="left-container">			
 				<div class="summary-info">
 					<div class="cafe-info">
-						<img src="resource?resource=index/cafelogo.png" alt="카페 로고" style="border: 1px solid #000; border-radius: 5px;">
-						<h4>카페 정보</h4>								
-						<ul>
-							<li>└ 매니저 : ${manager}</li>
-							<li>└ 회원 : ${memberTotalCount}명</li>
-						</ul>
+						<h4>카페 정보</h4>
+						<div class="cafe-logo">
+							<img src="resource?resource=index/cafelogo.png" alt="카페 로고" style="border: 1px solid #000; border-radius: 5px;">						
+						</div>
+						<table>
+							<tbody>
+								<tr>
+									<th>카페 매니저</th>
+									<th>${manager}</th>
+								</tr>
+								<tr>
+									<th>카페 회원</th>
+									<th>${memberTotalCount}명</th>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<c:if test="${not empty sessionScope.memberVO}">
 						<div class="member-info">
