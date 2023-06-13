@@ -3,7 +3,7 @@ package com.cafe.mbti.domain;
 import java.util.Date;
 
 public class CommentsVO {
-	private int commentsNumber, boardNumber, memberNumber;
+	private int commentsSeqNextVal, commentsNumber, boardNumber, memberNumber;
 	private String commentsContent;
 	private Date commentsRegdate;
 	// JOIN
@@ -76,6 +76,14 @@ public class CommentsVO {
 
 	public void setMemberPicture(String memberPicture) {
 		this.memberPicture = memberPicture;
+	}
+
+	public int getCommentsSeqNextVal() {
+		return commentsSeqNextVal;
+	}
+
+	public void setCommentsSeqNextVal(int commentsSeqNextVal) {
+		this.commentsSeqNextVal = commentsSeqNextVal;
 	}
 
 	@Override

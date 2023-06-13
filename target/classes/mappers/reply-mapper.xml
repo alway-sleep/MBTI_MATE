@@ -6,11 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace = "com.cafe.mbti.ReplyMapper">
 	<!-- 답글 등록 -->
 	<insert id="insert">
+		<selectKey keyProperty="replySeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT REPLY_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT
 		INTO ${reply}
-		(${commentsNumber}, ${memberNumber}, ${replyContent})
+		(${replyNumber}, ${commentsNumber}, ${memberNumber}, ${replyContent})
 		VALUES
-		(#{commentsNumber}, #{memberNumber}, #{replyContent})
+		(#{replySeqNextVal}, #{commentsNumber}, #{memberNumber}, #{replyContent})
 	</insert>
 	<!-- 답글 정렬 후 출력 -->
 	<select id="selectAll" resultType="ReplyVO">

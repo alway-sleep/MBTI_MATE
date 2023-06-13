@@ -1,6 +1,8 @@
 package com.cafe.mbti;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.annotation.Resource;
@@ -14,10 +16,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cafe.mbti.domain.MemberVO;
@@ -184,6 +189,50 @@ public class MemberController {
 			redirectAttributes.addFlashAttribute("message", "회원탈퇴에 실패했습니다.");
 		}
 		return "redirect:..";
+	}
+	
+	@GetMapping("/picture")
+	public void pictureGET(HttpServletRequest request) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+	}
+	
+	@Transactional(value = "transactionManager")
+	@PostMapping("/picture")
+	public String picturePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, MultipartFile file) throws IllegalStateException, IOException {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		System.out.println(file);
+		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
+		String resourcePath = resourcesPath + "member/";
+		
+		// 경로에 존재하는 이전 프로필 사진 삭제
+		File dir = new File(resourcePath);
+		if (dir.exists() && dir.isDirectory()) {
+			File[] files = dir.listFiles();
+			if (files != null) {
+				for (File fileToDelete : files) {
+					if (fileToDelete.getName().substring(0, fileToDelete.getName().lastIndexOf(".")).equals("picture"+memberVO.getMemberNumber())) {
+						FileSystemUtils.deleteRecursively(fileToDelete);
+					}
+				}
+			}
+		}
+		// 기본 프로필 설정
+		if (file == null) {
+			memberVO.setMemberPicture("picture.jpg");
+			memberService.updatePicture(memberVO);
+			redirectAttributes.addFlashAttribute("message", "기본 프로필로 설정했습니다.");
+			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");
+		// 프로필 사진 선택
+		} else {
+			String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+			memberVO.setMemberPicture("picture"+memberVO.getMemberNumber()+"."+extension);			
+			// 프로필 사진 저장
+			file.transferTo(new File(resourcePath+memberVO.getMemberPicture()));
+			memberService.updatePicture(memberVO);
+			redirectAttributes.addFlashAttribute("message", "프로필 사진을 변경했습니다.");
+			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");
+		}
+		return "redirect:/member/picture";
 	}
 	
 	@GetMapping("/resource")

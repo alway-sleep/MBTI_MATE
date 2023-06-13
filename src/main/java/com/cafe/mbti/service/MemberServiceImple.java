@@ -29,9 +29,9 @@ public class MemberServiceImple implements MemberService {
 	private ReplyDAO replyDAO;
 
 	@Override
-	public int create(MemberVO vo) {
+	public int create(MemberVO memberVO) {
 		logger.info("create() 호출");
-		return memberDAO.insert(vo);
+		return memberDAO.insert(memberVO);
 	}
 
 	@Override
@@ -203,17 +203,11 @@ public class MemberServiceImple implements MemberService {
 	}
 
 	@Override
-	public int updatePicture(int memberNumber) {
+	public int updatePicture(MemberVO memberVO) {
 		logger.info("updatePicture() 호출");
-		return memberDAO.updatePicture(memberNumber);
+		return memberDAO.updatePicture(memberVO);
 	}
-
-	@Override
-	public int updatePictureDefault(int memberNumber) {
-		logger.info("updatePictureDefault() 호출");
-		return memberDAO.updatePictureDefault(memberNumber);
-	}
-
+	
 	@Override
 	public int readNumberByNickname(String memberNickname) {
 		logger.info("readNumberByNickname() 호출");

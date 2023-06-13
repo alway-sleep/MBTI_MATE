@@ -6,11 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace = "com.cafe.mbti.CommentsMapper">
 	<!-- 댓글 등록 -->
 	<insert id="insert">
+		<selectKey keyProperty="commentsSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT COMMENTS_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT
 		INTO ${comments}
-		(${boardNumber}, ${memberNumber}, ${commentsContent})
+		(${commentsNumber}, ${boardNumber}, ${memberNumber}, ${commentsContent})
 		VALUES
-		(#{boardNumber}, #{memberNumber}, #{commentsContent})
+		(#{commentsSeqNextVal}, #{boardNumber}, #{memberNumber}, #{commentsContent})
 	</insert>
 	<!-- 댓글 정렬 후 출력 -->
 	<select id="selectAll" resultType="CommentsVO">

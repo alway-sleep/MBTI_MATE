@@ -3,7 +3,7 @@ package com.cafe.mbti.domain;
 import java.util.Date;
 
 public class FilesVO {
-	private int filesNumber, boardNumber;
+	private int filesSeqNextVal, filesNumber, boardNumber;
 	private String filesName;
 	private Date filesRegdate;
 	
@@ -46,6 +46,14 @@ public class FilesVO {
 
 	public void setFilesRegdate(Date filesRegdate) {
 		this.filesRegdate = filesRegdate;
+	}
+	
+	public int getFilesSeqNextVal() {
+		return filesSeqNextVal;
+	}
+
+	public void setFilesSeqNextVal(int filesSeqNextVal) {
+		this.filesSeqNextVal = filesSeqNextVal;
 	}
 
 	@Override

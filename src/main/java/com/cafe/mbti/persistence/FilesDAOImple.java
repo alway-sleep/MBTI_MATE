@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.cafe.mbti.domain.FilesVO;
+
 // TODO @Repository @Component : 영속 계층(Persistence Layer)의 DB 관련 기능을 담당
 @Repository // 저장소
 public class FilesDAOImple implements FilesDAO {
@@ -16,6 +18,12 @@ public class FilesDAOImple implements FilesDAO {
 	@Autowired
 	private SqlSession sqlSession;
 
+	@Override
+	public int insert(FilesVO filesVO) {
+		logger.info("insert() 호출");
+		return sqlSession.insert(NAMESPACE + ".insert", filesVO);
+	}
+	
 	@Override
 	public int deleteOnBoard(int boardNumber) {
 		logger.info("deleteOnBoard() 호출");

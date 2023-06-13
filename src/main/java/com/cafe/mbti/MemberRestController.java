@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -116,16 +114,4 @@ public class MemberRestController {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
 		return new ResponseEntity<String>(memberService.readPwStr(memberNumber), HttpStatus.OK);
 	}
-	
-	@PutMapping("/picture/{memberNumber}") // PUT : 프로필 사진 변경
-	public ResponseEntity<Integer> updatePicture(HttpServletRequest request, @PathVariable("memberNumber") int memberNumber) {
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		return new ResponseEntity<Integer>(memberService.updatePicture(memberNumber), HttpStatus.OK);
-	} // end updatePicture()
-	
-	@PutMapping("/picturedefault/{memberNumber}") // PUT : 프로필 사진 초기화
-	public ResponseEntity<Integer> updatePictureDefault(HttpServletRequest request, @PathVariable("memberNumber") int memberNumber) {
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		return new ResponseEntity<Integer>(memberService.updatePictureDefault(memberNumber), HttpStatus.OK);
-	} // end updatePictureDefault()
 } // end MemberController

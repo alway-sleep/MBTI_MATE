@@ -1,23 +1,22 @@
 package com.cafe.mbti.domain;
 
-import java.util.Arrays;
 import java.util.Date;
 
 public class BoardVO {
-	private int boardNumber, memberNumber, boardSection, boardList, boardType;
+	private int boardSeqNextVal, boardNumber, memberNumber, boardSection, boardList, boardType;
 	private String boardName, boardTitle, boardContent;
 	private int boardViews, boardLikes, boardComments;
 	private Date boardRegdate;
 	// JOIN
 	private String memberNickname, memberPicture;
 	private int boardlikeNumber;
-	private String[] filesName;
+	private String filesName;
 
 	public BoardVO() {}
 
 	public BoardVO(int boardNumber, int memberNumber, int boardSection, int boardList, int boardType, String boardName,
 			String boardTitle, String boardContent, int boardViews, int boardLikes, int boardComments,
-			Date boardRegdate, String memberNickname, String memberPicture, int boardlikeNumber, String[] filesName) {
+			Date boardRegdate, String memberNickname, String memberPicture, int boardlikeNumber, String filesName) {
 		this.boardNumber = boardNumber;
 		this.memberNumber = memberNumber;
 		this.boardSection = boardSection;
@@ -155,12 +154,20 @@ public class BoardVO {
 		this.boardlikeNumber = boardlikeNumber;
 	}
 
-	public String[] getFilesName() {
+	public String getFilesName() {
 		return filesName;
 	}
 
-	public void setFilesName(String[] filesName) {
+	public void setFilesName(String filesName) {
 		this.filesName = filesName;
+	}
+
+	public int getBoardSeqNextVal() {
+		return boardSeqNextVal;
+	}
+
+	public void setBoardSeqNextVal(int boardSeqNextVal) {
+		this.boardSeqNextVal = boardSeqNextVal;
 	}
 
 	@Override
@@ -170,6 +177,6 @@ public class BoardVO {
 				+ ", boardTitle=" + boardTitle + ", boardContent=" + boardContent + ", boardViews=" + boardViews
 				+ ", boardLikes=" + boardLikes + ", boardComments=" + boardComments + ", boardRegdate=" + boardRegdate
 				+ ", memberNickname=" + memberNickname + ", memberPicture=" + memberPicture + ", boardlikeNumber="
-				+ boardlikeNumber + ", filesName=" + Arrays.toString(filesName) + "]";
+				+ boardlikeNumber + ", filesName=" + filesName + "]";
 	}
 }

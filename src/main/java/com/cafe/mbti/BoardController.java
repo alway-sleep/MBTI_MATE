@@ -1,17 +1,26 @@
 package com.cafe.mbti;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cafe.mbti.domain.BoardVO;
@@ -28,6 +37,9 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
+	
+	@Resource(name = "resourcesPath")
+	private String resourcesPath;
 	
 	@GetMapping("/list")
 	public void listGET(HttpServletRequest request, Model model, Integer page, Integer numsPerPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword) {
@@ -109,14 +121,33 @@ public class BoardController {
 	} // end writeGET()
 	
 	@PostMapping("/write")
-	public String writePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, BoardVO boardVO) {
+	public String writePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, BoardVO boardVO, MultipartFile[] files) throws IOException {
 		Target target = (Target) request.getSession().getAttribute("target");
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
 		
+		if (files.length != 0) {
+			String filesName = "";
+			String resourcePath = resourcesPath + "board/";
+			Date date = new Date();
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS");
+			String dirPath = resourcePath + simpleDateFormat.format(date) + "/";
+			File dir = new File(dirPath);
+			
+			if (!dir.exists()) {
+				dir.mkdir();
+				for (MultipartFile file : files) {
+					filesName = (filesName == "") ? file.getOriginalFilename() : filesName+"|"+file.getOriginalFilename();
+					file.transferTo(new File(dirPath + file.getOriginalFilename()));
+				}
+				boardVO.setFilesName(filesName);
+			}
+		} else {
+			boardVO.setFilesName("|");
+		}
 		boardVO.setMemberNumber(memberVO.getMemberNumber());
 		boardVO.setBoardSection(target.getBoardSection());
-		boardVO.setBoardList(target.getBoardList());
+		boardVO.setBoardList(target.getBoardList());		
 		if (boardService.create(boardVO) == 1) {
 			redirectAttributes.addFlashAttribute("message", "게시글이 등록되었습니다.");
 		} else {

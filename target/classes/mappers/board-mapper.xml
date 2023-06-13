@@ -11,16 +11,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- id : dao.class의 sqlSession 특정 함수와 연결하기 위해 사용 -->
 	<!-- ${key} : mybatis-config.xml의 property.name의 value(DB테이블의 컬럼) -->
 	<!-- #{key} : dao.class의 sqlSession의 request.Parameter("name")의 value(입력받은 데이터) -->	
-	
 	<!-- 게시글 작성 -->
 	<insert id="insert">
-		INSERT
+		<selectKey keyProperty="boardSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT BOARD_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		<!-- <selectKey keyProperty="filesSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT FILES_SEQ.NEXTVAL FROM DUAL
+		</selectKey> -->
+		INSERT ALL
 		INTO ${board}
-		(${memberNumber}, ${boardSection}, ${boardList}, ${boardName}, ${boardTitle}, ${boardContent})
+		(${boardNumber}, ${memberNumber}, ${boardSection}, ${boardList}, ${boardName}, ${boardTitle}, ${boardContent})
 		VALUES
-		(#{memberNumber}, #{boardSection}, #{boardList}, #{boardName}, #{boardTitle}, #{boardContent})
+		(#{boardSeqNextVal}, #{memberNumber}, #{boardSection}, #{boardList}, #{boardName}, #{boardTitle}, #{boardContent})
+		INTO ${files}
+		(${boardNumber}, ${filesName})
+		VALUES
+		(#{boardSeqNextVal}, #{filesName})
+		SELECT * FROM DUAL
 	</insert>
-	
 	<!-- 전체 게시글의 수 -->
 	<select id="selectCountOnBoard" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT

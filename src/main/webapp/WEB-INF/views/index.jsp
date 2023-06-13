@@ -85,7 +85,7 @@ ul li {
 	margin-bottom: 3px;
 }
 
-.member-info .member-profile div {
+.member-info .member-profile .member-nickname {
 	align-self: center;
 	font-size: 13px;
 	font-weight: bold;
@@ -110,6 +110,22 @@ ul li {
 .member-info table tbody th:nth-child(2) {
 	width: 50%;
 	text-align: right;
+}
+
+.member-info .member-picture {
+	position: relative;
+}
+
+.member-info .member-picture-set {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	z-index: 1;
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 a {
@@ -363,6 +379,14 @@ footer {
 				}
 			});
 		}); // end $('.left-container').on('click', 'ul li a', function(e) {})
+		// 프로필 사진 변경
+		$('.member-picture-set').click(function(e) {
+			var popup = window.open("/mbti/member/picture", "음티메이트 : 프로필 사진", "width=450, height=540");
+			
+			$(popup).on('beforeunload', function(e) {
+				location.reload();
+			}); // end $(popup).on('beforeunload', function(e) {})
+		}); // end $('.member-picture-set').click(function(e) {})
 		// 내가 쓴 게시글 보기
 		$('.countByNumberOnBoard').click(function(e) {
 			e.preventDefault();
@@ -435,9 +459,12 @@ footer {
 						<div class="member-info">
 							<h4>나의 활동</h4>
 							<div class="member-profile">
-								<img src="resource?resource=member/${sessionScope.memberVO.memberPicture}" style="width: 56px; height: 56px; max-height: 100%; border-radius: 30px; margin-right: 10px; align-self: flex-start;">
+								<div class="member-picture">
+									<img src="resource?resource=member/${sessionScope.memberVO.memberPicture}" style="width: 56px; height: 56px; max-height: 100%; border-radius: 30px; margin-right: 10px; align-self: flex-start;">
+									<span class="member-picture-set">&#x2699;</span>
+								</div>
 								<fmt:formatDate value="${sessionScope.memberVO.memberRegdate}" pattern="yyyy-MM-dd" var="memberRegdate"/>
-								<div>
+								<div class="member-nickname member-regdate">
 									<span>${sessionScope.memberVO.memberNickname}</span>
 									<br>
 									<span style="color: #979797;">가입일 ${memberRegdate}</span>
@@ -447,11 +474,11 @@ footer {
 								<tbody>
 									<tr>
 										<th>MBTI</th>
-										<th>${sessionScope.memberVO.memberMBTI}</th>
+										<th class="member-MBTI">${sessionScope.memberVO.memberMBTI}</th>
 									</tr>
 									<tr>
 										<th>등급</th>
-										<th>
+										<th class="member-grade">
 											<c:choose>
 												<c:when test="${sessionScope.memberVO.memberGrade eq 0}">씨앗</c:when>
 												<c:when test="${sessionScope.memberVO.memberGrade eq 1}">새싹</c:when>
@@ -464,7 +491,7 @@ footer {
 									</tr>
 									<tr>
 										<th>회원</th>
-										<th>
+										<th class="member-premium">
 											<c:choose>
 												<c:when test="${sessionScope.memberVO.memberPremium eq 0}">일반</c:when>
 												<c:when test="${sessionScope.memberVO.memberPremium eq 1}">프리미엄</c:when>

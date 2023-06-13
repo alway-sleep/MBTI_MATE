@@ -6,11 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace = "com.cafe.mbti.MemberMapper">
 	<!-- 회원가입 -->
 	<insert id="insert">
+		<selectKey keyProperty="memberSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT
 		INTO ${member}
-		(${memberId}, ${memberPw}, ${memberNickname}, ${memberName}, ${memberRRN}, ${memberPhone}, ${memberEmail}, ${memberRegion}, ${memberMBTI})
+		(${memberNumber}, ${memberId}, ${memberPw}, ${memberNickname}, ${memberName}, ${memberRRN}, ${memberPhone}, ${memberEmail}, ${memberRegion}, ${memberMBTI})
 		VALUES
-		(#{memberId}, #{memberPw}, #{memberNickname}, #{memberName}, #{memberRRN}, #{memberPhone}, #{memberEmail}, #{memberRegion}, #{memberMBTI})
+		(#{memberSeqNextVal}, #{memberId}, #{memberPw}, #{memberNickname}, #{memberName}, #{memberRRN}, #{memberPhone}, #{memberEmail}, #{memberRegion}, #{memberMBTI})
 	</insert>
 	
 	<!-- 회원가입 유효성 검사(isUnique) -->
@@ -202,14 +205,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 회원사진 -->
 	<update id="updatePicture">
-		<bind name="pictureMemberNumber" value="concat('picture', #{memberNumber})"/>
 		UPDATE ${member} 
-		SET ${memberPicture} = #{pictureMemberNumber} 
-		WHERE ${memberNumber} = #{memberNumber}
-	</update>
-	<update id="updatePictureDefault">
-		UPDATE ${member} 
-		SET ${memberPicture} = null 
+		SET ${memberPicture} = #{memberPicture}
 		WHERE ${memberNumber} = #{memberNumber}
 	</update>
 	

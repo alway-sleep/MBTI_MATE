@@ -4,7 +4,7 @@ import com.cafe.mbti.domain.MemberVO;
 
 public interface MemberDAO {
 	// 회원가입
-	int insert(MemberVO vo);
+	int insert(MemberVO memberVO);
 	// 회원가입 유효성검사
 	int isDuplicatedId(String memberId);
 	int isDuplicatedNickname(String memberNickname);
@@ -46,8 +46,7 @@ public interface MemberDAO {
 	// 회원탈퇴
 	int delete(int memberNumber);
 	// 회원사진
-	int updatePicture(int memberNumber);
-	int updatePictureDefault(int memberNumber);
+	int updatePicture(MemberVO memberVO);
 	//	
 	int selectNumberByNickname(String memberNickname);
 	int selectNumberById(String memberId);

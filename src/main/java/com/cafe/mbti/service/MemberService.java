@@ -46,8 +46,7 @@ public interface MemberService {
 	// 회원탈퇴
 	int delete(int memberNumber) throws Exception;
 	// 회원사진
-	int updatePicture(int memberNumber);
-	int updatePictureDefault(int memberNumber);
+	int updatePicture(MemberVO memberVO);
 	//	
 	int readNumberByNickname(String memberNickname);
 	int readNumberById(String memberId);

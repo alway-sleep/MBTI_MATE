@@ -5,6 +5,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace = "com.cafe.mbti.FilesMapper">
 	<!-- 게시글 삭제 시 게시글 번호 초기화 -->
+	<insert id="insert">
+		INSERT
+		INTO ${files}
+		(${boardNumber}, ${filesName})
+		VALUES
+		(#{boardNumber}, #{filesName})
+	</insert>
 	<delete id="deleteOnBoard">
 		DELETE
 		FROM ${files}

@@ -37,10 +37,13 @@ public class BoardServiceImple implements BoardService {
 	@Autowired
 	private FilesDAO filesDAO;
 
+	@Transactional(value = "transactionManager")
 	@Override
 	public int create(BoardVO boardVO) {
 		logger.info("create() 호출");
-		return boardDAO.insert(boardVO);
+		System.out.println(boardVO.getFilesName().toString());
+		boardDAO.insert(boardVO);
+		return 1;
 	}
 
 	@Override

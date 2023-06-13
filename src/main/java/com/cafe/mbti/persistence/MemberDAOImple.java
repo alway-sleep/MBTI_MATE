@@ -22,9 +22,9 @@ public class MemberDAOImple implements MemberDAO {
 	private SqlSession sqlSession;
 
 	@Override
-	public int insert(MemberVO vo) {
+	public int insert(MemberVO memberVO) {
 		logger.info("insert() 호출");
-		return sqlSession.insert(NAMESPACE + ".insert", vo);
+		return sqlSession.insert(NAMESPACE + ".insert", memberVO);
 	}
 
 	@Override
@@ -234,15 +234,9 @@ public class MemberDAOImple implements MemberDAO {
 	}
 	
 	@Override
-	public int updatePicture(int memberNumber) {
+	public int updatePicture(MemberVO memberVO) {
 		logger.info("updatePicture() 호출");
-		return sqlSession.update(NAMESPACE + ".updatePicture", memberNumber);
-	}
-	
-	@Override
-	public int updatePictureDefault(int memberNumber) {
-		logger.info("updatePictureDefault() 호출");
-		return sqlSession.update(NAMESPACE + ".updatePictureDefault", memberNumber);
+		return sqlSession.update(NAMESPACE + ".updatePicture", memberVO);
 	}
 	
 	@Override

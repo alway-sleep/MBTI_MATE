@@ -6,11 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace = "com.cafe.mbti.MessageMapper">
 	<!-- 쪽지 작성 -->
 	<insert id="insert">
+		<selectKey keyProperty="messageSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT MESSAGE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT 
 		INTO ${message}
-		(${messageSender}, ${messageRecipient}, ${messageTitle}, ${messageContent}) 
+		(${messageNumber}, ${messageSender}, ${messageRecipient}, ${messageTitle}, ${messageContent}) 
 		VALUES 
-		(#{memberNumber}, #{memberId}, #{messageTitle}, #{messageContent})
+		(#{messageSeqNextVal}, #{memberNumber}, #{memberId}, #{messageTitle}, #{messageContent})
 	</insert>
 	<!-- 받은 쪽지함 -->
 	<select id="selectAllByRecipient" resultType="MessageVO">

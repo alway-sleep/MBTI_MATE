@@ -14,11 +14,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 게시글 추천 등록 -->
 	<insert id="insert">
+		<selectKey keyProperty="boardlikeSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT BOARDLIKE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT
 		INTO ${boardlike}
-		(${boardNumber}, ${memberNumber})
+		(${boardlikeNumber}, ${boardNumber}, ${memberNumber})
 		VALUES
-		(#{boardNumber}, #{memberNumber})
+		(#{boardlikeSeqNextVal}, #{boardNumber}, #{memberNumber})
 	</insert>
 	
 	<!-- 게시글 추천 등록/취소 후 카운트 -->

@@ -1,7 +1,7 @@
 package com.cafe.mbti.domain;
 
 public class BoardlikeVO {
-	private int boardlikeNumber, boardNumber, memberNumber;
+	private int boardlikeSeqNextVal, boardlikeNumber, boardNumber, memberNumber;
 
 	public BoardlikeVO() {}
 
@@ -33,6 +33,14 @@ public class BoardlikeVO {
 
 	public void setMemberNumber(int memberNumber) {
 		this.memberNumber = memberNumber;
+	}
+
+	public int getBoardlikeSeqNextVal() {
+		return boardlikeSeqNextVal;
+	}
+
+	public void setBoardlikeSeqNextVal(int boardlikeSeqNextVal) {
+		this.boardlikeSeqNextVal = boardlikeSeqNextVal;
 	}
 
 	@Override

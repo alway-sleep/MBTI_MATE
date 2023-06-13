@@ -3,7 +3,7 @@ package com.cafe.mbti.domain;
 import java.util.Date;
 
 public class MemberVO {
-	private int memberNumber;
+	private int memberSeqNextVal, memberNumber;
 	private String memberId, memberPw, memberNickname, memberName, memberRRN, memberPhone, memberEmail, memberRegion, memberMBTI;
 	private int memberGrade, memberPremium, memberAge;
 	private String memberGender, memberPicture;
@@ -168,6 +168,14 @@ public class MemberVO {
 
 	public void setMemberUpdate(Date memberUpdate) {
 		this.memberUpdate = memberUpdate;
+	}
+
+	public int getMemberSeqNextVal() {
+		return memberSeqNextVal;
+	}
+
+	public void setMemberSeqNextVal(int memberSeqNextVal) {
+		this.memberSeqNextVal = memberSeqNextVal;
 	}
 
 	@Override
