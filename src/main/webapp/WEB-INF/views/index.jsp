@@ -430,7 +430,7 @@ footer {
 		</header>
 		<div class="banner">
 			<a href="/mbti" >
-				<img src="resource?resource=index/cafebanner.png" alt="카페 배너" style="max-height: 400px; width: 100%; border-radius: 5px;">
+				<img src="/mbti/resources/index?fileName=cafebanner.png" alt="카페 배너" style="max-height: 400px; width: 100%; border-radius: 5px;">
 			</a>
 		</div>
 			
@@ -440,7 +440,7 @@ footer {
 					<div class="cafe-info">
 						<h4>카페 정보</h4>
 						<div class="cafe-logo">
-							<img src="resource?resource=index/cafelogo.png" alt="카페 로고" style="border: 1px solid #000; border-radius: 5px;">						
+							<img src="/mbti/resources/index?fileName=cafelogo.png" alt="카페 로고" style="border: 1px solid #000; border-radius: 5px;">						
 						</div>
 						<table>
 							<tbody>
@@ -460,7 +460,7 @@ footer {
 							<h4>나의 활동</h4>
 							<div class="member-profile">
 								<div class="member-picture">
-									<img src="resource?resource=member/${sessionScope.memberVO.memberPicture}" style="width: 56px; height: 56px; max-height: 100%; border-radius: 30px; margin-right: 10px; align-self: flex-start;">
+									<img src="/mbti/resources/member?fileName=${sessionScope.memberVO.memberPicture}" style="width: 56px; height: 56px; max-height: 100%; border-radius: 30px; margin-right: 10px; align-self: flex-start;">
 									<span class="member-picture-set">&#x2699;</span>
 								</div>
 								<fmt:formatDate value="${sessionScope.memberVO.memberRegdate}" pattern="yyyy-MM-dd" var="memberRegdate"/>
@@ -581,9 +581,9 @@ footer {
 				<div class="content">
 					<div class="index-content">
 						<a href="https://www.16personalities.com/ko" target="_blank" >
-							<img src="resource?resource=index/mbtitest.png" alt="MBTI 테스트" style="width: 100%; height: 150px;">
+							<img src="/mbti/resources/index?fileName=mbtitest.png" alt="MBTI 테스트" style="width: 100%; height: 150px;">
 						</a>
-						<img src="resource?resource=index/mbticompat.png" alt="MBTI 궁합표">
+						<img src="/mbti/resources/index?fileName=mbticompat.png" alt="MBTI 궁합표">
 					</div>
 				</div>
 			</div>

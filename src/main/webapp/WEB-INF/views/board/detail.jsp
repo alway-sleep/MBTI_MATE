@@ -1303,6 +1303,8 @@ body {
 					</div>
 				</div>
 			</div>
+			<div class="files">
+			</div>
 			<textarea rows="20" cols="80" id="boardContent" name="boardContent" readonly>${boardVO.boardContent}</textarea>
 			<div class="detail-options">
 				<button type="button" class="listGET">목록</button>

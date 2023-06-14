@@ -1,5 +1,7 @@
 package com.cafe.mbti.util;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class Target {
 	private int boardPage, boardSection, boardList;
 	private String boardName;
@@ -21,6 +23,28 @@ public class Target {
 		this.boardName = boardName;
 		this.boardNumber = boardNumber;
 		this.searchOption = searchOption;
+	}
+	
+	public Target(HttpServletRequest request, Integer boardPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption) {
+		Target target = (Target) request.getSession().getAttribute("target");
+		if (target == null) {
+			request.getSession().setAttribute("target", new Target());
+			target = (Target) request.getSession().getAttribute("target");
+			target.setBoardPage(boardPage != null ? boardPage : target.getBoardPage());
+			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
+			target.setBoardList(boardList != null ? boardList : target.getBoardList());
+			target.setBoardName(boardName != null ? boardName : target.getBoardName());
+			target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
+			target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
+		} else {
+			target.setBoardPage(boardPage != null ? boardPage : target.getBoardPage());
+			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
+			target.setBoardList(boardList != null ? boardList : target.getBoardList());
+			target.setBoardName(boardName != null ? boardName : target.getBoardName());
+			target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
+			target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
+		}
+		target.toString();
 	}
 
 	public int getBoardPage() {

@@ -1,24 +1,14 @@
 package com.cafe.mbti;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.service.MemberService;
-import com.cafe.mbti.util.MediaUtil;
+import com.cafe.mbti.util.FileUtil;
 import com.cafe.mbti.util.Target;
 
 @Controller // @Component
@@ -38,9 +28,6 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@Resource(name = "resourcesPath")
-	private String resourcesPath;
-
 	@GetMapping("/join")
 	public void joinGET(HttpServletRequest request) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
@@ -196,71 +183,25 @@ public class MemberController {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 	}
 	
-	@Transactional(value = "transactionManager")
 	@PostMapping("/picture")
 	public String picturePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, MultipartFile file) throws IllegalStateException, IOException {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		System.out.println(file);
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
-		String resourcePath = resourcesPath + "member/";
+		FileUtil fileUtil = new FileUtil();
+		int memberNumber = memberVO.getMemberNumber();
 		
-		// 경로에 존재하는 이전 프로필 사진 삭제
-		File dir = new File(resourcePath);
-		if (dir.exists() && dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			if (files != null) {
-				for (File fileToDelete : files) {
-					if (fileToDelete.getName().substring(0, fileToDelete.getName().lastIndexOf(".")).equals("picture"+memberVO.getMemberNumber())) {
-						FileSystemUtils.deleteRecursively(fileToDelete);
-					}
-				}
-			}
-		}
-		// 기본 프로필 설정
-		if (file == null) {
+		fileUtil.deleteMemberPicture(memberNumber);
+		if (file == null) { // 기본 프로필 설정
 			memberVO.setMemberPicture("picture.jpg");
 			memberService.updatePicture(memberVO);
 			redirectAttributes.addFlashAttribute("message", "기본 프로필로 설정했습니다.");
-			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");
-		// 프로필 사진 선택
-		} else {
-			String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-			memberVO.setMemberPicture("picture"+memberVO.getMemberNumber()+"."+extension);			
-			// 프로필 사진 저장
-			file.transferTo(new File(resourcePath+memberVO.getMemberPicture()));
+			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");		
+		} else { // 프로필 사진 선택
+			memberVO.setMemberPicture(fileUtil.saveMemberPicture(file, memberNumber));
 			memberService.updatePicture(memberVO);
 			redirectAttributes.addFlashAttribute("message", "프로필 사진을 변경했습니다.");
 			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");
 		}
 		return "redirect:/member/picture";
-	}
-	
-	@GetMapping("/resource")
-	private ResponseEntity<byte[]> resource(String resource) {		
-		ResponseEntity<byte[]> entity = null;
-		InputStream in = null;
-		
-		String resourcePath = resourcesPath + resource;
-		logger.info("{}",resourcePath);
-		try {
-			in = new FileInputStream(resourcePath);
-			
-			// 파일 확장자
-			String extension = resourcePath.substring(resourcePath.lastIndexOf(".") + 1);
-			
-			// 응답 헤더(response header)에 Content-Type 설정
-			HttpHeaders httpHeaders = new HttpHeaders();
-			httpHeaders.setContentType(MediaUtil.getMediaType(extension));
-			
-			// 데이터 전송
-			entity = new ResponseEntity<byte[]>(
-					IOUtils.toByteArray(in), // 파일에서 읽은 데이터
-					httpHeaders, // 응답 헤더
-					HttpStatus.OK
-					);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return entity;
 	}
 } // end MemberController

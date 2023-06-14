@@ -1,9 +1,6 @@
 package com.cafe.mbti;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -24,6 +21,7 @@ import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.service.BoardService;
 import com.cafe.mbti.util.BoardPageCriteria;
+import com.cafe.mbti.util.FileUtil;
 import com.cafe.mbti.util.PageMaker;
 import com.cafe.mbti.util.Target;
 
@@ -41,7 +39,7 @@ public class BoardController {
 	@GetMapping("/list")
 	public void listGET(HttpServletRequest request, Model model, Integer boardPage, Integer boardNumsPerPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		Target target = target(request, boardNumsPerPage, boardSection, boardList, boardName, boardNumber, searchOption);
+		Target target = new Target(request, boardNumsPerPage, boardSection, boardList, boardName, boardNumber, searchOption);
 		BoardPageCriteria boardPageCriteria = boardPageCriteria(boardPage, boardNumsPerPage, target.getBoardSection(), target.getBoardList(), keyword);
 		List<BoardVO> boardVO = null;
 		// 전체 게시글
@@ -121,27 +119,10 @@ public class BoardController {
 	public String writePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, BoardVO boardVO, MultipartFile[] files) throws IOException {
 		Target target = (Target) request.getSession().getAttribute("target");
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
+		FileUtil fileUtil = new FileUtil();
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
 		
-		if (files.length != 0) {
-			String filesName = "";
-			String resourcePath = resourcesPath + "board/";
-			Date date = new Date();
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS");
-			String dirPath = resourcePath + simpleDateFormat.format(date) + "/";
-			File dir = new File(dirPath);
-			
-			if (!dir.exists()) {
-				dir.mkdir();
-				for (MultipartFile file : files) {
-					filesName = (filesName == "") ? file.getOriginalFilename() : filesName+"|"+file.getOriginalFilename();
-					file.transferTo(new File(dirPath + file.getOriginalFilename()));
-				}
-				boardVO.setFilesName(filesName);
-			}
-		} else {
-			boardVO.setFilesName("|");
-		}
+		boardVO.setFilesName(fileUtil.saveFilesName(files));
 		boardVO.setMemberNumber(memberVO.getMemberNumber());
 		boardVO.setBoardSection(target.getBoardSection());
 		boardVO.setBoardList(target.getBoardList());		
@@ -223,27 +204,4 @@ public class BoardController {
 		pageMaker.setBoardPageData();
 		return pageMaker;
 	} // end pageMaker()
-	
-	private Target target(HttpServletRequest request, Integer boardPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption) {
-		Target target = (Target) request.getSession().getAttribute("target");
-		if (target == null) {
-			request.getSession().setAttribute("target", new Target());
-			target = (Target) request.getSession().getAttribute("target");
-			target.setBoardPage(boardPage != null ? boardPage : target.getBoardPage());
-			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
-			target.setBoardList(boardList != null ? boardList : target.getBoardList());
-			target.setBoardName(boardName != null ? boardName : target.getBoardName());
-			target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
-			target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
-		} else {
-			target.setBoardPage(boardPage != null ? boardPage : target.getBoardPage());
-			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
-			target.setBoardList(boardList != null ? boardList : target.getBoardList());
-			target.setBoardName(boardName != null ? boardName : target.getBoardName());
-			target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
-			target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
-		}
-		logger.info(target.toString());
-		return target;
-	}
 } // end BoardController
