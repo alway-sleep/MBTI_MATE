@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cafe.mbti.domain.CommentsVO;
 import com.cafe.mbti.service.CommentsService;
-import com.cafe.mbti.util.CommentsPageCriteria;
-import com.cafe.mbti.util.CommentsPageMaker;
+import com.cafe.mbti.util.CmRpPageCriteria;
+import com.cafe.mbti.util.PageMaker;
 
 @RestController
 @RequestMapping(value="/comments")
@@ -38,12 +38,12 @@ public class CommentsRestController {
 		return new ResponseEntity<Integer>(commentsService.create(commentsVO), HttpStatus.OK);
 	} // end commentsPOST()
 	
-	@GetMapping("/list/{boardNumber}/{page}") // SELECT
-	public ResponseEntity<List<CommentsVO>> commentsListGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, @PathVariable("page") Integer page) {
+	@GetMapping("/list/{boardNumber}/{commentsPage}") // SELECT
+	public ResponseEntity<List<CommentsVO>> commentsListGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, @PathVariable("commentsPage") Integer commentsPage) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(page, boardNumber);
-		return new ResponseEntity<List<CommentsVO>>(commentsService.readAll(commentsPageCriteria), HttpStatus.OK);
+		CmRpPageCriteria cmRpPageCriteria = cmRpPageCriteria(commentsPage, boardNumber);
+		return new ResponseEntity<List<CommentsVO>>(commentsService.readAll(cmRpPageCriteria), HttpStatus.OK);
 	} // end commentsListGET()
 	
 	@GetMapping("/count/{boardNumber}") // SELECT
@@ -54,12 +54,12 @@ public class CommentsRestController {
 	} // end commentsCountGET()
 	
 	@GetMapping("/pagemaker/{boardNumber}") // SELECT
-	public ResponseEntity<CommentsPageMaker> commentsPageMakerGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, Integer page) {
+	public ResponseEntity<PageMaker> PageMakerGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber, Integer commentsPage) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		CommentsPageCriteria commentsPageCriteria = commentsPageCriteria(page, boardNumber);
-		return new ResponseEntity<CommentsPageMaker>(commentsPageMaker(commentsPageCriteria, commentsService.readCountOnBoard(boardNumber)), HttpStatus.OK);
-	} // end commentsPageMakerGET()
+		CmRpPageCriteria cmRpPageCriteria = cmRpPageCriteria(commentsPage, boardNumber);
+		return new ResponseEntity<PageMaker>(pageMaker(cmRpPageCriteria, commentsService.readCountOnBoard(boardNumber)), HttpStatus.OK);
+	} // end commentscommentsPageMakerGET()
 	
 	@GetMapping("/{boardNumber}") // SELECT
 	public ResponseEntity<Integer> boardCommentsGET(HttpServletRequest request, @PathVariable("boardNumber") int boardNumber) {
@@ -82,18 +82,18 @@ public class CommentsRestController {
 		return new ResponseEntity<Integer>(commentsService.delete(commentsNumber), HttpStatus.OK);
 	} // end commentsDELETE()
 	
-	private CommentsPageCriteria commentsPageCriteria(Integer page, int boardNumber) {
-		CommentsPageCriteria commentsPageCriteria = new CommentsPageCriteria();
-		commentsPageCriteria.setPage(page != null ? page : commentsPageCriteria.getPage());
+	private CmRpPageCriteria cmRpPageCriteria(Integer commentsPage, int boardNumber) {
+		CmRpPageCriteria commentsPageCriteria = new CmRpPageCriteria();
+		commentsPageCriteria.setCommentsPage(commentsPage != null ? commentsPage : commentsPageCriteria.getCommentsPage());
 		commentsPageCriteria.setBoardNumber(boardNumber);
 		return commentsPageCriteria;
-	} // end commentsPageCriteria()
+	} // end commentscommentsPageCriteria()
 	
-	private CommentsPageMaker commentsPageMaker(CommentsPageCriteria commentsPageCriteria, int totalCount) {
-		CommentsPageMaker commentsPageMaker = new CommentsPageMaker();
-		commentsPageMaker.setCriteria(commentsPageCriteria);
-		commentsPageMaker.setTotalCount(totalCount);
-		commentsPageMaker.setPageData();
-		return commentsPageMaker;
-	} // end commentsPageMaker()
+	private PageMaker pageMaker(CmRpPageCriteria cmRpPageCriteria, int commentsTotalCount) {
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCmRpPageCriteria(cmRpPageCriteria);
+		pageMaker.setCommentsTotalCount(commentsTotalCount);
+		pageMaker.setCommentsPageData();
+		return pageMaker;
+	} // end commentscommentsPageMaker()
 } // end CommentRestController

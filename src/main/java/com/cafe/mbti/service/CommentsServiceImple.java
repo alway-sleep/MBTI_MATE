@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.cafe.mbti.domain.CommentsVO;
 import com.cafe.mbti.persistence.CommentsDAO;
-import com.cafe.mbti.util.CommentsPageCriteria;
+import com.cafe.mbti.util.CmRpPageCriteria;
 
 @Service
 public class CommentsServiceImple implements CommentsService {
@@ -25,9 +25,9 @@ public class CommentsServiceImple implements CommentsService {
 	}
 
 	@Override
-	public List<CommentsVO> readAll(CommentsPageCriteria commentsPageCriteria) {
+	public List<CommentsVO> readAll(CmRpPageCriteria cmRpPageCriteria) {
 		logger.info("readAll() 호출");
-		return commentDAO.selectAll(commentsPageCriteria);
+		return commentDAO.selectAll(cmRpPageCriteria);
 	}
 	
 	@Override

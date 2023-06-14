@@ -14,7 +14,7 @@ import com.cafe.mbti.persistence.BoardlikeDAO;
 import com.cafe.mbti.persistence.CommentsDAO;
 import com.cafe.mbti.persistence.FilesDAO;
 import com.cafe.mbti.persistence.ReplyDAO;
-import com.cafe.mbti.util.PageCriteria;
+import com.cafe.mbti.util.BoardPageCriteria;
 
 @Service // @Component
 /*
@@ -53,81 +53,81 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Override
-	public int readCountOnBoard2(PageCriteria pageCriteria) {
+	public int readCountOnBoard2(BoardPageCriteria boardboardPageCriteria) {
 		logger.info("readCountOnBoard2() 호출");
-		return boardDAO.selectCountOnBoard2(pageCriteria);
+		return boardDAO.selectCountOnBoard2(boardboardPageCriteria);
 	}
 
 	@Override
-	public int readCountByBoardTitle(PageCriteria pageCriteria) {
+	public int readCountByBoardTitle(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByBoardTitle() 호출");
-		return boardDAO.selectCountByBoardTitle(pageCriteria);
+		return boardDAO.selectCountByBoardTitle(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByBoardContent(PageCriteria pageCriteria) {
+	public int readCountByBoardContent(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByBoardContent() 호출");
-		return boardDAO.selectCountByBoardContent(pageCriteria);
+		return boardDAO.selectCountByBoardContent(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByNicknameOnBoard(PageCriteria pageCriteria) {
+	public int readCountByNicknameOnBoard(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByNicknameOnBoard() 호출");
-		return boardDAO.selectCountByNicknameOnBoard(pageCriteria);
+		return boardDAO.selectCountByNicknameOnBoard(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByCmRpContent(PageCriteria pageCriteria) {
+	public int readCountByCmRpContent(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByCmRpContent() 호출");
-		return boardDAO.selectCountByCmRpContent(pageCriteria);
+		return boardDAO.selectCountByCmRpContent(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByNicknameOnCmRp(PageCriteria pageCriteria) {
+	public int readCountByNicknameOnCmRp(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByNicknameOnCmRp() 호출");
-		return boardDAO.selectCountByNicknameOnCmRp(pageCriteria);
+		return boardDAO.selectCountByNicknameOnCmRp(boardPageCriteria);
 	}
 	
 	@Override
-	public int readCountByBoardTitle2(PageCriteria pageCriteria) {
+	public int readCountByBoardTitle2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByBoardTitle2() 호출");
-		return boardDAO.selectCountByBoardTitle2(pageCriteria);
+		return boardDAO.selectCountByBoardTitle2(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByBoardContent2(PageCriteria pageCriteria) {
+	public int readCountByBoardContent2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByBoardContent2() 호출");
-		return boardDAO.selectCountByBoardContent2(pageCriteria);
+		return boardDAO.selectCountByBoardContent2(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByNicknameOnBoard2(PageCriteria pageCriteria) {
+	public int readCountByNicknameOnBoard2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByNicknameOnBoard2() 호출");
-		return boardDAO.selectCountByNicknameOnBoard2(pageCriteria);
+		return boardDAO.selectCountByNicknameOnBoard2(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByCmRpContent2(PageCriteria pageCriteria) {
+	public int readCountByCmRpContent2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByCmRpContent2() 호출");
-		return boardDAO.selectCountByCmRpContent2(pageCriteria);
+		return boardDAO.selectCountByCmRpContent2(boardPageCriteria);
 	}
 
 	@Override
-	public int readCountByNicknameOnCmRp2(PageCriteria pageCriteria) {
+	public int readCountByNicknameOnCmRp2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readCountByNicknameOnCmRp2() 호출");
-		return boardDAO.selectCountByNicknameOnCmRp2(pageCriteria);
+		return boardDAO.selectCountByNicknameOnCmRp2(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readAll(PageCriteria pageCriteria) {
+	public List<BoardVO> readAll(BoardPageCriteria boardPageCriteria) {
 		logger.info("readAll() 호출");	
-		return boardDAO.selectAll(pageCriteria);
+		return boardDAO.selectAll(boardPageCriteria);
 	}
 	
 	@Override
-	public List<BoardVO> readBoard(PageCriteria pageCriteria) {
+	public List<BoardVO> readBoard(BoardPageCriteria boardPageCriteria) {
 		logger.info("readBoard() 호출");
-		return boardDAO.selectBoard(pageCriteria);
+		return boardDAO.selectBoard(boardPageCriteria);
 	}
 
 	@Override
@@ -137,62 +137,62 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Override
-	public List<BoardVO> readByBoardTitle(PageCriteria pageCriteria) {
+	public List<BoardVO> readByBoardTitle(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByBoardTitle() 호출");
-		return boardDAO.selectByBoardTitle(pageCriteria);
+		return boardDAO.selectByBoardTitle(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByBoardContent(PageCriteria pageCriteria) {
+	public List<BoardVO> readByBoardContent(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByBoardContent() 호출");
-		return boardDAO.selectByBoardContent(pageCriteria);
+		return boardDAO.selectByBoardContent(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByNicknameOnBoard(PageCriteria pageCriteria) {
+	public List<BoardVO> readByNicknameOnBoard(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByNicknameOnBoard() 호출");
-		return boardDAO.selectByNicknameOnBoard(pageCriteria);
+		return boardDAO.selectByNicknameOnBoard(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByCmRpContent(PageCriteria pageCriteria) {
+	public List<BoardVO> readByCmRpContent(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByCmRpContent() 호출");
-		return boardDAO.selectByCmRpContent(pageCriteria);
+		return boardDAO.selectByCmRpContent(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByNicknameOnCmRp(PageCriteria pageCriteria) {
+	public List<BoardVO> readByNicknameOnCmRp(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByNicknameOnCmRp() 호출");
-		return boardDAO.selectByNicknameOnCmRp(pageCriteria);
+		return boardDAO.selectByNicknameOnCmRp(boardPageCriteria);
 	}
 	@Override
-	public List<BoardVO> readByBoardTitle2(PageCriteria pageCriteria) {
+	public List<BoardVO> readByBoardTitle2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByBoardTitle2() 호출");
-		return boardDAO.selectByBoardTitle2(pageCriteria);
+		return boardDAO.selectByBoardTitle2(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByBoardContent2(PageCriteria pageCriteria) {
+	public List<BoardVO> readByBoardContent2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByBoardContent2() 호출");
-		return boardDAO.selectByBoardContent2(pageCriteria);
+		return boardDAO.selectByBoardContent2(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByNicknameOnBoard2(PageCriteria pageCriteria) {
+	public List<BoardVO> readByNicknameOnBoard2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByNicknameOnBoard2() 호출");
-		return boardDAO.selectByNicknameOnBoard2(pageCriteria);
+		return boardDAO.selectByNicknameOnBoard2(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByCmRpContent2(PageCriteria pageCriteria) {
+	public List<BoardVO> readByCmRpContent2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByCmRpContent2() 호출");
-		return boardDAO.selectByCmRpContent2(pageCriteria);
+		return boardDAO.selectByCmRpContent2(boardPageCriteria);
 	}
 
 	@Override
-	public List<BoardVO> readByNicknameOnCmRp2(PageCriteria pageCriteria) {
+	public List<BoardVO> readByNicknameOnCmRp2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByNicknameOnCmRp2() 호출");
-		return boardDAO.selectByNicknameOnCmRp2(pageCriteria);
+		return boardDAO.selectByNicknameOnCmRp2(boardPageCriteria);
 	}
 
 	@Override

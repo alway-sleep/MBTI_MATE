@@ -235,7 +235,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				ORDER BY B.${boardNumber} DESC
 				) B1
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	
 	<!-- 게시판 정렬 후 출력 -->
@@ -255,7 +255,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				ORDER BY B.${boardNumber} DESC
 				) B1
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	
 	<!-- 게시글 출력 -->
@@ -283,7 +283,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			WHERE B1.${boardTitle} LIKE #{sqlKeyword}
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByBoardContent" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -300,7 +300,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			WHERE B1.${boardContent} LIKE #{sqlKeyword}
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByNicknameOnBoard" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -317,7 +317,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			WHERE B1.${memberNickname} LIKE #{sqlKeyword}
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByCmRpContent" resultType="BoardVO">		
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -348,7 +348,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				ORDER BY B.${boardNumber} DESC
 				) B1
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByNicknameOnCmRp" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -394,7 +394,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				ORDER BY B.${boardNumber} DESC
 				) B1
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	
 	<!-- 해당 게시판 검색 기능 -->
@@ -413,7 +413,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			WHERE B1.${boardTitle} LIKE #{sqlKeyword}
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByBoardContent2" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -430,7 +430,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			WHERE B1.${boardContent} LIKE #{sqlKeyword}
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByNicknameOnBoard2" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -447,7 +447,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			WHERE B1.${memberNickname} LIKE #{sqlKeyword}
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByCmRpContent2" resultType="BoardVO">		
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -478,7 +478,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				ORDER BY B.${boardNumber} DESC
 				) B1
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	<select id="selectByNicknameOnCmRp2" resultType="BoardVO">
 		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -524,7 +524,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				ORDER BY B.${boardNumber} DESC
 				) B1
 			) B2
-		WHERE B2.RN BETWEEN #{start} AND #{end}
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	
 	<!-- 게시글 수정 -->
@@ -554,19 +554,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM ${board}
 		WHERE ${memberNumber} = #{memberNumber}
 	</delete>
-	
-	<!-- 
-	<select id="boardPagination" resultType="BoardVO">
-		SELECT B.${boardNumber}, B.${memberNumber}, B.${boardTitle}, B.${boardContent}, B.${boardViews}, B.${boardLikes}, B.${boardComments}, B.{boardRegdate}
-		FROM (
-   			SELECT ROWNUM AS RN, A.*
-   			FROM (
-       			SELECT *
-       			FROM ${board}
-       			ORDER BY ${boardNumber} DESC
-  			) A
-  		) B
-  		WHERE B.RN BETWEEN #{start} AND #{end}
-	</select>
-	 -->
 </mapper>

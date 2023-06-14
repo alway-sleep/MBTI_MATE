@@ -132,9 +132,9 @@ body {
 		<c:if test="${not empty message}">
 			alert("${message}");
 		</c:if>
-		<c:if test="${not empty pageMaker.criteria.keyword}">
+		<c:if test="${not empty pageMaker.boardPageCriteria.keyword}">
 			$('#searchOption').val("${target.searchOption}");
-			$('#keyword').val("${pageMaker.criteria.keyword}");
+			$('#keyword').val("${pageMaker.boardPageCriteria.keyword}");
 		</c:if>
 		// 게시글 보기
 		$('tbody td').closest('tr').find('a').click(function(e) {
@@ -201,7 +201,7 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
-				    	page : 1,
+				    	boardPage : 1,
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
@@ -219,7 +219,7 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
-				    	page : "${pageMaker.endPageNo - 1}",
+				    	boardPage : "${pageMaker.boardEndPage - 1}",
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
@@ -237,7 +237,7 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
-				    	page : parseInt($(this).text()),
+				    	boardPage : parseInt($(this).text()),
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
@@ -255,7 +255,7 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
-				    	page : "${pageMaker.endPageNo + 1}",
+				    	boardPage : "${pageMaker.boardEndPage + 1}",
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
@@ -273,7 +273,7 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
-				    	page : "${pageMaker.totalLinkNo}",
+				    	boardPage : "${pageMaker.boardTotalPage}",
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
@@ -374,18 +374,18 @@ body {
 		<div class="list-page">
 			<ul>
 				<li><a href="#" class="listGET-start">처음</a></li>
-				<c:if test="${pageMaker.hasPrev}">
+				<c:if test="${pageMaker.boardHasPrev}">
 				<li><a href="#" class="listGET-prev">이전</a></li>
 				</c:if>
-				<c:forEach var="num" begin="${pageMaker.startPageNo}" end="${pageMaker.endPageNo}">
-				<c:if test="${pageMaker.criteria.page eq num}">
-					<li><a href="#" class="listGET-page selected">${num}</a></li>
+				<c:forEach var="boardPage" begin="${pageMaker.boardStartPage}" end="${pageMaker.boardEndPage}">
+				<c:if test="${pageMaker.boardPageCriteria.boardPage eq boardPage}">
+					<li><a href="#" class="listGET-page selected">${boardPage}</a></li>
 				</c:if>
-				<c:if test="${pageMaker.criteria.page ne num}">
-					<li><a href="#" class="listGET-page">${num}</a></li>
+				<c:if test="${pageMaker.boardPageCriteria.boardPage ne boardPage}">
+					<li><a href="#" class="listGET-page">${boardPage}</a></li>
 				</c:if>
 				</c:forEach>
-				<c:if test="${pageMaker.hasNext}">
+				<c:if test="${pageMaker.boardHasNext}">
 				<li><a href="#"	class="listGET-next">다음</a></li>
 				</c:if>
 				<li><a href="#" class="listGET-end">끝</a></li>

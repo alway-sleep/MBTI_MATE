@@ -3,43 +3,43 @@ package com.cafe.mbti.util;
 // 브라우저에서 보여질 페이지 번호와
 // 한 페이지에서 보여질 게시글의 개수를 저장하는 클래스
 // -> paging 처리에 필요한 start와 end 번호를 알 수 있음
-public class PageCriteria {
-	private int page; // 현재 페이지 번호
-	private int numsPerPage; // 한 페이지의 게시글 개수
+public class BoardPageCriteria {
+	private int boardPage; // 현재 페이지 번호
+	private int boardNumsPerPage; // 한 페이지의 게시글 개수
 	private int boardSection, boardList; // 접근한 게시판 구역, 위치
 	private String keyword;
 	
-	public PageCriteria() {
-		this.page = 1;
-		this.numsPerPage = 5;
+	public BoardPageCriteria() {
+		this.boardPage = 1;
+		this.boardNumsPerPage = 5;
 		this.boardSection=0;
 		this.boardList=0;
 		this.keyword = "";
 	}
 	
-	public PageCriteria(int page, int numsPerPage, int boardSection, int boardList, String keyword) {
-		this.page = page;
-		this.numsPerPage = numsPerPage;
+	public BoardPageCriteria(int boardPage, int boardNumsPerPage, int boardSection, int boardList, String keyword) {
+		this.boardPage = boardPage;
+		this.boardNumsPerPage = boardNumsPerPage;
 		this.boardSection = boardSection;
 		this.boardList = boardList;
 		this.keyword = keyword;
 	}
 
 	// getter/setter
-	public int getPage() {
-		return page;
+	public int getBoardPage() {
+		return boardPage;
 	}
 
-	public void setPage(int page) {
-		this.page = page;
+	public void setBoardPage(int boardPage) {
+		this.boardPage = boardPage;
 	}
 
-	public int getNumsPerPage() {
-		return numsPerPage;
+	public int getBoardNumsPerPage() {
+		return boardNumsPerPage;
 	}
 
-	public void setNumsPerPage(int numsPerPage) {
-		this.numsPerPage = numsPerPage;
+	public void setBoardNumsPerPage(int boardNumsPerPage) {
+		this.boardNumsPerPage = boardNumsPerPage;
 	}
 	
 	public int getBoardSection() {
@@ -72,12 +72,12 @@ public class PageCriteria {
 	}
 
 	// 현재 보여지는 페이지의 시작 글 일련번호(rn)
-	public int getStart() {
-		return (this.page - 1) * this.numsPerPage + 1;
+	public int getBoardStart() {
+		return (this.boardPage - 1) * this.boardNumsPerPage + 1;
 	}
 	
 	// 현재 보여지는 페이지의 마지막 글 일련번호(rn)
-	public int getEnd() {
-		return this.page * this.numsPerPage;
+	public int getBoardEnd() {
+		return this.boardPage * this.boardNumsPerPage;
 	}
 }

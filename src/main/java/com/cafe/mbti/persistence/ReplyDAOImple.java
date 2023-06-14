@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cafe.mbti.domain.ReplyVO;
-import com.cafe.mbti.util.ReplyPageCriteria;
+import com.cafe.mbti.util.CmRpPageCriteria;
 
 @Repository
 public class ReplyDAOImple implements ReplyDAO {
@@ -28,9 +28,9 @@ public class ReplyDAOImple implements ReplyDAO {
 	}
 
 	@Override
-	public List<ReplyVO> selectAll(ReplyPageCriteria replyPageCriteria) {
+	public List<ReplyVO> selectAll(CmRpPageCriteria cmRpPageCriteria) {
 		logger.info("selectAll() 호출");
-		return sqlSession.selectList(NAMESPACE + ".selectAll", replyPageCriteria);
+		return sqlSession.selectList(NAMESPACE + ".selectAll", cmRpPageCriteria);
 	}
 	
 	@Override

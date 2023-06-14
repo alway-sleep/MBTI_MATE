@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			ORDER BY R.${replyNumber} ASC
 			) R1
 		) R2
-	WHERE R2.RN BETWEEN #{start} AND #{end}
+	WHERE R2.RN BETWEEN #{replyStart} AND #{replyEnd}
 	</select>
 	<!-- 답글 등록/삭제 후 카운트 -->
 	<select id="selectCountOnComments" resultType="Integer">

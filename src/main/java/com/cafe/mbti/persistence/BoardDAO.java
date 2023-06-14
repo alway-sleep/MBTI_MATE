@@ -3,7 +3,7 @@ package com.cafe.mbti.persistence;
 import java.util.List;
 
 import com.cafe.mbti.domain.BoardVO;
-import com.cafe.mbti.util.PageCriteria;
+import com.cafe.mbti.util.BoardPageCriteria;
 
 public interface BoardDAO {
 	// 게시글 작성
@@ -11,53 +11,53 @@ public interface BoardDAO {
 	// 전체 게시글의 수
 	int selectCountOnBoard();
 	// 해당 게시판 게시글의 수
-	int selectCountOnBoard2(PageCriteria pageCriteria);
+	int selectCountOnBoard2(BoardPageCriteria boardPageCriteria);
 	// 게시글 제목으로 검색된 게시글의 수
-	int selectCountByBoardTitle(PageCriteria pageCriteria);
+	int selectCountByBoardTitle(BoardPageCriteria boardPageCriteria);
 	// 게시글 내용으로 검색된 게시글의 수
-	int selectCountByBoardContent(PageCriteria pageCriteria);
+	int selectCountByBoardContent(BoardPageCriteria boardPageCriteria);
 	// 게시글 작성자로 검색된 게시글의 수
-	int selectCountByNicknameOnBoard(PageCriteria pageCriteria);
+	int selectCountByNicknameOnBoard(BoardPageCriteria boardPageCriteria);
 	// 댓글 내용으로 검색된 게시글의 수
-	int selectCountByCmRpContent(PageCriteria pageCriteria);
+	int selectCountByCmRpContent(BoardPageCriteria boardPageCriteria);
 	// 댓글 작성자로 검색된 게시글의 수
-	int selectCountByNicknameOnCmRp(PageCriteria pageCriteria);
+	int selectCountByNicknameOnCmRp(BoardPageCriteria boardPageCriteria);
 	// 게시글 제목으로 검색된 게시글의 수
-	int selectCountByBoardTitle2(PageCriteria pageCriteria);
+	int selectCountByBoardTitle2(BoardPageCriteria boardPageCriteria);
 	// 게시글 내용으로 검색된 게시글의 수
-	int selectCountByBoardContent2(PageCriteria pageCriteria);
+	int selectCountByBoardContent2(BoardPageCriteria boardPageCriteria);
 	// 게시글 작성자로 검색된 게시글의 수
-	int selectCountByNicknameOnBoard2(PageCriteria pageCriteria);
+	int selectCountByNicknameOnBoard2(BoardPageCriteria boardPageCriteria);
 	// 댓글 내용으로 검색된 게시글의 수
-	int selectCountByCmRpContent2(PageCriteria pageCriteria);
+	int selectCountByCmRpContent2(BoardPageCriteria boardPageCriteria);
 	// 댓글 작성자로 검색된 게시글의 수
-	int selectCountByNicknameOnCmRp2(PageCriteria pageCriteria);
+	int selectCountByNicknameOnCmRp2(BoardPageCriteria boardPageCriteria);
 	// 전체 게시글 정렬 후 출력
-	List<BoardVO> selectAll(PageCriteria pageCriteria);
+	List<BoardVO> selectAll(BoardPageCriteria boardPageCriteria);
 	// 게시판 정렬 후 출력
-	List<BoardVO> selectBoard(PageCriteria pageCriteria);
+	List<BoardVO> selectBoard(BoardPageCriteria boardPageCriteria);
 	// 게시글 출력
 	BoardVO select(int boardNumber, int memberNumber);
 	// 검색 조건 : 게시글 제목
-	List<BoardVO> selectByBoardTitle(PageCriteria pageCriteria);
+	List<BoardVO> selectByBoardTitle(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 게시글 내용
-	List<BoardVO> selectByBoardContent(PageCriteria pageCriteria);
+	List<BoardVO> selectByBoardContent(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 게시글 작성자
-	List<BoardVO> selectByNicknameOnBoard(PageCriteria pageCriteria);
+	List<BoardVO> selectByNicknameOnBoard(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 댓글 내용
-	List<BoardVO> selectByCmRpContent(PageCriteria pageCriteria);
+	List<BoardVO> selectByCmRpContent(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 댓글 작성자
-	List<BoardVO> selectByNicknameOnCmRp(PageCriteria pageCriteria);
+	List<BoardVO> selectByNicknameOnCmRp(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 게시글 제목2
-	List<BoardVO> selectByBoardTitle2(PageCriteria pageCriteria);
+	List<BoardVO> selectByBoardTitle2(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 게시글 내용2
-	List<BoardVO> selectByBoardContent2(PageCriteria pageCriteria);
+	List<BoardVO> selectByBoardContent2(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 게시글 작성자2
-	List<BoardVO> selectByNicknameOnBoard2(PageCriteria pageCriteria);
+	List<BoardVO> selectByNicknameOnBoard2(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 댓글 내용2
-	List<BoardVO> selectByCmRpContent2(PageCriteria pageCriteria);
+	List<BoardVO> selectByCmRpContent2(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 댓글 작성자2
-	List<BoardVO> selectByNicknameOnCmRp2(PageCriteria pageCriteria);
+	List<BoardVO> selectByNicknameOnCmRp2(BoardPageCriteria boardPageCriteria);
 	// 게시글 수정
 	int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber);
 	// 인기글 업데이트

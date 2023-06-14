@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cafe.mbti.domain.ReplyVO;
 import com.cafe.mbti.service.ReplyService;
-import com.cafe.mbti.util.ReplyPageCriteria;
-import com.cafe.mbti.util.ReplyPageMaker;
+import com.cafe.mbti.util.CmRpPageCriteria;
+import com.cafe.mbti.util.PageMaker;
 
 @RestController
 @RequestMapping(value="/reply")
@@ -38,12 +38,12 @@ public class ReplyRestController {
 		return new ResponseEntity<Integer>(replyService.create(replyVO), HttpStatus.OK);
 	} // end replyPOST()
 	
-	@GetMapping("/list/{commentsNumber}/{page}") // SELECT
-	public ResponseEntity<List<ReplyVO>> replyListGET(HttpServletRequest request, @PathVariable("commentsNumber") int commentsNumber, @PathVariable("page") Integer page) {
+	@GetMapping("/list/{commentsNumber}/{replyPage}") // SELECT
+	public ResponseEntity<List<ReplyVO>> replyListGET(HttpServletRequest request, @PathVariable("commentsNumber") int commentsNumber, @PathVariable("replyPage") Integer replyPage) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		ReplyPageCriteria replyPageCriteria = replyPageCriteria(page, commentsNumber);
-		return new ResponseEntity<List<ReplyVO>>(replyService.readAll(replyPageCriteria), HttpStatus.OK);
+		CmRpPageCriteria cmRpPageCriteria = cmRpPageCriteria(replyPage, commentsNumber);
+		return new ResponseEntity<List<ReplyVO>>(replyService.readAll(cmRpPageCriteria), HttpStatus.OK);
 	} // end replyListGET()
 	
 	@GetMapping("/count/{commentsNumber}") // SELECT
@@ -54,11 +54,11 @@ public class ReplyRestController {
 	} // end replyCountGET()
 	
 	@GetMapping("/pagemaker/{commentsNumber}") // SELECT
-	public ResponseEntity<ReplyPageMaker> replyPageMakerGET(HttpServletRequest request, @PathVariable("commentsNumber") int commentsNumber, Integer page) {
+	public ResponseEntity<PageMaker> replyPageMakerGET(HttpServletRequest request, @PathVariable("commentsNumber") int commentsNumber, Integer replyPage) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		ReplyPageCriteria replyPageCriteria = replyPageCriteria(page, commentsNumber);
-		return new ResponseEntity<ReplyPageMaker>(replyPageMaker(replyPageCriteria, replyService.readCountOnComments(commentsNumber)), HttpStatus.OK);
+		CmRpPageCriteria cmRpPageCriteria = cmRpPageCriteria(replyPage, commentsNumber);
+		return new ResponseEntity<PageMaker>(pageMaker(cmRpPageCriteria, replyService.readCountOnComments(commentsNumber)), HttpStatus.OK);
 	} // end replyPageMakerGET()
 	
 	@PutMapping("/update/{replyNumber}") // UPDATE
@@ -75,18 +75,18 @@ public class ReplyRestController {
 		return new ResponseEntity<Integer>(replyService.delete(replyNumber), HttpStatus.OK);
 	} // end replyDELETE()
 	
-	private ReplyPageCriteria replyPageCriteria(Integer page, int commentsNumber) {
-		ReplyPageCriteria replyPageCriteria = new ReplyPageCriteria();
-		replyPageCriteria.setPage(page != null ? page : replyPageCriteria.getPage());
-		replyPageCriteria.setCommentsNumber(commentsNumber);
-		return replyPageCriteria;
+	private CmRpPageCriteria cmRpPageCriteria(Integer replyPage, int commentsNumber) {
+		CmRpPageCriteria cmRpPageCriteria = new CmRpPageCriteria();
+		cmRpPageCriteria.setReplyPage(replyPage != null ? replyPage : cmRpPageCriteria.getReplyPage());
+		cmRpPageCriteria.setCommentsNumber(commentsNumber);
+		return cmRpPageCriteria;
 	} // end replyPageCriteria()
 	
-	private ReplyPageMaker replyPageMaker(ReplyPageCriteria replyPageCriteria, int totalCount) {
-		ReplyPageMaker replyPageMaker = new ReplyPageMaker();
-		replyPageMaker.setCriteria(replyPageCriteria);
-		replyPageMaker.setTotalCount(totalCount);
-		replyPageMaker.setPageData();
-		return replyPageMaker;
+	private PageMaker pageMaker(CmRpPageCriteria cmRpPageCriteria, int replyTotalCount) {
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCmRpPageCriteria(cmRpPageCriteria);
+		pageMaker.setReplyTotalCount(replyTotalCount);
+		pageMaker.setReplyPageData();
+		return pageMaker;
 	} // end replyPageMaker()
 } // end ReplyRestController

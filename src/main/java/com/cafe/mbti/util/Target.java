@@ -1,12 +1,12 @@
 package com.cafe.mbti.util;
 
 public class Target {
-	private int page, boardSection, boardList;
+	private int boardPage, boardSection, boardList;
 	private String boardName;
 	private int boardNumber, searchOption;
 	
 	public Target() {
-		page = 1;
+		boardPage = 1;
 		boardSection = 0;
 		boardList = 0;
 		boardName = "";
@@ -14,8 +14,8 @@ public class Target {
 		searchOption = 0;
 	}
 
-	public Target(int page, int boardSection, int boardList, String boardName, int boardNumber, int searchOption) {
-		this.page = page;
+	public Target(int boardPage, int boardSection, int boardList, String boardName, int boardNumber, int searchOption) {
+		this.boardPage = boardPage;
 		this.boardSection = boardSection;
 		this.boardList = boardList;
 		this.boardName = boardName;
@@ -23,12 +23,12 @@ public class Target {
 		this.searchOption = searchOption;
 	}
 
-	public int getPage() {
-		return page;
+	public int getBoardPage() {
+		return boardPage;
 	}
 
-	public void setPage(int page) {
-		this.page = page;
+	public void setBoardPage(int boardPage) {
+		this.boardPage = boardPage;
 	}
 
 	public int getBoardSection() {
@@ -73,7 +73,7 @@ public class Target {
 
 	@Override
 	public String toString() {
-		return "Target [page=" + page + ", boardSection=" + boardSection + ", boardList=" + boardList + ", boardName="
+		return "Target [BoardPage=" + boardPage + ", boardSection=" + boardSection + ", boardList=" + boardList + ", boardName="
 				+ boardName + ", boardNumber=" + boardNumber + ", searchOption=" + searchOption + "]";
 	}
 }

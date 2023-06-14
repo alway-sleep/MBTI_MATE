@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			ORDER BY C.${commentsNumber} ASC
 			) C1
 		) C2
-	WHERE C2.RN BETWEEN #{start} AND #{end}
+	WHERE C2.RN BETWEEN #{commentsStart} AND #{commentsEnd}
 	</select>
 	<!-- 해당 게시글 댓글 카운트 -->
 	<select id="selectCountOnBoard" resultType="Integer">

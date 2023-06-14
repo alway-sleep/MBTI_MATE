@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.cafe.mbti.domain.ReplyVO;
 import com.cafe.mbti.persistence.ReplyDAO;
-import com.cafe.mbti.util.ReplyPageCriteria;
+import com.cafe.mbti.util.CmRpPageCriteria;
 
 @Service
 public class ReplyServiceImple implements ReplyService {
@@ -25,9 +25,9 @@ public class ReplyServiceImple implements ReplyService {
 	}
 
 	@Override
-	public List<ReplyVO> readAll(ReplyPageCriteria replyPageCriteria) {
+	public List<ReplyVO> readAll(CmRpPageCriteria cmRpPageCriteria) {
 		logger.info("readAll() 호출");
-		return replyDAO.selectAll(replyPageCriteria);
+		return replyDAO.selectAll(cmRpPageCriteria);
 	}
 	
 	@Override

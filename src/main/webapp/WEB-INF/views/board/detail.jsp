@@ -88,7 +88,7 @@ body {
 /* 닉네임, 추천 버튼 스타일 */
 .detail-wrapper button#boardLikesToggle,
 .detail-wrapper button#memberNickname,
-.writer-wrapper button.memberNickname {
+.writer-wrapper button.memberNicknameOnComments {
 	border: none;
 	background-color: #fff;
 	font-weight: bold;
@@ -105,6 +105,11 @@ body {
 	overflow-y: auto;
 	overflow-wrap: break-word;
 }
+
+.reply-list textarea {
+	background-color: #eaeaea;
+}
+
 .detail-wrapper .detail-info {
 	display: flex;
 	justify-content: flex-start;
@@ -124,10 +129,12 @@ body {
 	border-radius: 10px;
 }
 
-.reply button#memberNickname,
-.reply button.memberNickname,
-.reply-list textarea {
+.reply button.memberNicknameOnReply {
+	border: none;
 	background-color: #eaeaea;
+	font-weight: bold;
+	padding: 0;
+	cursor: pointer;
 }
 
 .reply {
@@ -168,8 +175,8 @@ body {
 		// 전역 변수 선언
 		var boardNumber = "${boardVO.boardNumber}";
 		var memberNumber = "${sessionScope.memberVO.memberNumber}";
-		var commentsPage = 1;
-		commentsGET(commentsPage);
+		let commentsPage = 1;
+		commentsGET(1);
 		/******************************************************댓글 관련 기능*****************************************************************/
 		// 댓글 불러오기
 		function commentsGET(commentsPage) {
@@ -203,7 +210,7 @@ body {
 											'</div>'+ // \div .writer-picture
 											'<div class="writer-area">'+ // div .writer-area
 											'<div class="writer-info">'+ // div .writer-info
-											'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
+											'<button class="memberNicknameOnComments" name="memberNickname">'+this.memberNickname+'</button>'+
 											'</div>'+ // \div .writer-info
 											'<div class="comments-info">'+ // div .comments-info
 											'<span class="commentsRegdate">'+commentsRegdate+'</span>'+
@@ -242,28 +249,28 @@ body {
 									url: '/mbti/comments/pagemaker/'+boardNumber,
 									type: 'GET',
 									data: {
-										page : commentsPage
+										commentsPage : commentsPage
 									},
 									success: function(commentsPageMaker) {
 										$('.comments-page ul').append('<li><a href="#" class="commentsGET-start">처음</a></li>');
-										$('.commentsGET-start').data('page', 1);
-										if (commentsPageMaker.hasPrev) {
+										$('.commentsGET-start').data('commentsPage', 1);
+										if (commentsPageMaker.commentsHasPrev) {
 											$('.comments-page ul').append('<li><a href="#" class="commentsGET-prev">이전</a></li>');
-											$('.commentsGET-prev').data('page', commentsPageMaker.endPageNo - 1);
+											$('.commentsGET-prev').data('commentsPage', commentsPageMaker.commentsEndPage - 1);
 										}
-										for (var i = 1; i <= commentsPageMaker.endPageNo; i++) {
-											if (commentsPageMaker.commentsPageCriteria.page == i) {
+										for (var i = 1; i <= commentsPageMaker.commentsEndPage; i++) {
+											if (commentsPageMaker.cmRpPageCriteria.commentsPage == i) {
 												$('.comments-page ul').append('<li><a href="#" class="commentsGET-page selected">'+i+'</a></li>');
 											} else {
 												$('.comments-page ul').append('<li><a href="#" class="commentsGET-page">'+i+'</a></li>');
 											}
 										}
-										if (commentsPageMaker.hasNext) {
+										if (commentsPageMaker.commentsHasNext) {
 											$('.comments-page ul').append('<li><a href="#" class="commentsGET-next">다음</a></li>');
-											$('.commentsGET-next').data('page', commentsPageMaker.endPageNo + 1);
+											$('.commentsGET-next').data('commentsPage', commentsPageMaker.commentsEndPage + 1);
 										}
 										$('.comments-page ul').append('<li><a href="#" class="commentsGET-end">끝</a></li>');
-										$('.commentsGET-end').data('page', commentsPageMaker.totalLinkNo);
+										$('.commentsGET-end').data('commentsPage', commentsPageMaker.commentsTotalPage);
 									}
 								}); // end ajax()
 							}
@@ -275,17 +282,13 @@ body {
 		// 댓글 페이지 이동
 		$('.comments-page').on('click', 'ul li a', function(e) {
 			e.preventDefault();
-			if ($(this).hasClass('commentsGET-page')) {
-				commentsPage = parseInt($(this).text());
-			} else {
-				commentsPage = parseInt($(this).data('page'));
-			}
+			commentsPage = ($(this).hasClass('commentsGET-page')) ? parseInt($(this).text()) : $(this).data('commentsPage');
 			commentsGET(commentsPage);
-		})// end $('.comments-page').on('click', 'ul li a', function(e) {});
+		});// end $('.comments-page').on('click', 'ul li a', function(e) {});
 		// 댓글 등록
 		$('.comments-options .commentsPOST').click(function(e) {
 			e.preventDefault();
-			commentsPage = $('.commentsGET-end').data('page');
+			commentsPage = (commentsPage == 1) ? commentsPage : $('.commentsGET-end').data('commentsPage');
 			var commentsContent = $('#commentsContent').val();
 			// 5글자 이상 작성해야 등록 가능
 			if (commentsContent.length >= 5) {
@@ -385,14 +388,14 @@ body {
 			// 해당 댓글의 답글 목록
 			var replyGET = $(this);
 			var replyList = $(this).closest('.comments-options').next();
-			var page = 1;
+			var replyPage = 1;
 			replyList.off('click', '.reply-options .replyPOST').off('click', '.reply-options .replyPUT').off('click', '.reply-options .replyDELETE').off('click', '.reply-page ul li a');
 			replyList.toggle();
 			// 답글 불러오기
 			var commentsNumber = $(this).val();
 			$('#replyContent').val('');
 			$.ajax({
-				url: '/mbti/reply/list/'+commentsNumber+'/'+page,
+				url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 				type: 'GET',
 				success: function(replyGETResult) {
 					replyList.empty();
@@ -407,7 +410,7 @@ body {
 									'<div class="writer-wrapper">'+ // div .writer-wrapper
 									'<div class="writer-area">'+ // div .writer-area
 									'<div class="writer-info">'+ // div .writer-info
-									'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+									'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 									'</div>'+ // \div .writer-info
 									'</div>'+ // \div .writer-area
 									'</div>'+ // \div .writer-wrapper
@@ -451,7 +454,7 @@ body {
 										'</div>'+ // \div .writer-picture
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
-										'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
+										'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
 										'</div>'+ // \div .writer-info
 										'<div class="reply-info">'+ // div .reply-info
 										'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -486,7 +489,7 @@ body {
 										'<div class="writer-wrapper">'+ // div .writer-wrapper
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
-										'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+										'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 										'</div>'+ // \div .writer-info
 										'</div>'+ // \div .writer-area
 										'</div>'+ // \div .writer-wrapper
@@ -519,24 +522,24 @@ body {
 										type: 'GET',
 										success: function(replyPageMaker) {
 											$('.reply-page ul').append('<li><a href="#" class="replyGET-start">처음</a></li>');
-											$('.replyGET-start').data('page', 1);
-											if (replyPageMaker.hasPrev) {
+											$('.replyGET-start').data('replyPage', 1);
+											if (replyPageMaker.replyHasPrev) {
 												$('.reply-page ul').append('<li><a href="#" class="replyGET-prev">이전</a></li>');
-												$('.replyGET-prev').data('page', replyPageMaker.endPageNo - 1);
+												$('.replyGET-prev').data('replyPage', replyPageMaker.replyEndPage - 1);
 											}
-											for (var i = 1; i <= replyPageMaker.endPageNo; i++) {
-												if (replyPageMaker.replyPageCriteria.page == i) {
+											for (var i = 1; i <= replyPageMaker.replyEndPage; i++) {
+												if (replyPageMaker.cmRpPageCriteria.replyPage == i) {
 													$('.reply-page ul').append('<li><a href="#" class="replyGET-page selected">'+i+'</a></li>');
 												} else {
 													$('.reply-page ul').append('<li><a href="#" class="replyGET-page">'+i+'</a></li>');
 												}
 											}
-											if (replyPageMaker.hasNext) {
+											if (replyPageMaker.replyHasNext) {
 												$('.reply-page ul').append('<li><a href="#" class="replyGET-next">다음</a></li>');
-												$('.replyGET-next').data('page', replyPageMaker.endPageNo + 1);
+												$('.replyGET-next').data('replyPage', replyPageMaker.replyEndPage + 1);
 											}
 											$('.reply-page ul').append('<li><a href="#" class="replyGET-end">끝</a></li>');
-											$('.replyGET-end').data('page', replyPageMaker.totalLinkNo);
+											$('.replyGET-end').data('replyPage', replyPageMaker.replyTotalPage);
 										}
 									}); // end ajax()
 								}
@@ -547,18 +550,65 @@ body {
 			// 답글 페이지 이동
 			replyList.on('click', '.reply-page ul li a', function(e) {
 				e.preventDefault();
-				if ($(this).hasClass('replyGET-page')) {
-					page = parseInt($(this).text());
-				} else {
-					page = parseInt($(this).data('page'));
-				}
+				replyPage = ($(this).hasClass('replyGET-page')) ? parseInt($(this).text()) : $(this).data('replyPage');
 				$.ajax({
-					url: '/mbti/reply/list/'+commentsNumber+'/'+page,
+					url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 					type: 'GET',
 					success: function(replyGETResult) {
 						replyList.empty();
-						if (replyGETResult == 0) {
-							var reply = // 답글 작성
+						$(replyGETResult).each(function() {
+							var replyRegdate = new Date(this.replyRegdate);
+							replyRegdate = replyRegdate.getFullYear()+
+											'-'+(replyRegdate.getMonth() + 1).toString().padStart(2, '0')+
+											'-'+replyRegdate.getDate().toString().padStart(2, '0')+
+											' '+replyRegdate.getHours().toString().padStart(2, '0')+
+											':'+replyRegdate.getMinutes().toString().padStart(2, '0')+
+											':'+replyRegdate.getSeconds().toString().padStart(2, '0');
+							// 해당 답글 작성자만 수정/삭제 가능
+							if(memberNumber == this.memberNumber) {
+								var hidden = '';
+							} else {
+								hidden = 'hidden';								
+							};
+							// 해당 댓글의 답글 출력 및 답글 입력창 출력
+							var reply = '<div class="reply">'+ // div .reply
+										'<div class="display-flex">'+ // div .display-flex
+										'<div class="left-align">'+ // div .left-align
+										'└&nbsp;'+
+										'</div>'+ // \div .left-align
+										'<div class="right-align">'+ // div .right-align
+										'<div class="writer-wrapper">'+ // div .writer-wrapper
+										'<div class="writer-picture">'+ // div .writer-picture
+										'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+										'</div>'+ // \div .writer-picture
+										'<div class="writer-area">'+ // div .writer-area
+										'<div class="writer-info">'+ // div .writer-info
+										'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
+										'</div>'+ // \div .writer-info
+										'<div class="reply-info">'+ // div .reply-info
+										'<span class="replyRegdate">'+replyRegdate+'</span>'+
+										'</div>'+ // \div .reply-info
+										'</div>'+ // \div .writer-area
+										'</div>'+ // \div .writer-wrapper
+										'<textarea rows="2" class="replyContent" name="replyContent" minlength="5" maxlength="2000" placeholder="답글을 남겨보세요(5글자 이상)" readonly>'+this.replyContent+'</textarea>'+
+										'<div class="reply-options">'+ // div .reply-options
+										'<div class="reply-options-left-align">'+ // div .left-align
+										'</div>'+ // \div .left-align
+										'<div class="reply-options-right-align">'+ // div .right-align
+										'<button type="button" class="replyPUT" value="'+this.replyNumber+'" '+hidden+'>수정</button>'+
+										'&nbsp;'+
+										'<button type="button" class="replyDELETE" value="'+this.replyNumber+'" hidden>삭제</button>'+
+										'</div>'+ // \div .right-align
+										'</div>'+ // \div .reply-options
+										'</div>'+ // \div .reply
+										'</div>'+ // \div .right-align
+										'</div>'; // \div .display-flex
+										// 출력한 내용 붙여넣기
+										replyList.append(reply); // reply-list.append
+							}); // end replyGETResult.each(function() {})
+							var reply = // 답글 페이징
+										'<div class="reply-page"><ul></ul></div>'+
+										// 답글 작성
 										'<div class="reply">'+ // div .reply
 										'<div class="display-flex">'+ // div .display-flex
 										'<div class="left-align">'+ // div .left-align
@@ -568,7 +618,7 @@ body {
 										'<div class="writer-wrapper">'+ // div .writer-wrapper
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
-										'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+										'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 										'</div>'+ // \div .writer-info
 										'</div>'+ // \div .writer-area
 										'</div>'+ // \div .writer-wrapper
@@ -584,86 +634,6 @@ body {
 										'</div>'+ // \div .display-flex
 										'</div>'; // \div .reply
 										replyList.append(reply);
-						} else {
-							$(replyGETResult).each(function() {
-								var replyRegdate = new Date(this.replyRegdate);
-								replyRegdate = replyRegdate.getFullYear()+
-												'-'+(replyRegdate.getMonth() + 1).toString().padStart(2, '0')+
-												'-'+replyRegdate.getDate().toString().padStart(2, '0')+
-												' '+replyRegdate.getHours().toString().padStart(2, '0')+
-												':'+replyRegdate.getMinutes().toString().padStart(2, '0')+
-												':'+replyRegdate.getSeconds().toString().padStart(2, '0');
-								// 해당 답글 작성자만 수정/삭제 가능
-								if(memberNumber == this.memberNumber) {
-									var hidden = '';
-								} else {
-									hidden = 'hidden';								
-								};
-								// 해당 댓글의 답글 출력 및 답글 입력창 출력
-								var reply = '<div class="reply">'+ // div .reply
-											'<div class="display-flex">'+ // div .display-flex
-											'<div class="left-align">'+ // div .left-align
-											'└&nbsp;'+
-											'</div>'+ // \div .left-align
-											'<div class="right-align">'+ // div .right-align
-											'<div class="writer-wrapper">'+ // div .writer-wrapper
-											'<div class="writer-picture">'+ // div .writer-picture
-											'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
-											'</div>'+ // \div .writer-picture
-											'<div class="writer-area">'+ // div .writer-area
-											'<div class="writer-info">'+ // div .writer-info
-											'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
-											'</div>'+ // \div .writer-info
-											'<div class="reply-info">'+ // div .reply-info
-											'<span class="replyRegdate">'+replyRegdate+'</span>'+
-											'</div>'+ // \div .reply-info
-											'</div>'+ // \div .writer-area
-											'</div>'+ // \div .writer-wrapper
-											'<textarea rows="2" class="replyContent" name="replyContent" minlength="5" maxlength="2000" placeholder="답글을 남겨보세요(5글자 이상)" readonly>'+this.replyContent+'</textarea>'+
-											'<div class="reply-options">'+ // div .reply-options
-											'<div class="reply-options-left-align">'+ // div .left-align
-											'</div>'+ // \div .left-align
-											'<div class="reply-options-right-align">'+ // div .right-align
-											'<button type="button" class="replyPUT" value="'+this.replyNumber+'" '+hidden+'>수정</button>'+
-											'&nbsp;'+
-											'<button type="button" class="replyDELETE" value="'+this.replyNumber+'" hidden>삭제</button>'+
-											'</div>'+ // \div .right-align
-											'</div>'+ // \div .reply-options
-											'</div>'+ // \div .reply
-											'</div>'+ // \div .right-align
-											'</div>'; // \div .display-flex
-											// 출력한 내용 붙여넣기
-											replyList.append(reply); // reply-list.append
-								}); // end replyGETResult.each(function() {})
-								var reply = // 답글 페이징
-											'<div class="reply-page"><ul></ul></div>'+
-											// 답글 작성
-											'<div class="reply">'+ // div .reply
-											'<div class="display-flex">'+ // div .display-flex
-											'<div class="left-align">'+ // div .left-align
-											'└&nbsp;'+
-											'</div>'+ // \div .left-align
-											'<div class="right-align">'+ // div .right-align
-											'<div class="writer-wrapper">'+ // div .writer-wrapper
-											'<div class="writer-area">'+ // div .writer-area
-											'<div class="writer-info">'+ // div .writer-info
-											'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
-											'</div>'+ // \div .writer-info
-											'</div>'+ // \div .writer-area
-											'</div>'+ // \div .writer-wrapper
-											'<textarea rows="2" id="replyContent" name="replyContent" minlength="5" maxlength="2000" placeholder="답글을 남겨보세요(5글자 이상)"></textarea>'+
-											'<div class="reply-options">'+ // div .reply-options
-											'<div class="reply-options-left-align">'+ // div .left-align
-											'</div>'+ // \div .left-align
-											'<div class="reply-options-right-align">'+ // div .right-align
-											'<button type="button" class="replyPOST" value="'+commentsNumber+'">등록</button>'+
-											'</div>'+ // \div .right-align
-											'</div>'+ // \div .reply-options
-											'</div>'+ // \div .right-align
-											'</div>'+ // \div .display-flex
-											'</div>'; // \div .reply
-											replyList.append(reply);
-							} // end else()
 							// 추가되는 댓글 하위 요소 스타일
 							$('.writer-picture img').css('width, height, max-width, max-height, border-radius, margin-right', '34px, 34px, 100%, 100%, 30px, 10px');
 							$('.reply .memberNickname').css('border, background-color, font-weight, padding, cursor', 'none, #eaeaea, bold, 0, pointer');
@@ -677,28 +647,28 @@ body {
 											url: '/mbti/reply/pagemaker/'+commentsNumber,
 											type: 'GET',
 											data: {
-												page : page
+												replyPage : replyPage
 											},
 											success: function(replyPageMaker) {
 												$('.reply-page ul').append('<li><a href="#" class="replyGET-start">처음</a></li>');
-												$('.replyGET-start').data('page', 1);
-												if (replyPageMaker.hasPrev) {
+												$('.replyGET-start').data('replyPage', 1);
+												if (replyPageMaker.replyHasPrev) {
 													$('.reply-page ul').append('<li><a href="#" class="replyGET-prev">이전</a></li>');
-													$('.replyGET-prev').data('page', replyPageMaker.endPageNo - 1);
+													$('.replyGET-prev').data('replyPage', replyPageMaker.replyEndPage - 1);
 												}
-												for (var i = 1; i <= replyPageMaker.endPageNo; i++) {
-													if (replyPageMaker.replyPageCriteria.page == i) {
+												for (var i = 1; i <= replyPageMaker.replyEndPage; i++) {
+													if (replyPageMaker.cmRpPageCriteria.replyPage == i) {
 														$('.reply-page ul').append('<li><a href="#" class="replyGET-page selected">'+i+'</a></li>');
 													} else {
 														$('.reply-page ul').append('<li><a href="#" class="replyGET-page">'+i+'</a></li>');
 													}
 												}
-												if (replyPageMaker.hasNext) {
+												if (replyPageMaker.replyHasNext) {
 													$('.reply-page ul').append('<li><a href="#" class="replyGET-next">다음</a></li>');
-													$('.replyGET-next').data('page', replyPageMaker.endPageNo + 1);
+													$('.replyGET-next').data('replyPage', replyPageMaker.replyEndPage + 1);
 												}
 												$('.reply-page ul').append('<li><a href="#" class="replyGET-end">끝</a></li>');
-												$('.replyGET-end').data('page', replyPageMaker.totalLinkNo);
+												$('.replyGET-end').data('replyPage', replyPageMaker.replyTotalPage);
 											}
 										}); // end ajax()
 									}
@@ -710,6 +680,7 @@ body {
 			// 답글 등록
 			replyList.on('click', '.reply-options .replyPOST', function(e) {
 				e.preventDefault();
+				replyPage = (replyPage == 1) ? replyPage : $('.replyGET-end').data('replyPage');
 				var replyContent = $(this).closest('.reply-options').siblings('#replyContent').val();				
 				if (replyContent.length >= 5) {
 					$.ajax({
@@ -724,9 +695,8 @@ body {
 						success: function(replyPOSTResult) {
 							if (replyPOSTResult == 1) {
 								alert('답글을 등록했습니다.');
-								page = $('.replyGET-end').data('page');
 								$.ajax({
-									url: '/mbti/reply/list/'+commentsNumber+'/'+page,
+									url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 									type: 'GET',
 									success: function(replyGETResult) {
 										replyList.empty();
@@ -757,7 +727,7 @@ body {
 														'</div>'+ // \div .writer-picture
 														'<div class="writer-area">'+ // div .writer-area
 														'<div class="writer-info">'+ // div .writer-info
-														'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
+														'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
 														'</div>'+ // \div .writer-info
 														'<div class="reply-info">'+ // div .reply-info
 														'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -792,7 +762,7 @@ body {
 														'<div class="writer-wrapper">'+ // div .writer-wrapper
 														'<div class="writer-area">'+ // div .writer-area
 														'<div class="writer-info">'+ // div .writer-info
-														'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+														'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 														'</div>'+ // \div .writer-info
 														'</div>'+ // \div .writer-area
 														'</div>'+ // \div .writer-wrapper
@@ -821,28 +791,28 @@ body {
 														url: '/mbti/reply/pagemaker/'+commentsNumber,
 														type: 'GET',
 														data: {
-															page : page
+															replyPage : replyPage
 														},
 														success: function(replyPageMaker) {
 															$('.reply-page ul').append('<li><a href="#" class="replyGET-start">처음</a></li>');
-															$('.replyGET-start').data('page', 1);
-															if (replyPageMaker.hasPrev) {
+															$('.replyGET-start').data('replyPage', 1);
+															if (replyPageMaker.replyHasPrev) {
 																$('.reply-page ul').append('<li><a href="#" class="replyGET-prev">이전</a></li>');
-																$('.replyGET-prev').data('page', replyPageMaker.endPageNo - 1);
+																$('.replyGET-prev').data('replyPage', replyPageMaker.replyEndPage - 1);
 															}
-															for (var i = 1; i <= replyPageMaker.endPageNo; i++) {
-																if (replyPageMaker.replyPageCriteria.page == i) {
+															for (var i = 1; i <= replyPageMaker.replyEndPage; i++) {
+																if (replyPageMaker.cmRpPageCriteria.replyPage == i) {
 																	$('.reply-page ul').append('<li><a href="#" class="replyGET-page selected">'+i+'</a></li>');
 																} else {
 																	$('.reply-page ul').append('<li><a href="#" class="replyGET-page">'+i+'</a></li>');
 																}
 															}
-															if (replyPageMaker.hasNext) {
+															if (replyPageMaker.replyHasNext) {
 																$('.reply-page ul').append('<li><a href="#" class="replyGET-next">다음</a></li>');
-																$('.replyGET-next').data('page', replyPageMaker.endPageNo + 1);
+																$('.replyGET-next').data('replyPage', replyPageMaker.replyEndPage + 1);
 															}
 															$('.reply-page ul').append('<li><a href="#" class="replyGET-end">끝</a></li>');
-															$('.replyGET-end').data('page', replyPageMaker.totalLinkNo);
+															$('.replyGET-end').data('replyPage', replyPageMaker.replyTotalPage);
 														}
 													}); // end ajax()
 												}
@@ -880,10 +850,10 @@ body {
 								if (replyPUTResult == 1) {
 									alert('답글이 수정되었습니다.');
 									$.ajax({
-										url: '/mbti/reply/list/'+commentsNumber+'/'+page,
+										url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 										type: 'GET',
 										data: {
-											page : page
+											replyPage : replyPage
 										},
 										success: function(replyGETResult) {
 											replyList.empty();
@@ -898,7 +868,7 @@ body {
 															'<div class="writer-wrapper">'+ // div .writer-wrapper
 															'<div class="writer-area">'+ // div .writer-area
 															'<div class="writer-info">'+ // div .writer-info
-															'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+															'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 															'</div>'+ // \div .writer-info
 															'</div>'+ // \div .writer-area
 															'</div>'+ // \div .writer-wrapper
@@ -942,7 +912,7 @@ body {
 																'</div>'+ // \div .writer-picture
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
+																'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
 																'</div>'+ // \div .writer-info
 																'<div class="reply-info">'+ // div .reply-info
 																'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -977,7 +947,7 @@ body {
 																'<div class="writer-wrapper">'+ // div .writer-wrapper
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+																'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 																'</div>'+ // \div .writer-info
 																'</div>'+ // \div .writer-area
 																'</div>'+ // \div .writer-wrapper
@@ -1007,28 +977,28 @@ body {
 																url: '/mbti/reply/pagemaker/'+commentsNumber,
 																type: 'GET',
 																data: {
-																	page : page
+																	replyPage : replyPage
 																},
 																success: function(replyPageMaker) {
 																	$('.reply-page ul').append('<li><a href="#" class="replyGET-start">처음</a></li>');
-																	$('.replyGET-start').data('page', 1);
-																	if (replyPageMaker.hasPrev) {
+																	$('.replyGET-start').data('replyPage', 1);
+																	if (replyPageMaker.replyHasPrev) {
 																		$('.reply-page ul').append('<li><a href="#" class="replyGET-prev">이전</a></li>');
-																		$('.replyGET-prev').data('page', replyPageMaker.endPageNo - 1);
+																		$('.replyGET-prev').data('replyPage', replyPageMaker.replyEndPage - 1);
 																	}
-																	for (var i = 1; i <= replyPageMaker.endPageNo; i++) {
-																		if (replyPageMaker.replyPageCriteria.page == i) {
+																	for (var i = 1; i <= replyPageMaker.replyEndPage; i++) {
+																		if (replyPageMaker.cmRpPageCriteria.replyPage == i) {
 																			$('.reply-page ul').append('<li><a href="#" class="replyGET-page selected">'+i+'</a></li>');
 																		} else {
 																			$('.reply-page ul').append('<li><a href="#" class="replyGET-page">'+i+'</a></li>');
 																		}
 																	}
-																	if (replyPageMaker.hasNext) {
+																	if (replyPageMaker.replyHasNext) {
 																		$('.reply-page ul').append('<li><a href="#" class="replyGET-next">다음</a></li>');
-																		$('.replyGET-next').data('page', replyPageMaker.endPageNo + 1);
+																		$('.replyGET-next').data('replyPage', replyPageMaker.replyEndPage + 1);
 																	}
 																	$('.reply-page ul').append('<li><a href="#" class="replyGET-end">끝</a></li>');
-																	$('.replyGET-end').data('page', replyPageMaker.totalLinkNo);
+																	$('.replyGET-end').data('replyPage', replyPageMaker.replyTotalPage);
 																}
 															}); // end ajax()
 														}
@@ -1043,10 +1013,10 @@ body {
 						alert('5글자 이상 작성해주세요.');
 					}
 				});
-				// 등록된 댓글 삭제
+				// 등록된 답글 삭제
 				$(this).siblings('.replyDELETE').click(function(e) {
 					e.preventDefault();
-					// 댓글을 삭제할 건지 다시 한번 확인
+					// 답글을 삭제할 건지 다시 한번 확인
 					if (confirm('답글을 삭제하시겠습니까?')) {
 						$.ajax({
 							url: '/mbti/reply/delete/'+$(this).val(),
@@ -1055,10 +1025,10 @@ body {
 								if (replyDELETEResult == 1) {
 									alert('답글이 삭제되었습니다.');
 									$.ajax({
-										url: '/mbti/reply/list/'+commentsNumber+'/'+page,
+										url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 										type: 'GET',
 										data: {
-											page : page
+											replyPage : replyPage
 										},
 										success: function(replyGETResult) {
 											replyList.empty();
@@ -1073,7 +1043,7 @@ body {
 															'<div class="writer-wrapper">'+ // div .writer-wrapper
 															'<div class="writer-area">'+ // div .writer-area
 															'<div class="writer-info">'+ // div .writer-info
-															'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+															'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 															'</div>'+ // \div .writer-info
 															'</div>'+ // \div .writer-area
 															'</div>'+ // \div .writer-wrapper
@@ -1117,7 +1087,7 @@ body {
 																'</div>'+ // \div .writer-picture
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button class="memberNickname" name="memberNickname">'+this.memberNickname+'</button>'+
+																'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
 																'</div>'+ // \div .writer-info
 																'<div class="reply-info">'+ // div .reply-info
 																'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -1152,7 +1122,7 @@ body {
 																'<div class="writer-wrapper">'+ // div .writer-wrapper
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button id="memberNickname">${sessionScope.memberVO.memberNickname }</button>'+
+																'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
 																'</div>'+ // \div .writer-info
 																'</div>'+ // \div .writer-area
 																'</div>'+ // \div .writer-wrapper
@@ -1182,28 +1152,28 @@ body {
 																url: '/mbti/reply/pagemaker/'+commentsNumber,
 																type: 'GET',
 																data: {
-																	page : page
+																	replyPage : replyPage
 																},
 																success: function(replyPageMaker) {
 																	$('.reply-page ul').append('<li><a href="#" class="replyGET-start">처음</a></li>');
-																	$('.replyGET-start').data('page', 1);
-																	if (replyPageMaker.hasPrev) {
+																	$('.replyGET-start').data('replyPage', 1);
+																	if (replyPageMaker.replyHasPrev) {
 																		$('.reply-page ul').append('<li><a href="#" class="replyGET-prev">이전</a></li>');
-																		$('.replyGET-prev').data('page', replyPageMaker.endPageNo - 1);
+																		$('.replyGET-prev').data('replyPage', replyPageMaker.replyEndPage - 1);
 																	}
-																	for (var i = 1; i <= replyPageMaker.endPageNo; i++) {
-																		if (replyPageMaker.replyPageCriteria.page == i) {
+																	for (var i = 1; i <= replyPageMaker.replyEndPage; i++) {
+																		if (replyPageMaker.cmRpPageCriteria.replyPage == i) {
 																			$('.reply-page ul').append('<li><a href="#" class="replyGET-page selected">'+i+'</a></li>');
 																		} else {
 																			$('.reply-page ul').append('<li><a href="#" class="replyGET-page">'+i+'</a></li>');
 																		}
 																	}
-																	if (replyPageMaker.hasNext) {
+																	if (replyPageMaker.replyHasNext) {
 																		$('.reply-page ul').append('<li><a href="#" class="replyGET-next">다음</a></li>');
-																		$('.replyGET-next').data('page', replyPageMaker.endPageNo + 1);
+																		$('.replyGET-next').data('replyPage', replyPageMaker.replyEndPage + 1);
 																	}
 																	$('.reply-page ul').append('<li><a href="#" class="replyGET-end">끝</a></li>');
-																	$('.replyGET-end').data('page', replyPageMaker.totalLinkNo);
+																	$('.replyGET-end').data('replyPage', replyPageMaker.replyTotalPage);
 																}
 															}); // end ajax()
 														}

@@ -3,7 +3,6 @@ package com.cafe.mbti;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,19 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.service.BoardService;
-import com.cafe.mbti.util.PageCriteria;
+import com.cafe.mbti.util.BoardPageCriteria;
 import com.cafe.mbti.util.PageMaker;
 import com.cafe.mbti.util.Target;
 
@@ -42,81 +39,81 @@ public class BoardController {
 	private String resourcesPath;
 	
 	@GetMapping("/list")
-	public void listGET(HttpServletRequest request, Model model, Integer page, Integer numsPerPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword) {
+	public void listGET(HttpServletRequest request, Model model, Integer boardPage, Integer boardNumsPerPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
-		Target target = target(request, numsPerPage, boardSection, boardList, boardName, boardNumber, searchOption);
-		PageCriteria pageCriteria = pageCriteria(page, numsPerPage, target.getBoardSection(), target.getBoardList(), keyword);
+		Target target = target(request, boardNumsPerPage, boardSection, boardList, boardName, boardNumber, searchOption);
+		BoardPageCriteria boardPageCriteria = boardPageCriteria(boardPage, boardNumsPerPage, target.getBoardSection(), target.getBoardList(), keyword);
 		List<BoardVO> boardVO = null;
 		// 전체 게시글
-		if (target.getBoardSection() == 0) {			
+		if (target.getBoardSection() == 0) {
 			if (keyword != null && keyword != "") {
 				switch (searchOption) {
 				case 0: // 게시글 제목
-					boardVO = boardService.readByBoardTitle(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardTitle(pageCriteria)));
+					boardVO = boardService.readByBoardTitle(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByBoardTitle(boardPageCriteria)));
 					break;
 				case 1: // 게시글 내용
-					boardVO = boardService.readByBoardContent(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardContent(pageCriteria)));
+					boardVO = boardService.readByBoardContent(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByBoardContent(boardPageCriteria)));
 					break;
 				case 2: // 게시글 작성자
-					boardVO = boardService.readByNicknameOnBoard(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnBoard(pageCriteria)));
+					boardVO = boardService.readByNicknameOnBoard(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByNicknameOnBoard(boardPageCriteria)));
 					break;
 				case 3: // 댓글 내용
-					boardVO = boardService.readByCmRpContent(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByCmRpContent(pageCriteria)));
+					boardVO = boardService.readByCmRpContent(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByCmRpContent(boardPageCriteria)));
 					break;
 				case 4: // 댓글 작성자
-					boardVO = boardService.readByNicknameOnCmRp(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnCmRp(pageCriteria)));
+					boardVO = boardService.readByNicknameOnCmRp(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByNicknameOnCmRp(boardPageCriteria)));
 					break;
 				case 5: // 게시글 작성일
 					//boardVO = boardService.readAll(pageCriteria);
 					break;
 				}
 			} else {
-				boardVO = boardService.readAll(pageCriteria);
-				model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountOnBoard()));
+				boardVO = boardService.readAll(boardPageCriteria);
+				model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountOnBoard()));
 			}
 		// 해당 게시판
 		} else {
 			if (keyword != null && keyword != "") {
 				switch (searchOption) {
 				case 0: // 게시글 제목
-					boardVO = boardService.readByBoardTitle2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardTitle2(pageCriteria)));
+					boardVO = boardService.readByBoardTitle2(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByBoardTitle2(boardPageCriteria)));
 					break;
 				case 1: // 게시글 내용
-					boardVO = boardService.readByBoardContent2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByBoardContent2(pageCriteria)));
+					boardVO = boardService.readByBoardContent2(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByBoardContent2(boardPageCriteria)));
 					break;
 				case 2: // 게시글 작성자
-					boardVO = boardService.readByNicknameOnBoard2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnBoard2(pageCriteria)));
+					boardVO = boardService.readByNicknameOnBoard2(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByNicknameOnBoard2(boardPageCriteria)));
 					break;
 				case 3: // 댓글 내용
-					boardVO = boardService.readByCmRpContent2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByCmRpContent2(pageCriteria)));
+					boardVO = boardService.readByCmRpContent2(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByCmRpContent2(boardPageCriteria)));
 					break;
 				case 4: // 댓글 작성자
-					boardVO = boardService.readByNicknameOnCmRp2(pageCriteria);
-					model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountByNicknameOnCmRp2(pageCriteria)));
+					boardVO = boardService.readByNicknameOnCmRp2(boardPageCriteria);
+					model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountByNicknameOnCmRp2(boardPageCriteria)));
 					break;
 				case 5: // 게시글 작성일
 					//boardVO = boardService.readAll(pageCriteria);
 					break;
 				}
 			} else {
-				boardVO = boardService.readBoard(pageCriteria);
-				model.addAttribute("pageMaker", pageMaker(pageCriteria, boardService.readCountOnBoard2(pageCriteria)));
+				boardVO = boardService.readBoard(boardPageCriteria);
+				model.addAttribute("pageMaker", pageMaker(boardPageCriteria, boardService.readCountOnBoard2(boardPageCriteria)));
 			}
 		}
 		model.addAttribute("boardVO", boardVO);
 	} // end listGET()
 	
 	@GetMapping("/write")
-	public void writeGET(HttpServletRequest request, Model model) {
+	public void writeGET(HttpServletRequest request) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 	} // end writeGET()
 	
@@ -209,37 +206,37 @@ public class BoardController {
 		return "redirect:..";
 	} // end deletePOST()
 	
-	private PageCriteria pageCriteria(Integer page, Integer numsPerPage, Integer boardSection, Integer boardList, String keyword) {
-		PageCriteria pageCriteria = new PageCriteria();
-		pageCriteria.setPage(page != null ? page : pageCriteria.getPage());
-		pageCriteria.setNumsPerPage(numsPerPage != null ? numsPerPage : pageCriteria.getNumsPerPage());
-		pageCriteria.setBoardSection(boardSection);
-		pageCriteria.setBoardList(boardList);
-		pageCriteria.setKeyword(keyword != null ? keyword : pageCriteria.getKeyword());
-		return pageCriteria;
+	private BoardPageCriteria boardPageCriteria(Integer boardPage, Integer boardNumsPerPage, Integer boardSection, Integer boardList, String keyword) {
+		BoardPageCriteria boardPageCriteria = new BoardPageCriteria();
+		boardPageCriteria.setBoardPage(boardPage != null ? boardPage : boardPageCriteria.getBoardPage());
+		boardPageCriteria.setBoardNumsPerPage(boardNumsPerPage != null ? boardNumsPerPage : boardPageCriteria.getBoardNumsPerPage());
+		boardPageCriteria.setBoardSection(boardSection);
+		boardPageCriteria.setBoardList(boardList);
+		boardPageCriteria.setKeyword(keyword != null ? keyword : boardPageCriteria.getKeyword());
+		return boardPageCriteria;
 	} // end pageCriteria()
 	
-	private PageMaker pageMaker(PageCriteria pageCriteria, int totalCount) {
+	private PageMaker pageMaker(BoardPageCriteria boardPageCriteria, int boardTotalCount) {
 		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCriteria(pageCriteria);
-		pageMaker.setTotalCount(totalCount);
-		pageMaker.setPageData();
+		pageMaker.setBoardPageCriteria(boardPageCriteria);
+		pageMaker.setBoardTotalCount(boardTotalCount);
+		pageMaker.setBoardPageData();
 		return pageMaker;
 	} // end pageMaker()
 	
-	private Target target(HttpServletRequest request, Integer page, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption) {
+	private Target target(HttpServletRequest request, Integer boardPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption) {
 		Target target = (Target) request.getSession().getAttribute("target");
 		if (target == null) {
 			request.getSession().setAttribute("target", new Target());
 			target = (Target) request.getSession().getAttribute("target");
-			target.setPage(page != null ? page : target.getPage());
+			target.setBoardPage(boardPage != null ? boardPage : target.getBoardPage());
 			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
 			target.setBoardList(boardList != null ? boardList : target.getBoardList());
 			target.setBoardName(boardName != null ? boardName : target.getBoardName());
 			target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
 			target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
 		} else {
-			target.setPage(page != null ? page : target.getPage());
+			target.setBoardPage(boardPage != null ? boardPage : target.getBoardPage());
 			target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
 			target.setBoardList(boardList != null ? boardList : target.getBoardList());
 			target.setBoardName(boardName != null ? boardName : target.getBoardName());
