@@ -2,8 +2,6 @@ package com.cafe.mbti.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -16,6 +14,14 @@ public class FileUtil {
 	
 	public FileUtil() {}
 
+	public String saveMemberPicture(MultipartFile file, int memberNumber) throws IOException {
+		String resourcePath = resourcesPath + "member/";
+		String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+		String memberPicture = "picture" + memberNumber + "." + extension;
+		file.transferTo(new File(resourcePath + memberPicture));
+		return memberPicture;
+	}
+	
 	// 확장자가 여러개이기 때문에 해당 회원 관련 사진 모두 삭제
 	public void deleteMemberPicture(int memberNumber) {
 		String resourcePath = resourcesPath + "member/";
@@ -26,30 +32,18 @@ public class FileUtil {
 		}
 	}
 	
-	public String saveMemberPicture(MultipartFile file, int memberNumber) throws IOException {
-		String resourcePath = resourcesPath + "member/";
-		String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-		String memberPicture = "picture" + memberNumber + "." + extension;
-		file.transferTo(new File(resourcePath + memberPicture));
-		return memberPicture;
+	public void saveBoardFiles(MultipartFile[] files, int boardSeqNextVal) throws IOException {
+		String resourcePath = resourcesPath + "board/";
+		String dirPath = resourcePath + Integer.toString(boardSeqNextVal);
+		new File(dirPath).mkdir();
+		for (MultipartFile file : files) {
+			file.transferTo(new File(dirPath + file.getOriginalFilename()));
+		}
 	}
 	
-	public String saveFilesName(MultipartFile[] files) throws IOException {
+	public void deleteBoardFiles(int boardNumber) {
 		String resourcePath = resourcesPath + "board/";
-		String filesName = "";
-		Date date = new Date();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS");
-		String dirPath = resourcePath + simpleDateFormat.format(date) + "/";
-		File dir = new File(dirPath);
-		if (files.length != 0 && !dir.exists()) {		
-			dir.mkdir();
-			for (MultipartFile file : files) {
-				file.transferTo(new File(dirPath + file.getOriginalFilename()));
-				filesName = (filesName == "") ? file.getOriginalFilename() : filesName+"|"+file.getOriginalFilename();
-			}
-		} else {
-			filesName = "|";
-		}
-		return filesName;
+		String dirPath = resourcePath + Integer.toString(boardNumber);
+		new File(dirPath).delete();
 	}
 }

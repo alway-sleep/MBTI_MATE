@@ -32,9 +32,10 @@ body {
 }
 
 .write-wrapper input[type=text],
+.write-wrapper input[type=file],
 .write-wrapper textarea {
 	width: 100%;
-	padding: 8px;
+	padding: 3px;
 	border-radius: 3px;
 	border: 1px solid #ccc;
 	box-sizing: border-box;
@@ -82,10 +83,13 @@ body {
 			});
 		}); // end $('.write-options button[type="button"]').click()
 		// 선택한 파일의 용량이 100MB를 초과할 때
-		$('.files').on('change', function(e) {
+		$('#files').on('change', function(e) {
 			for(var i = 0; i < e.target.files.length; i++) {
+				console.log(e.target.files[i]);
+				console.log(typeof e.target.files[i]);
+				console.log(e.target.files[i].size);
 				if (e.target.files[i].size > 104857600) {
-					alert('최대 100MB의 파일만 업로드 가능합니다.');
+					alert('최대 100MB까지의 파일만 업로드 가능합니다.');
 					$('#files').val('');
 				}
 			}

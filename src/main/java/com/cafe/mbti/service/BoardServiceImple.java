@@ -12,7 +12,6 @@ import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.persistence.BoardDAO;
 import com.cafe.mbti.persistence.BoardlikeDAO;
 import com.cafe.mbti.persistence.CommentsDAO;
-import com.cafe.mbti.persistence.FilesDAO;
 import com.cafe.mbti.persistence.ReplyDAO;
 import com.cafe.mbti.util.BoardPageCriteria;
 
@@ -34,14 +33,11 @@ public class BoardServiceImple implements BoardService {
 	private CommentsDAO commentsDAO;
 	@Autowired
 	private ReplyDAO replyDAO;
-	@Autowired
-	private FilesDAO filesDAO;
 
 	@Transactional(value = "transactionManager")
 	@Override
 	public int create(BoardVO boardVO) {
 		logger.info("create() 호출");
-		System.out.println(boardVO.getFilesName().toString());
 		boardDAO.insert(boardVO);
 		return 1;
 	}
@@ -214,7 +210,6 @@ public class BoardServiceImple implements BoardService {
 		boardlikeDAO.deleteOnBoard(boardNumber);
 		commentsDAO.updateDeleteOnBoard(boardNumber);
 		replyDAO.updateDeleteOnBoard(boardNumber);
-		filesDAO.deleteOnBoard(boardNumber);
 		return boardDAO.delete(boardNumber);
 	}
 }

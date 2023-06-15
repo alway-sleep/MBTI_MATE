@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,9 +34,21 @@ body {
 	flex-direction: column;
 }
 
+.detail-wrapper form .board-files {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	font-size: 12px;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 3px;
+	margin: 3px 0;
+}
+
 .detail-wrapper input[type=text],
 .detail-wrapper textarea {
-	padding: 8px;
+	padding: 3px;
 	border-radius: 3px;
 	border: 1px solid #ccc;
 	box-sizing: border-box;
@@ -206,7 +219,7 @@ body {
 							var comments = '<div class="comments">'+ // div .comments
 											'<div class="writer-wrapper">'+ // div .writer-wrapper
 											'<div class="writer-picture">'+ // div .writer-picture
-											'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+											'<img src="/mbti/resources/member?fileName='+this.memberPicture+'">'+
 											'</div>'+ // \div .writer-picture
 											'<div class="writer-area">'+ // div .writer-area
 											'<div class="writer-info">'+ // div .writer-info
@@ -450,7 +463,7 @@ body {
 										'<div class="right-align">'+ // div .right-align
 										'<div class="writer-wrapper">'+ // div .writer-wrapper
 										'<div class="writer-picture">'+ // div .writer-picture
-										'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+										'<img src="/mbti/resources/member?fileName='+this.memberPicture+'">'+
 										'</div>'+ // \div .writer-picture
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
@@ -579,7 +592,7 @@ body {
 										'<div class="right-align">'+ // div .right-align
 										'<div class="writer-wrapper">'+ // div .writer-wrapper
 										'<div class="writer-picture">'+ // div .writer-picture
-										'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+										'<img src="/mbti/resources/member?fileName='+this.memberPicture+'">'+
 										'</div>'+ // \div .writer-picture
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
@@ -723,7 +736,7 @@ body {
 														'<div class="right-align">'+ // div .right-align
 														'<div class="writer-wrapper">'+ // div .writer-wrapper
 														'<div class="writer-picture">'+ // div .writer-picture
-														'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+														'<img src="/mbti/resources/member?fileName='+this.memberPicture+'">'+
 														'</div>'+ // \div .writer-picture
 														'<div class="writer-area">'+ // div .writer-area
 														'<div class="writer-info">'+ // div .writer-info
@@ -908,7 +921,7 @@ body {
 																'<div class="right-align">'+ // div .right-align
 																'<div class="writer-wrapper">'+ // div .writer-wrapper
 																'<div class="writer-picture">'+ // div .writer-picture
-																'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+																'<img src="/mbti/resources/member?fileName='+this.memberPicture+'">'+
 																'</div>'+ // \div .writer-picture
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
@@ -1083,7 +1096,7 @@ body {
 																'<div class="right-align">'+ // div .right-align
 																'<div class="writer-wrapper">'+ // div .writer-wrapper
 																'<div class="writer-picture">'+ // div .writer-picture
-																'<img src="/mbti/member/resource?resource=member/'+this.memberPicture+'">'+
+																'<img src="/mbti/resources/member?fileName='+this.memberPicture+'">'+
 																'</div>'+ // \div .writer-picture
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
@@ -1285,12 +1298,12 @@ body {
 </head>
 <body>
 	<div class="detail-wrapper">
+		<input type="text" value="${boardVO.boardName}" style="border: none;" onfocus="blur()" readonly>
 		<h2>${boardVO.boardTitle }</h2>
 		<form class="detail-form">
-			<input type="text" id="boardName" value="${boardVO.boardName}" style="border: none;" onfocus="blur()" readonly>
 			<div class="writer-wrapper">
 				<div class="writer-picture">
-					<img src="/mbti/member/resource?resource=member/${boardVO.memberPicture}">
+					<img src="/mbti/resources/member?fileName=${boardVO.memberPicture}">
 				</div>
 				<div class="writer-area">
 					<div class="writer-info">
@@ -1303,8 +1316,14 @@ body {
 					</div>
 				</div>
 			</div>
-			<div class="files">
-			</div>
+			<c:if test="${boardVO.boardFiles[0].toString() ne \"''\"}">
+				<input type="text" value="첨부파일" style="border: none;" onfocus="blur()" readonly>
+				<div class="board-files">
+						<c:forEach var="fileName" items="${boardVO.boardFiles}">
+							<div class="board-file"><a href="/mbti/resources/board?boardNumber=${boardVO.boardNumber}&fileName=${fileName}" download="${fileName}">${fileName}</a></div>
+						</c:forEach>
+				</div>
+			</c:if>
 			<textarea rows="20" cols="80" id="boardContent" name="boardContent" readonly>${boardVO.boardContent}</textarea>
 			<div class="detail-options">
 				<button type="button" class="listGET">목록</button>

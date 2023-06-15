@@ -24,7 +24,7 @@
 	<!-- 문자열 리소스를 bean으로 추가 -->
 	<!-- String filesPath = new String("경로"); -->
 	<beans:bean id="resourcesPath" class="java.lang.String">
-		<beans:constructor-arg value="C:/Users/goott/Desktop/SPRING_CODES/MBTI_CAFE/src/main/webapp/resources/"/>
+		<beans:constructor-arg value="C:/Users/goott/Desktop/git/repository/MBTI_MATE/src/main/webapp/resources/"/>
 	</beans:bean>
 	
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

@@ -120,14 +120,23 @@ public class BoardController {
 		Target target = (Target) request.getSession().getAttribute("target");
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		FileUtil fileUtil = new FileUtil();
+		String boardFiles = "";
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
 		
-		boardVO.setFilesName(fileUtil.saveFilesName(files));
+		if (files.length != 0) {
+			for (int i = 0; i < files.length; i++) {
+				for (MultipartFile file : files) {
+					boardFiles = (boardFiles == "") ? file.getOriginalFilename() : boardFiles + ", " + file.getOriginalFilename();
+				}
+			}
+		}
+		boardVO.setBoardFiles(boardFiles);
 		boardVO.setMemberNumber(memberVO.getMemberNumber());
 		boardVO.setBoardSection(target.getBoardSection());
-		boardVO.setBoardList(target.getBoardList());		
-		if (boardService.create(boardVO) == 1) {
-			redirectAttributes.addFlashAttribute("message", "게시글이 등록되었습니다.");
+		boardVO.setBoardList(target.getBoardList());
+		if (boardService.create(boardVO) == 1 && boardFiles != "") {
+			fileUtil.saveBoardFiles(files, boardVO.getBoardSeqNextVal());
+			redirectAttributes.addFlashAttribute("message", "게시글이 등록되었습니다.");			
 		} else {
 			redirectAttributes.addFlashAttribute("message", "게시글 등록을 실패했습니다.");
 		}
@@ -139,7 +148,7 @@ public class BoardController {
 	public void detailGET(HttpServletRequest request, Model model, Integer boardNumber) {
 		Target target = (Target) request.getSession().getAttribute("target");
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		logger.info("RequestURL: ({}){}", request.getMethod(), request.getRequestURI());
 		
 		target.setBoardNumber(boardNumber != null ? boardNumber : target.getBoardNumber());
 		if (memberVO != null) {
@@ -177,8 +186,10 @@ public class BoardController {
 	@PostMapping("/delete")
 	public String deletePOST(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
 		Target target = (Target) request.getSession().getAttribute("target");
+		FileUtil fileUtil = new FileUtil();
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		if (boardService.delete(target.getBoardNumber()) == 1) {
+			fileUtil.deleteBoardFiles(target.getBoardNumber());
 			redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
 		} else {
 			redirectAttributes.addFlashAttribute("message", "게시글 삭제를 실패했습니다.");

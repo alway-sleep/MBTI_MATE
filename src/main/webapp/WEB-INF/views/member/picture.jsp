@@ -95,7 +95,7 @@ body {
 		// 미리보기
 		$('#file').on('change', function(e) {
 			// 선택한 파일의 타입이 유효하다면
-			if (['image/jpeg', 'image/png', 'image/gif'].includes(e.target.files[0].type)) {
+			if (['image/jpeg', 'image/png', 'image/gif', 'image/heic', 'image/heif'].includes(e.target.files[0].type) && e.target.files[0].size < 104857600) {
 				var reader = new FileReader();
 				reader.onload = function(e) {
 					$('.picture-preview').html('<img src="'+e.target.result+'">');

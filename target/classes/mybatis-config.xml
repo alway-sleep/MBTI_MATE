@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 				<property name="boardLikes" value="BOARD_LIKES"/>
 				<property name="boardComments" value="BOARD_COMMENTS"/>
 				<property name="boardRegdate" value="BOARD_REGDATE"/>
+				<property name="boardFiles" value="BOARD_FILES"/>
 					<property name="totalCount" value="TOTAL_COUNT"/>
 		<!-- BoardlikeVO | BOARDLIKE -->
 		<property name="boardlike" value="BOARDLIKE"/>
@@ -75,12 +76,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 				<property name="messageRecipientIsdel" value="MESSAGE_RECIPIENT_ISDEL"/>
 				<property name="messageBox" value="MESSAGE_BOX"/>
 				<property name="messageRegdate" value="MESSAGE_REGDATE"/>
-		<!-- FilesVO | FILES -->
-		<property name="files" value="FILES"/>
-		<property name="filesNumber" value="FILES_NUMBER"/>
-			<property name="boardNumber" value="BOARD_NUMBER"/>
-				<property name="filesName" value="FILES_NAME"/>
-				<property name="filesRegdate" value="FILES_REGDATE"/>
 	</properties>
 	
 	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->

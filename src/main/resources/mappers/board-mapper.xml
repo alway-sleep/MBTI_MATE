@@ -16,19 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<selectKey keyProperty="boardSeqNextVal" resultType="Integer" order="BEFORE">
 				SELECT BOARD_SEQ.NEXTVAL FROM DUAL
 		</selectKey>
-		<!-- <selectKey keyProperty="filesSeqNextVal" resultType="Integer" order="BEFORE">
-				SELECT FILES_SEQ.NEXTVAL FROM DUAL
-		</selectKey> -->
 		INSERT ALL
 		INTO ${board}
-		(${boardNumber}, ${memberNumber}, ${boardSection}, ${boardList}, ${boardName}, ${boardTitle}, ${boardContent})
+		(${boardNumber}, ${memberNumber}, ${boardSection}, ${boardList}, ${boardName}, ${boardTitle}, ${boardContent}, ${boardFiles})
 		VALUES
-		(#{boardSeqNextVal}, #{memberNumber}, #{boardSection}, #{boardList}, #{boardName}, #{boardTitle}, #{boardContent})
-		INTO ${files}
-		(${boardNumber}, ${filesName})
-		VALUES
-		(#{boardSeqNextVal}, #{filesName})
-		SELECT * FROM DUAL
+		(#{boardSeqNextVal}, #{memberNumber}, #{boardSection}, #{boardList}, #{boardName}, #{boardTitle}, #{boardContent}, #{boardFiles})
 	</insert>
 	<!-- 전체 게시글의 수 -->
 	<select id="selectCountOnBoard" resultType="Integer">
