@@ -103,7 +103,7 @@ body {
 				reader.readAsDataURL(e.target.files[0]);
 			// 선택한 파일의 타입이 유효하지 않다면
 			} else {
-				alert('이미지 파일만 선택해주세요.');
+				alert('허용된 이미지파일이 아닙니다.');
 				$('#file').val('');
 			}
 		}); // end $('#file').on('change', function(e) {})

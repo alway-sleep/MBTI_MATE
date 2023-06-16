@@ -135,7 +135,7 @@ public class BoardController {
 		boardVO.setBoardSection(target.getBoardSection());
 		boardVO.setBoardList(target.getBoardList());
 		if (boardService.create(boardVO) == 1 && boardFiles != "") {
-			fileUtil.saveBoardFiles(files, boardVO.getBoardSeqNextVal());
+			fileUtil.saveBoardFiles(resourcesPath, files, boardVO.getBoardSeqNextVal());
 			redirectAttributes.addFlashAttribute("message", "게시글이 등록되었습니다.");			
 		} else {
 			redirectAttributes.addFlashAttribute("message", "게시글 등록을 실패했습니다.");
@@ -189,7 +189,7 @@ public class BoardController {
 		FileUtil fileUtil = new FileUtil();
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		if (boardService.delete(target.getBoardNumber()) == 1) {
-			fileUtil.deleteBoardFiles(target.getBoardNumber());
+			fileUtil.deleteBoardFiles(resourcesPath, target.getBoardNumber());
 			redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
 		} else {
 			redirectAttributes.addFlashAttribute("message", "게시글 삭제를 실패했습니다.");

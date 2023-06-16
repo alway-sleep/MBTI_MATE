@@ -2,6 +2,7 @@ package com.cafe.mbti;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -27,6 +28,9 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Resource(name = "resourcesPath")
+	private String resourcesPath;
 	
 	@GetMapping("/join")
 	public void joinGET(HttpServletRequest request) {
@@ -190,14 +194,14 @@ public class MemberController {
 		FileUtil fileUtil = new FileUtil();
 		int memberNumber = memberVO.getMemberNumber();
 		
-		fileUtil.deleteMemberPicture(memberNumber);
+		fileUtil.deleteMemberPicture(resourcesPath, memberNumber);			
 		if (file == null) { // 기본 프로필 설정
 			memberVO.setMemberPicture("picture.jpg");
 			memberService.updatePicture(memberVO);
 			redirectAttributes.addFlashAttribute("message", "기본 프로필로 설정했습니다.");
 			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");		
 		} else { // 프로필 사진 선택
-			memberVO.setMemberPicture(fileUtil.saveMemberPicture(file, memberNumber));
+			memberVO.setMemberPicture(fileUtil.saveMemberPicture(resourcesPath, file, memberNumber));
 			memberService.updatePicture(memberVO);
 			redirectAttributes.addFlashAttribute("message", "프로필 사진을 변경했습니다.");
 			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");
