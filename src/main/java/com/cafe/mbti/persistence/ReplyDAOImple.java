@@ -55,9 +55,9 @@ public class ReplyDAOImple implements ReplyDAO {
 	}
 	
 	@Override
-	public int updateDeleteOnComments(int commentsNumber) {
+	public int updateDeleteOnComments(int boardNumber) {
 		logger.info("updateDeleteOnComments() 호출");
-		return sqlSession.update(NAMESPACE + ".updateDeleteOnComments", commentsNumber);
+		return sqlSession.update(NAMESPACE + ".updateDeleteOnComments", boardNumber);
 	}
 	
 	@Override

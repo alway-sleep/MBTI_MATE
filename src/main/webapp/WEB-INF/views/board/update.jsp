@@ -32,9 +32,10 @@ body {
 }
 
 .update-wrapper input[type=text],
+.update-wrapper input[type=file],
 .update-wrapper textarea {
 	width: 100%;
-	padding: 8px;
+	padding: 3px;
 	border-radius: 3px;
 	border: 1px solid #ccc;
 	box-sizing: border-box;
@@ -97,6 +98,7 @@ body {
 			<input type="hidden" id="boardList" name="boardList" value="${boardVO.boardList}">
 			<input type="text" id="boardName" name="boardName" value="${boardVO.boardName}" style="border: none;" onfocus="blur()" readonly>
 			<input type="text" id="boardTitle" name="boardTitle" minlength="1" maxlength="40" placeholder="제목 입력" value="${boardVO.boardTitle}" required>
+			<input type="file" id="files" name="files" multiple="multiple">
 			<textarea rows="20" cols="120" minlength="2" maxlength="2000" id="boardContent" name="boardContent" placeholder="내용 입력" style="resize: none;" required>${boardVO.boardContent}</textarea>
 			<div class="update-options">
 				<input type="submit" value="수정">

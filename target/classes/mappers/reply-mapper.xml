@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		(
 		SELECT C.${commentsNumber}
 		FROM ${comments} C
-		WHERE C.${boardNumber} = #${boardNumber}
+		WHERE C.${boardNumber} = #{boardNumber}
 		)
 	</update>
 	
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		(
 		SELECT C.${commentsNumber}
 		FROM ${comments} C
-		WHERE C.${boardNumber} = #${boardNumber}
+		WHERE C.${boardNumber} = #{boardNumber}
 		)
 	</update>
 	<!-- 회원탈퇴 시 해당 회원 답글 삭제 -->
