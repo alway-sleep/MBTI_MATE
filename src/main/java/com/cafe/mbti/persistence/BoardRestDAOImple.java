@@ -6,20 +6,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.cafe.mbti.domain.BoardlikeVO;
+import com.cafe.mbti.domain.BoardRestVO;
 
 @Repository
-public class BoardlikeDAOImple implements BoardlikeDAO {
-	private static final Logger logger = LoggerFactory.getLogger(BoardlikeDAOImple.class);
-	private static final String NAMESPACE = "com.cafe.mbti.BoardlikeMapper";
+public class BoardRestDAOImple implements BoardRestDAO {
+	private static final Logger logger = LoggerFactory.getLogger(BoardRestDAOImple.class);
+	private static final String NAMESPACE = "com.cafe.mbti.BoardrestMapper";
 	
 	@Autowired
 	private SqlSession sqlSession;
 	
 	@Override
-	public int insert(BoardlikeVO boardlikeVO) {
-		logger.info("insert() 호출");
-		return sqlSession.insert(NAMESPACE + ".insert", boardlikeVO);
+	public int insertBoardlike(BoardRestVO boardRestVO) {
+		logger.info("insertBoardlike() 호출");
+		return sqlSession.insert(NAMESPACE + ".insertBoardlike", boardRestVO);
 	}
 
 	@Override
@@ -29,9 +29,9 @@ public class BoardlikeDAOImple implements BoardlikeDAO {
 	}
 	
 	@Override
-	public int delete(BoardlikeVO boardlikeVO) {
+	public int delete(BoardRestVO boardRestVO) {
 		logger.info("delete() 호출");
-		return sqlSession.delete(NAMESPACE + ".delete", boardlikeVO);
+		return sqlSession.delete(NAMESPACE + ".delete", boardRestVO);
 	}
 
 	@Override
@@ -44,5 +44,11 @@ public class BoardlikeDAOImple implements BoardlikeDAO {
 	public int deleteOnMember(int memberNumber) {
 		logger.info("deleteOnMember() 호출");
 		return sqlSession.delete(NAMESPACE + ".deleteOnMember", memberNumber);
+	}
+
+	@Override
+	public int insertBoardview(BoardRestVO boardRestVO) {
+		logger.info("insertBoardview() 호출");
+		return sqlSession.insert(NAMESPACE + ".insertBoardview", boardRestVO);
 	}
 }

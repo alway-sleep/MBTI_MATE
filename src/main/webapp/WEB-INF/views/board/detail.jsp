@@ -190,6 +190,7 @@ body {
 		var memberNumber = "${sessionScope.memberVO.memberNumber}";
 		let commentsPage = 1;
 		commentsGET(1);
+		boardViews();
 		/******************************************************댓글 관련 기능*****************************************************************/
 		// 댓글 불러오기
 		function commentsGET(commentsPage) {
@@ -1208,7 +1209,7 @@ body {
 			// 추천 색깔이 검정색(미추천 상태)일 때 클릭 이벤트 발생 (추천 등록)
 			if ($('.detail-info #boardLikes').css('color') == 'rgb(0, 0, 0)') {
 				$.ajax({
-					url: '/mbti/boardlike',
+					url: '/mbti/board/like',
 					type: 'POST',
 					headers: {'Content-Type' : 'application/json'},
 					data: JSON.stringify({
@@ -1218,7 +1219,7 @@ body {
 					success: function(boardlikePOSTResult) {
 						if (boardlikePOSTResult == 1) {
 							$.ajax({
-								url: '/mbti/boardlike/'+boardNumber,
+								url: '/mbti/board/like/'+boardNumber,
 								type: 'GET',
 								success: function(boardlikeGETResult) {
 									$('#boardLikes').html(boardlikeGETResult);
@@ -1231,7 +1232,7 @@ body {
 			  // 추천 색깔이 빨간색(추천 상태)일 때 클릭 이벤트 발생 (추천 취소)
 			} else if ($('.detail-info #boardLikes').css('color') == 'rgb(255, 0, 0)') { 					
 				$.ajax({
-					url: '/mbti/boardlike',
+					url: '/mbti/board/like',
 					type: 'DELETE',
 					headers: {'Content-Type' : 'application/json'},
 					data: JSON.stringify({
@@ -1241,7 +1242,7 @@ body {
 					success: function(boardlikeDELETEResult) {
 						if (boardlikeDELETEResult == 1) {
 							$.ajax({
-								url: '/mbti/boardlike/'+boardNumber,
+								url: '/mbti/board/like/'+boardNumber,
 								type: 'GET',
 								success: function(boardlikeGETResult) {
 									$('#boardLikes').html(boardlikeGETResult);
@@ -1292,6 +1293,24 @@ body {
 				return false;
 			}
 		}); // end $('input[type="submit"][value="삭제"]').click(function(e) {})
+		function boardViews() {
+			<c:if test="${boardVO.memberNumber ne sessionScope.memberVO.memberNumber && boardVO.boardviewNumber eq 0}">
+				$.ajax({
+					url: '/mbti/board/view',
+					type: 'POST',
+					headers: {'Content-Type' : 'application/json'},
+					data: JSON.stringify({
+				    	boardNumber : "${target.boardNumber}",
+				    	memberNumber : "${sessionScope.memberVO.memberNumber}"
+				    	}),
+					success: function(boardviewPOSTResult) {
+						if (boardviewPOSTResult == 1) {
+							$('#boardViews').text("${boardVO.boardViews + 1}");
+						}
+					}
+				});
+			</c:if>
+		} // end boardViews()
 		/**********************************************************************************************************************************/
 	}); // end $(document).ready(function() {})
 </script>
@@ -1312,7 +1331,7 @@ body {
 					<div class="board-info">
 						<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd HH:mm:ss" var="boardRegdate"/>
 						<span id="boardRegdate">${boardRegdate}</span>
-						<span id="boardViews">조회 ${boardVO.boardViews}</span>
+						<span>조회</span>&nbsp;<span id="boardViews">${boardVO.boardViews}</span>
 					</div>
 				</div>
 			</div>

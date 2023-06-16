@@ -1,5 +1,6 @@
 package com.cafe.mbti.domain;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class BoardVO {
@@ -10,13 +11,13 @@ public class BoardVO {
 	private String[] boardFiles;
 	// JOIN
 	private String memberNickname, memberPicture;
-	private int boardlikeNumber;
+	private int boardviewNumber, boardlikeNumber;
 
 	public BoardVO() {}
 
 	public BoardVO(int boardNumber, int memberNumber, int boardSection, int boardList, int boardType, String boardName,
 			String boardTitle, String boardContent, int boardViews, int boardLikes, int boardComments,
-			Date boardRegdate, String[] boardFiles, String memberNickname, String memberPicture, int boardlikeNumber) {
+			Date boardRegdate, String[] boardFiles, String memberNickname, String memberPicture, int boardviewNumber, int boardlikeNumber) {
 		this.boardNumber = boardNumber;
 		this.memberNumber = memberNumber;
 		this.boardSection = boardSection;
@@ -31,6 +32,7 @@ public class BoardVO {
 		this.boardFiles = boardFiles;
 		this.memberNickname = memberNickname;
 		this.memberPicture = memberPicture;
+		this.boardviewNumber = boardviewNumber;
 		this.boardlikeNumber = boardlikeNumber;
 	}
 
@@ -146,6 +148,14 @@ public class BoardVO {
 		this.memberPicture = memberPicture;
 	}
 
+	public int getBoardviewNumber() {
+		return boardviewNumber;
+	}
+
+	public void setBoardviewNumber(int boardviewNumber) {
+		this.boardviewNumber = boardviewNumber;
+	}
+
 	public int getBoardlikeNumber() {
 		return boardlikeNumber;
 	}
@@ -159,7 +169,9 @@ public class BoardVO {
 	}
 
 	public void setBoardFiles(String boardFiles) {
-		this.boardFiles = boardFiles.split(", ");
+		if (boardFiles != null || boardFiles != "") {
+			this.boardFiles = boardFiles.split(", ");			
+		}
 	}
 
 	public int getBoardSeqNextVal() {
@@ -168,11 +180,12 @@ public class BoardVO {
 
 	@Override
 	public String toString() {
-		return "BoardVO [boardNumber=" + boardNumber + ", memberNumber=" + memberNumber + ", boardSection="
-				+ boardSection + ", boardList=" + boardList + ", boardType=" + boardType + ", boardName=" + boardName
-				+ ", boardTitle=" + boardTitle + ", boardContent=" + boardContent + ", boardViews=" + boardViews
-				+ ", boardLikes=" + boardLikes + ", boardComments=" + boardComments + ", boardRegdate=" + boardRegdate
-				+ ", boardFiles=" + boardFiles + ", memberNickname=" + memberNickname + ", memberPicture="
-				+ memberPicture + ", boardlikeNumber=" + boardlikeNumber + "]";
+		return "BoardVO [boardSeqNextVal=" + boardSeqNextVal + ", boardNumber=" + boardNumber + ", memberNumber="
+				+ memberNumber + ", boardSection=" + boardSection + ", boardList=" + boardList + ", boardType="
+				+ boardType + ", boardName=" + boardName + ", boardTitle=" + boardTitle + ", boardContent="
+				+ boardContent + ", boardViews=" + boardViews + ", boardLikes=" + boardLikes + ", boardComments="
+				+ boardComments + ", boardRegdate=" + boardRegdate + ", boardFiles=" + Arrays.toString(boardFiles)
+				+ ", memberNickname=" + memberNickname + ", memberPicture=" + memberPicture + ", boardviewNumber="
+				+ boardviewNumber + ", boardlikeNumber=" + boardlikeNumber + "]";
 	}
 }

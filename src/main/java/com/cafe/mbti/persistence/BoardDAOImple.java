@@ -186,6 +186,12 @@ public class BoardDAOImple implements BoardDAO {
 	}
 
 	@Override
+	public int selectBoardViews(int boardNumber) {
+		logger.info("selectBoardViews()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectBoardViews", boardNumber);
+	}
+
+	@Override
 	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
 		logger.info("update() 호출");
 		Map<String, Object> args = new HashMap<>();

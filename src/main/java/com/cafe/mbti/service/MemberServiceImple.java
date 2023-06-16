@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.persistence.BoardDAO;
-import com.cafe.mbti.persistence.BoardlikeDAO;
+import com.cafe.mbti.persistence.BoardRestDAO;
 import com.cafe.mbti.persistence.CommentsDAO;
 import com.cafe.mbti.persistence.MemberDAO;
 import com.cafe.mbti.persistence.ReplyDAO;
@@ -22,7 +22,7 @@ public class MemberServiceImple implements MemberService {
 	@Autowired
 	private BoardDAO boardDAO;
 	@Autowired
-	private BoardlikeDAO boardlikeDAO;
+	private BoardRestDAO boardlikeDAO;
 	@Autowired
 	private CommentsDAO commentsDAO;
 	@Autowired

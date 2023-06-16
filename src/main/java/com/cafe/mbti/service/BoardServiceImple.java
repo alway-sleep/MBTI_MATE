@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.persistence.BoardDAO;
-import com.cafe.mbti.persistence.BoardlikeDAO;
+import com.cafe.mbti.persistence.BoardRestDAO;
 import com.cafe.mbti.persistence.CommentsDAO;
 import com.cafe.mbti.persistence.ReplyDAO;
 import com.cafe.mbti.util.BoardPageCriteria;
@@ -28,7 +28,7 @@ public class BoardServiceImple implements BoardService {
 	@Autowired
 	private BoardDAO boardDAO;
 	@Autowired
-	private BoardlikeDAO boardlikeDAO;
+	private BoardRestDAO boardlikeDAO;
 	@Autowired
 	private CommentsDAO commentsDAO;
 	@Autowired
@@ -189,6 +189,12 @@ public class BoardServiceImple implements BoardService {
 	public List<BoardVO> readByNicknameOnCmRp2(BoardPageCriteria boardPageCriteria) {
 		logger.info("readByNicknameOnCmRp2() 호출");
 		return boardDAO.selectByNicknameOnCmRp2(boardPageCriteria);
+	}
+
+	@Override
+	public int readBoardViews(int boardNumber) {
+		logger.info("readBoardViews() 호출");
+		return boardDAO.selectBoardViews(boardNumber);
 	}
 
 	@Override

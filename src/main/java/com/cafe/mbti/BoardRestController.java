@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cafe.mbti.domain.BoardlikeVO;
-import com.cafe.mbti.service.BoardlikeService;
+import com.cafe.mbti.domain.BoardRestVO;
+import com.cafe.mbti.service.BoardRestService;
 
 /*
  RESTful URL과 의미
@@ -33,32 +33,40 @@ import com.cafe.mbti.service.BoardlikeService;
  HTTP Response Body에 직접 데이터를 작성하므로 @ResponseBody 어노테이션을 사용할 필요가 없습니다.
  */
 @RestController
-@RequestMapping(value="/boardlike")
-public class BoardlikeRestController {
-	private static final Logger logger = LoggerFactory.getLogger(BoardlikeRestController.class);
+@RequestMapping(value="/board")
+public class BoardRestController {
+	private static final Logger logger = LoggerFactory.getLogger(BoardRestController.class);
 	
 	@Autowired
-	private BoardlikeService boardlikeService;
+	private BoardRestService boardRestService;
 	
-	@PostMapping // POST : 게시글 추천수 + 1
+	@PostMapping("/like") // POST : 게시글 추천수 + 1
 	// @RequestBody : 클라이언트에서 전송받은 JSON타입의 데이터를 자바 객체로 변환시켜주는 annotation
-	public ResponseEntity<Integer> boardlikePOST(HttpServletRequest request, @RequestBody BoardlikeVO boardlikeVO) {
+	public ResponseEntity<Integer> boardlikePOST(HttpServletRequest request, @RequestBody BoardRestVO boardRestVO) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		return new ResponseEntity<Integer>(boardlikeService.create(boardlikeVO), HttpStatus.OK);
+		return new ResponseEntity<Integer>(boardRestService.createBoardlike(boardRestVO), HttpStatus.OK);
 	} // end createBoardlike()
 	
-	@GetMapping("/{boardNumber}") // GET : 게시글 추천수 카운팅
+	@GetMapping("/like/{boardNumber}") // GET : 게시글 추천수 카운팅
 	public ResponseEntity<Integer> boardLikesGET(HttpServletRequest request, @PathVariable("boardNumber") Integer boardNumber) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 
-		return new ResponseEntity<Integer>(boardlikeService.readBoardlikeCount(boardNumber), HttpStatus.OK);
+		return new ResponseEntity<Integer>(boardRestService.readBoardlikeCount(boardNumber), HttpStatus.OK);
 	} // end selectBoardLikes()
 	
-	@DeleteMapping // DELETE : 게시글 추천수 - 1
-	public ResponseEntity<Integer> boardlikeDELETE(HttpServletRequest request, @RequestBody BoardlikeVO boardlikeVO) {
+	@DeleteMapping("/like") // DELETE : 게시글 추천수 - 1
+	public ResponseEntity<Integer> boardlikeDELETE(HttpServletRequest request, @RequestBody BoardRestVO boardRestVO) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 
-		return new ResponseEntity<Integer>(boardlikeService.delete(boardlikeVO), HttpStatus.OK);
-	} // end deleteBoardlike()	
+		return new ResponseEntity<Integer>(boardRestService.delete(boardRestVO), HttpStatus.OK);
+	} // end deleteBoardlike()
+	
+	@PostMapping("/view") // POST : 게시글 조휘수 + 1
+	// @RequestBody : 클라이언트에서 전송받은 JSON타입의 데이터를 자바 객체로 변환시켜주는 annotation
+	public ResponseEntity<Integer> boardviewPOST(HttpServletRequest request, @RequestBody BoardRestVO boardRestVO) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		
+		return new ResponseEntity<Integer>(boardRestService.createBoardview(boardRestVO), HttpStatus.OK);
+	} // end boardviewPOST()
 } // end CommentRestController

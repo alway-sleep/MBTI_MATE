@@ -22,6 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		VALUES
 		(#{boardSeqNextVal}, #{memberNumber}, #{boardSection}, #{boardList}, #{boardName}, #{boardTitle}, #{boardContent}, #{boardFiles})
 	</insert>
+	
 	<!-- 전체 게시글의 수 -->
 	<select id="selectCountOnBoard" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
@@ -252,10 +253,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 게시글 출력 -->
 	<select id="select" resultType="BoardVO">
-		SELECT B.*, M.${memberNickname}, M.${memberPicture}, BL.${boardlikeNumber}
+		SELECT B.*, M.${memberNickname}, M.${memberPicture}, BL.${boardlikeNumber}, BV.${boardviewNumber}
 		FROM ${board} B
 		LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
 		LEFT OUTER JOIN ${boardlike} BL ON B.${boardNumber} = BL.${boardNumber} AND BL.${memberNumber} = #{memberNumber}
+		LEFT OUTER JOIN ${boardview} BV ON B.${boardNumber} = BV.${boardNumber} AND BV.${memberNumber} = #{memberNumber}
 		WHERE B.${boardNumber} = #{boardNumber}
 	</select>
 	

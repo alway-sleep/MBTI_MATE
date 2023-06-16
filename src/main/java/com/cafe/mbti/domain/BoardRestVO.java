@@ -1,14 +1,23 @@
 package com.cafe.mbti.domain;
 
-public class BoardlikeVO {
-	private int boardlikeSeqNextVal, boardlikeNumber, boardNumber, memberNumber;
+public class BoardRestVO {
+	private int boardviewSeqNextVal, boardlikeSeqNextVal, boardviewNumber, boardlikeNumber, boardNumber, memberNumber;
 
-	public BoardlikeVO() {}
+	public BoardRestVO() {}
 
-	public BoardlikeVO(int boardlikeNumber, int boardNumber, int memberNumber) {
+	public BoardRestVO(int boardviewNumber, int boardlikeNumber, int boardNumber, int memberNumber) {
+		this.boardviewNumber = boardviewNumber;
 		this.boardlikeNumber = boardlikeNumber;
 		this.boardNumber = boardNumber;
 		this.memberNumber = memberNumber;
+	}
+
+	public int getBoardviewNumber() {
+		return boardviewNumber;
+	}
+
+	public void setBoardviewNumber(int boardviewNumber) {
+		this.boardviewNumber = boardviewNumber;
 	}
 
 	public int getBoardlikeNumber() {
@@ -33,6 +42,14 @@ public class BoardlikeVO {
 
 	public void setMemberNumber(int memberNumber) {
 		this.memberNumber = memberNumber;
+	}
+	
+	public int getBoardviewSeqNextVal() {
+		return boardviewSeqNextVal;
+	}
+
+	public void setBoardviewSeqNextVal(int boardviewSeqNextVal) {
+		this.boardviewSeqNextVal = boardviewSeqNextVal;
 	}
 
 	public int getBoardlikeSeqNextVal() {

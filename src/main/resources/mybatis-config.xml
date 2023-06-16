@@ -45,7 +45,12 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 				<property name="boardRegdate" value="BOARD_REGDATE"/>
 				<property name="boardFiles" value="BOARD_FILES"/>
 					<property name="totalCount" value="TOTAL_COUNT"/>
-		<!-- BoardlikeVO | BOARDLIKE -->
+		<!-- BoardRestVO | BOARDVIEW -->
+		<property name="boardview" value="BOARDVIEW"/>
+		<property name="boardviewNumber" value="BOARDVIEW_NUMBER"/>
+			<property name="boardNumber" value="BOARD_NUMBER"/>
+			<property name="memberNumber" value="MEMBER_NUMBER"/>
+		<!-- BoardResteVO | BOARDLIKE -->
 		<property name="boardlike" value="BOARDLIKE"/>
 		<property name="boardlikeNumber" value="BOARDLIKE_NUMBER"/>
 			<property name="boardNumber" value="BOARD_NUMBER"/>

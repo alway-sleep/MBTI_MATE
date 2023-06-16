@@ -58,6 +58,8 @@ public interface BoardDAO {
 	List<BoardVO> selectByCmRpContent2(BoardPageCriteria boardPageCriteria);
 	// 검색 조건 : 댓글 작성자2
 	List<BoardVO> selectByNicknameOnCmRp2(BoardPageCriteria boardPageCriteria);
+	// 게시글 조회수
+	int selectBoardViews(int boardNumber);
 	// 게시글 수정
 	int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber);
 	// 인기글 업데이트
