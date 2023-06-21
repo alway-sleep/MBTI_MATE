@@ -88,8 +88,8 @@ body {
 				console.log(e.target.files[i]);
 				console.log(typeof e.target.files[i]);
 				console.log(e.target.files[i].size);
-				if (e.target.files[i].size > 104857600) {
-					alert('최대 100MB까지의 파일만 업로드 가능합니다.');
+				if (e.target.files[i].size > 52428800) {
+					alert('최대 50MB까지의 파일만 업로드 가능합니다.');
 					$('#files').val('');
 				}
 			}
