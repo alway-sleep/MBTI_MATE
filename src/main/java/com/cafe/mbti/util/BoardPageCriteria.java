@@ -4,57 +4,59 @@ package com.cafe.mbti.util;
 // 한 페이지에서 보여질 게시글의 개수를 저장하는 클래스
 // -> paging 처리에 필요한 start와 end 번호를 알 수 있음
 public class BoardPageCriteria {
-	private int boardPage; // 현재 페이지 번호
-	private int boardNumsPerPage; // 한 페이지의 게시글 개수
-	private int boardSection, boardList; // 접근한 게시판 구역, 위치
+	private Integer boardPage; // 현재 페이지 번호
+	private Integer boardNumsPerPage; // 한 페이지의 게시글 개수
+	private Integer boardSection, boardList; // 접근한 게시판 구역, 위치
 	private String keyword;
 	
 	public BoardPageCriteria() {
-		this.boardPage = 1;
-		this.boardNumsPerPage = 5;
-		this.boardSection=0;
-		this.boardList=0;
-		this.keyword = "";
+		boardPage = 1;
+		boardNumsPerPage = 5;
+		boardSection = 0;
+		boardList = 0;
+		keyword = "";
 	}
 	
-	public BoardPageCriteria(int boardPage, int boardNumsPerPage, int boardSection, int boardList, String keyword) {
-		this.boardPage = boardPage;
-		this.boardNumsPerPage = boardNumsPerPage;
-		this.boardSection = boardSection;
-		this.boardList = boardList;
-		this.keyword = keyword;
+	public BoardPageCriteria setBoardPageCriteria(BoardPageCriteria boardPageCriteria, Integer boardPage, Integer boardNumsPerPage, Integer boardSection, Integer boardList, String keyword) {
+		boardPageCriteria.setBoardPage(boardPage != null ? boardPage : boardPageCriteria.getBoardPage());
+		boardPageCriteria.setBoardNumsPerPage(boardNumsPerPage != null ? boardNumsPerPage : boardPageCriteria.getBoardNumsPerPage());
+		boardPageCriteria.setBoardSection(boardSection != null ? boardSection : boardPageCriteria.getBoardSection());
+		boardPageCriteria.setBoardList(boardList != null ? boardList : boardPageCriteria.getBoardList());
+		boardPageCriteria.setKeyword(keyword != null ? keyword : boardPageCriteria.getKeyword());
+		System.out.println(boardPageCriteria.toString());
+		return boardPageCriteria;
 	}
 
 	// getter/setter
-	public int getBoardPage() {
+	public Integer getBoardPage() {
 		return boardPage;
 	}
 
-	public void setBoardPage(int boardPage) {
+	public void setBoardPage(Integer boardPage) {
 		this.boardPage = boardPage;
 	}
 
-	public int getBoardNumsPerPage() {
+	public Integer getBoardNumsPerPage() {
 		return boardNumsPerPage;
 	}
 
-	public void setBoardNumsPerPage(int boardNumsPerPage) {
+	public void setBoardNumsPerPage(Integer boardNumsPerPage) {
 		this.boardNumsPerPage = boardNumsPerPage;
 	}
 	
-	public int getBoardSection() {
+	public Integer getBoardSection() {
 		return boardSection;
 	}
 
-	public void setBoardSection(int boardSection) {
+	public void setBoardSection(Integer boardSection) {
 		this.boardSection = boardSection;
 	}
 
-	public int getBoardList() {
+	public Integer getBoardList() {
 		return boardList;
 	}
 
-	public void setBoardList(int boardList) {
+	public void setBoardList(Integer boardList) {
 		this.boardList = boardList;
 	}
 
@@ -72,12 +74,18 @@ public class BoardPageCriteria {
 	}
 
 	// 현재 보여지는 페이지의 시작 글 일련번호(rn)
-	public int getBoardStart() {
+	public Integer getBoardStart() {
 		return (this.boardPage - 1) * this.boardNumsPerPage + 1;
 	}
 	
 	// 현재 보여지는 페이지의 마지막 글 일련번호(rn)
-	public int getBoardEnd() {
+	public Integer getBoardEnd() {
 		return this.boardPage * this.boardNumsPerPage;
+	}
+
+	@Override
+	public String toString() {
+		return "BoardPageCriteria [boardPage=" + boardPage + ", boardNumsPerPage=" + boardNumsPerPage
+				+ ", boardSection=" + boardSection + ", boardList=" + boardList + ", keyword=" + keyword + "]";
 	}
 }

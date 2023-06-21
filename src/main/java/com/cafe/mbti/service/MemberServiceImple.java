@@ -1,11 +1,14 @@
 package com.cafe.mbti.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.persistence.BoardDAO;
 import com.cafe.mbti.persistence.BoardRestDAO;
@@ -68,6 +71,12 @@ public class MemberServiceImple implements MemberService {
 	public int login(String memberId, String memberPw) {
 		logger.info("login() 호출");
 		return memberDAO.login(memberId, memberPw);
+	}
+	
+	@Override
+	public int readNumberById(String memberId) {
+		logger.info("readNumberById() 호출");
+		return memberDAO.selectNumberById(memberId);
 	}
 
 	@Override
@@ -209,14 +218,26 @@ public class MemberServiceImple implements MemberService {
 	}
 	
 	@Override
-	public int readNumberByNickname(String memberNickname) {
-		logger.info("readNumberByNickname() 호출");
-		return memberDAO.selectNumberByNickname(memberNickname);
+	public int readCountByMember(int memberNumber) {
+		logger.info("readCountByMember() 호출");
+		return memberDAO.selectCountByMember(memberNumber);
 	}
-
+	
 	@Override
-	public int readNumberById(String memberId) {
-		logger.info("readNumberById() 호출");
-		return memberDAO.selectNumberById(memberId);
+	public int readCountByLike(int memberNumber) {
+		logger.info("readCountByLike() 호출");
+		return memberDAO.selectCountByLike(memberNumber);
+	}
+	
+	@Override
+	public List<BoardVO> readAllByMember(int memberNumber, int boardStart, int boardEnd) {
+		logger.info("readAllByMember() 호출");	
+		return memberDAO.selectAllByMember(memberNumber, boardStart, boardEnd);
+	}
+	
+	@Override
+	public List<BoardVO> readAllByLike(int memberNumber, int boardStart, int boardEnd) {
+		logger.info("readAllByLike() 호출");	
+		return memberDAO.selectAllByLike(memberNumber, boardStart, boardEnd);
 	}
 }

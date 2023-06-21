@@ -4,11 +4,14 @@ package com.cafe.mbti.util;
 // 한 페이지에서 보여질 게시글의 개수를 저장하는 클래스
 // -> paging 처리에 필요한 start와 end 번호를 알 수 있음
 public class CmRpPageCriteria {
+	private int memberNumber;
 	private int commentsPage, replyPage; // 현재 페이지 번호
 	private int commentsNumsPerPage, replyNumsPerPage; // 한 페이지의 댓글 개수
 	private int boardNumber, commentsNumber;
 	
 	public CmRpPageCriteria() {
+		this.memberNumber = 0;
+		
 		this.commentsPage = 1;
 		this.commentsNumsPerPage = 10;
 		this.boardNumber = 0;
@@ -18,7 +21,8 @@ public class CmRpPageCriteria {
 		this.commentsNumber =0;
 	}
 	
-	public CmRpPageCriteria(int commentsPage, int commentsNumsPerPage, int boardNumber, int replyPage, int replyNumsPerPage, int commentsNumber) {
+	public CmRpPageCriteria(int memberNumber, int commentsPage, int commentsNumsPerPage, int boardNumber, int replyPage, int replyNumsPerPage, int commentsNumber) {
+		this.memberNumber = memberNumber;
 		this.commentsPage = commentsPage;
 		this.commentsNumsPerPage = commentsNumsPerPage;
 		this.boardNumber = boardNumber;
@@ -26,6 +30,14 @@ public class CmRpPageCriteria {
 		this.replyPage = replyPage;
 		this.replyNumsPerPage = replyNumsPerPage;
 		this.commentsNumber = commentsNumber;
+	}
+
+	public int getMemberNumber() {
+		return memberNumber;
+	}
+
+	public void setMemberNumber(int memberNumber) {
+		this.memberNumber = memberNumber;
 	}
 
 	// getter/setter

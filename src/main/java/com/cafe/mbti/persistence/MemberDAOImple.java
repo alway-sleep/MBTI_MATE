@@ -1,6 +1,7 @@
 package com.cafe.mbti.persistence;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.domain.MemberVO;
 
 // TODO @Repository @Component : 영속 계층(Persistence Layer)의 DB 관련 기능을 담당
@@ -64,6 +66,12 @@ public class MemberDAOImple implements MemberDAO {
 		args.put("memberId", memberId);
 		args.put("memberPw", memberPw);
 		return sqlSession.selectOne(NAMESPACE + ".login", args);
+	}
+
+	@Override
+	public int selectNumberById(String memberId) {
+		logger.info("selectNumberById()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectNumberById", memberId);
 	}
 
 	@Override
@@ -240,14 +248,34 @@ public class MemberDAOImple implements MemberDAO {
 	}
 	
 	@Override
-	public int selectNumberByNickname(String memberNickname) {
-		logger.info("selectNumberByNickname() 호출");
-		return sqlSession.selectOne(NAMESPACE + ".selectNumberByNickname", memberNickname);
+	public int selectCountByMember(int memberNumber) {
+		logger.info("selectCountByMember()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByMember", memberNumber);
 	}
 	
 	@Override
-	public int selectNumberById(String memberId) {
-		logger.info("selectNumberById() 호출");
-		return sqlSession.selectOne(NAMESPACE + ".selectNumberById", memberId);
+	public int selectCountByLike(int memberNumber) {
+		logger.info("selectCountByLike()  호출");
+		return sqlSession.selectOne(NAMESPACE + ".selectCountByLike", memberNumber);
+	}
+	
+	@Override
+	public List<BoardVO> selectAllByMember(int memberNumber, int boardStart, int boardEnd) {
+		logger.info("selectAllByMember()  호출");
+		Map<String, Object> args = new HashMap<>();
+		args.put("memberNumber", memberNumber);
+		args.put("boardStart", boardStart);
+		args.put("boardEnd", boardEnd);
+		return sqlSession.selectList(NAMESPACE + ".selectAllByMember", args);
+	}
+	
+	@Override
+	public List<BoardVO> selectAllByLike(int memberNumber, int boardStart, int boardEnd) {
+		logger.info("selectAllByLike()  호출");
+		Map<String, Object> args = new HashMap<>();
+		args.put("memberNumber", memberNumber);
+		args.put("boardStart", boardStart);
+		args.put("boardEnd", boardEnd);
+		return sqlSession.selectList(NAMESPACE + ".selectAllByLike", args);
 	}
 } // end MemberDAOImple

@@ -100,6 +100,7 @@ body {
 }
 /* 닉네임, 추천 버튼 스타일 */
 .detail-wrapper button#boardLikesToggle,
+.detail-wrapper button#memberNicknameOnBoard,
 .detail-wrapper button#memberNickname,
 .writer-wrapper button.memberNicknameOnComments {
 	border: none;
@@ -224,7 +225,7 @@ body {
 											'</div>'+ // \div .writer-picture
 											'<div class="writer-area">'+ // div .writer-area
 											'<div class="writer-info">'+ // div .writer-info
-											'<button class="memberNicknameOnComments" name="memberNickname">'+this.memberNickname+'</button>'+
+											'<button class="memberNicknameOnComments" name="memberNickname" value="'+this.memberNumber+'">'+this.memberNickname+'</button>'+
 											'</div>'+ // \div .writer-info
 											'<div class="comments-info">'+ // div .comments-info
 											'<span class="commentsRegdate">'+commentsRegdate+'</span>'+
@@ -424,7 +425,7 @@ body {
 									'<div class="writer-wrapper">'+ // div .writer-wrapper
 									'<div class="writer-area">'+ // div .writer-area
 									'<div class="writer-info">'+ // div .writer-info
-									'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+									'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 									'</div>'+ // \div .writer-info
 									'</div>'+ // \div .writer-area
 									'</div>'+ // \div .writer-wrapper
@@ -468,7 +469,7 @@ body {
 										'</div>'+ // \div .writer-picture
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
-										'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
+										'<button class="memberNicknameOnReply" name="memberNickname" value="'+this.memberNumber+'">'+this.memberNickname+'</button>'+
 										'</div>'+ // \div .writer-info
 										'<div class="reply-info">'+ // div .reply-info
 										'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -503,7 +504,7 @@ body {
 										'<div class="writer-wrapper">'+ // div .writer-wrapper
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
-										'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+										'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 										'</div>'+ // \div .writer-info
 										'</div>'+ // \div .writer-area
 										'</div>'+ // \div .writer-wrapper
@@ -597,7 +598,7 @@ body {
 										'</div>'+ // \div .writer-picture
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
-										'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
+										'<button class="memberNicknameOnReply" name="memberNickname" value="'+this.memberNumber+'">'+this.memberNickname+'</button>'+
 										'</div>'+ // \div .writer-info
 										'<div class="reply-info">'+ // div .reply-info
 										'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -632,7 +633,7 @@ body {
 										'<div class="writer-wrapper">'+ // div .writer-wrapper
 										'<div class="writer-area">'+ // div .writer-area
 										'<div class="writer-info">'+ // div .writer-info
-										'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+										'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 										'</div>'+ // \div .writer-info
 										'</div>'+ // \div .writer-area
 										'</div>'+ // \div .writer-wrapper
@@ -741,7 +742,7 @@ body {
 														'</div>'+ // \div .writer-picture
 														'<div class="writer-area">'+ // div .writer-area
 														'<div class="writer-info">'+ // div .writer-info
-														'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
+														'<button class="memberNicknameOnReply" name="memberNickname" value="'+this.memberNumber+'">'+this.memberNickname+'</button>'+
 														'</div>'+ // \div .writer-info
 														'<div class="reply-info">'+ // div .reply-info
 														'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -776,7 +777,7 @@ body {
 														'<div class="writer-wrapper">'+ // div .writer-wrapper
 														'<div class="writer-area">'+ // div .writer-area
 														'<div class="writer-info">'+ // div .writer-info
-														'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+														'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 														'</div>'+ // \div .writer-info
 														'</div>'+ // \div .writer-area
 														'</div>'+ // \div .writer-wrapper
@@ -882,7 +883,7 @@ body {
 															'<div class="writer-wrapper">'+ // div .writer-wrapper
 															'<div class="writer-area">'+ // div .writer-area
 															'<div class="writer-info">'+ // div .writer-info
-															'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+															'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 															'</div>'+ // \div .writer-info
 															'</div>'+ // \div .writer-area
 															'</div>'+ // \div .writer-wrapper
@@ -926,7 +927,7 @@ body {
 																'</div>'+ // \div .writer-picture
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
+																'<button class="memberNicknameOnReply" name="memberNickname" value="'+this.memberNumber+'">'+this.memberNickname+'</button>'+
 																'</div>'+ // \div .writer-info
 																'<div class="reply-info">'+ // div .reply-info
 																'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -961,7 +962,7 @@ body {
 																'<div class="writer-wrapper">'+ // div .writer-wrapper
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+																'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 																'</div>'+ // \div .writer-info
 																'</div>'+ // \div .writer-area
 																'</div>'+ // \div .writer-wrapper
@@ -1057,7 +1058,7 @@ body {
 															'<div class="writer-wrapper">'+ // div .writer-wrapper
 															'<div class="writer-area">'+ // div .writer-area
 															'<div class="writer-info">'+ // div .writer-info
-															'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+															'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 															'</div>'+ // \div .writer-info
 															'</div>'+ // \div .writer-area
 															'</div>'+ // \div .writer-wrapper
@@ -1101,7 +1102,7 @@ body {
 																'</div>'+ // \div .writer-picture
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button class="memberNicknameOnReply" name="memberNickname">'+this.memberNickname+'</button>'+
+																'<button class="memberNicknameOnReply" name="memberNickname" value="'+this.memberNumber+'">'+this.memberNickname+'</button>'+
 																'</div>'+ // \div .writer-info
 																'<div class="reply-info">'+ // div .reply-info
 																'<span class="replyRegdate">'+replyRegdate+'</span>'+
@@ -1136,7 +1137,7 @@ body {
 																'<div class="writer-wrapper">'+ // div .writer-wrapper
 																'<div class="writer-area">'+ // div .writer-area
 																'<div class="writer-info">'+ // div .writer-info
-																'<button class="memberNicknameOnReply">${sessionScope.memberVO.memberNickname }</button>'+
+																'<button class="memberNicknameOnReply" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname }</button>'+
 																'</div>'+ // \div .writer-info
 																'</div>'+ // \div .writer-area
 																'</div>'+ // \div .writer-wrapper
@@ -1257,13 +1258,36 @@ body {
 		// 이전 목록으로 돌아가기
 		$('.detail-options .listGET').click(function(e) {
 			e.preventDefault();
-			$.ajax({
-				url: '/mbti/board/list',
-				type: 'GET',
-				success: function(includeJSP) {
-					$('.content').html(includeJSP);
-				}
-			});
+			if ("${target.option}" == -1) {
+				$.ajax({
+					url: '/mbti/board/list',
+					type: 'GET',
+					data: {
+						boardPage : "${sessionScope.target.boardPage}",
+						boardSection : "${sessionScope.target.boardSection}",
+						boardList : "${sessionScope.target.boardList}",
+						boardName : "${sessionScope.target.boardName}",
+						searchOption : "${sessionScope.target.searchOption}",
+						keyword : "${sessionScope.target.keyword}"
+					},
+					success: function(includeJSP) {
+						$('.content').html(includeJSP);
+					}
+				});
+			} else {
+				$.ajax({
+					url: '/mbti/member/history',
+					type: 'GET',
+					data: {
+						boardPage : "${sessionScope.target.boardPage}",
+						memberNumber : "${sessionScope.target.memberNumber}",
+						option : "${sessionScope.target.option}"
+					},
+					success: function(includeJSP) {
+						$('.content').html(includeJSP);
+					}
+				});
+			}
 		}); // end $('.detail-options .listGET').click()				
 		// 게시글 수정
 		$('input[type="submit"][value="수정"]').click(function(e) {
@@ -1301,7 +1325,7 @@ body {
 					headers: {'Content-Type' : 'application/json'},
 					data: JSON.stringify({
 				    	boardNumber : "${target.boardNumber}",
-				    	memberNumber : "${sessionScope.memberVO.memberNumber}"
+				    	memberNumber : memberNumber
 				    	}),
 					success: function(boardviewPOSTResult) {
 						if (boardviewPOSTResult == 1) {
@@ -1312,6 +1336,10 @@ body {
 			</c:if>
 		} // end boardViews()
 		/**********************************************************************************************************************************/
+		$('.detail-wrapper').on('click', 'button#memberNicknameOnBoard, button.memberNicknameOnComments, button.memberNicknameOnReply', function(e) {
+			e.preventDefault();
+			window.open("/mbti/member/history?memberNumber="+$(this).val(), "_blank");
+		});
 	}); // end $(document).ready(function() {})
 </script>
 </head>
@@ -1326,7 +1354,7 @@ body {
 				</div>
 				<div class="writer-area">
 					<div class="writer-info">
-						<button id="memberNickname">${boardVO.memberNickname}</button>
+						<button id="memberNicknameOnBoard" value="${boardVO.memberNumber}">${boardVO.memberNickname}</button>
 					</div>
 					<div class="board-info">
 						<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd HH:mm:ss" var="boardRegdate"/>
@@ -1373,7 +1401,7 @@ body {
 					<div class="writer-wrapper">
 						<div class="writer-area">
 							<div class="writer-info">
-								<button id="memberNickname">${sessionScope.memberVO.memberNickname}</button>
+								<button id="memberNickname" style="color: #000; cursor: default;" disabled>${sessionScope.memberVO.memberNickname}</button>
 							</div>
 						</div>
 					</div>

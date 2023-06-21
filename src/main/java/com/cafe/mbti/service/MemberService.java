@@ -1,5 +1,8 @@
 package com.cafe.mbti.service;
 
+import java.util.List;
+
+import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.domain.MemberVO;
 
 public interface MemberService {
@@ -13,6 +16,7 @@ public interface MemberService {
 	int isDuplicatedEmail(String memberEmail);
 	// 로그인
 	int login(String memberId, String memberPw);
+	int readNumberById(String memberId);
 	// 아이디/비밀번호 찾기
 	String readId(String memberName, String memberRRN, String memberPhone);
 	int readPw(String memberId, String memberName, String memberRRN, String memberPhone, String memberEmail);
@@ -47,7 +51,12 @@ public interface MemberService {
 	int delete(int memberNumber) throws Exception;
 	// 회원사진
 	int updatePicture(MemberVO memberVO);
-	//	
-	int readNumberByNickname(String memberNickname);
-	int readNumberById(String memberId);
+	// 회원 게시글의 수
+	int readCountByMember(int memberNumber);
+	// 회원 추천 게시글의 수
+	int readCountByLike(int memberNumber);
+	// 회원 게시글 정렬 후 출력
+	List<BoardVO> readAllByMember(int memberNumber, int boardStart, int boardEnd);
+	// 회원 추천 게시글 정렬 후 출력
+	List<BoardVO> readAllByLike(int memberNumber, int boardStart, int boardEnd);
 }

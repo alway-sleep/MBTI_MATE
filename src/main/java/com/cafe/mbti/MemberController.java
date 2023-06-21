@@ -1,6 +1,7 @@
 package com.cafe.mbti;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.service.MemberService;
+import com.cafe.mbti.util.BoardPageCriteria;
 import com.cafe.mbti.util.FileUtil;
+import com.cafe.mbti.util.PageMaker;
 import com.cafe.mbti.util.Target;
 
 @Controller // @Component
@@ -51,7 +55,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/login")
-	public void loginGET(HttpServletRequest request, Model model) {
+	public void loginGET(HttpServletRequest request) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 	}
 
@@ -95,8 +99,7 @@ public class MemberController {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		String selectId = memberService.readId(memberName, memberRRN, memberPhone);
 		if (selectId != null) {
-			selectId = selectId.substring(0, selectId.length() - 3) + "***";
-			redirectAttributes.addFlashAttribute("message", "아이디 : " + selectId);
+			redirectAttributes.addFlashAttribute("message", "아이디 : " + selectId.substring(0, selectId.length() - 3) + "***");
 			return "redirect:..";
 		} else {
 			redirectAttributes.addFlashAttribute("message", "입력하신 정보와 일치하는 아이디가 존재하지 않습니다.");
@@ -128,7 +131,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/mypage")
-	public void mypageGET(HttpServletRequest request, Model model) {
+	public void mypageGET(HttpServletRequest request) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 	}
 
@@ -196,7 +199,7 @@ public class MemberController {
 		
 		fileUtil.deleteMemberPicture(resourcesPath, memberNumber);			
 		if (file == null) { // 기본 프로필 설정
-			memberVO.setMemberPicture("picture.jpg");
+			memberVO.setMemberPicture("picture.png");
 			memberService.updatePicture(memberVO);
 			redirectAttributes.addFlashAttribute("message", "기본 프로필로 설정했습니다.");
 			redirectAttributes.addFlashAttribute("picturePOSTResult", "1");		
@@ -208,4 +211,38 @@ public class MemberController {
 		}
 		return "redirect:/member/picture";
 	}
+	
+	@GetMapping("/history")
+	public void historyGET(HttpServletRequest request, Model model, Integer boardPage, Integer memberNumber, Integer option) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		
+		Target target = new Target();
+		target.setBoardPage(boardPage);
+		target.setMemberNumber(memberNumber);
+		target.setOption(option);
+		request.getSession().setAttribute("target", target);
+		
+		BoardPageCriteria boardPageCriteria = new BoardPageCriteria();
+		boardPageCriteria.setBoardPage(boardPage);
+		List<BoardVO> boardVO = null;
+		if (option == 0) {
+			boardVO = memberService.readAllByMember(memberNumber, boardPageCriteria.getBoardStart(), boardPageCriteria.getBoardEnd());
+			model.addAttribute("pageMaker", pageMaker(boardPageCriteria, memberService.readCountByMember(memberNumber)));
+		} else if (option == 1) {
+			
+		} else if (option == 2) {
+			boardVO = memberService.readAllByLike(memberNumber, boardPageCriteria.getBoardStart(), boardPageCriteria.getBoardEnd());
+			model.addAttribute("pageMaker", pageMaker(boardPageCriteria, memberService.readCountByLike(memberNumber)));
+		}
+		model.addAttribute("boardVO", boardVO);
+		model.addAttribute("memberVO", memberService.read(memberNumber));
+	}
+	
+	private PageMaker pageMaker(BoardPageCriteria boardPageCriteria, int boardTotalCount) {		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setBoardPageCriteria(boardPageCriteria);
+		pageMaker.setBoardTotalCount(boardTotalCount);
+		pageMaker.setBoardPageData();
+		return pageMaker;
+	} // end pageMaker()
 } // end MemberController

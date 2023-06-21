@@ -133,10 +133,7 @@ a {
 	color: #333;
 }
 
-a:hover {
-	text-decoration: underline;
-}
-
+a:hover,
 .selected {
 	text-decoration: underline;
 }
@@ -387,20 +384,27 @@ footer {
 				location.reload();
 			}); // end $(popup).on('beforeunload', function(e) {})
 		}); // end $('.member-picture-set').click(function(e) {})
-		// 내가 쓴 게시글 보기
-		$('.countByNumberOnBoard').click(function(e) {
-			e.preventDefault();
-		}); // end $('.countByNumberOnBoard').click(function(e) {})
-		// 내가 쓴 댓글 보기
-		$('.countByNumberOnCmRp').click(function(e) {
-			e.preventDefault();
-		}); // end $('.countByNumberOnCmRp').click(function(e) {})
 		// 로그인 모달
 		$('.loginGET').click(function(e) {
 			e.preventDefault();
 			$('.login-modal').css('display', 'block');
 			$('#memberId').attr('autofocus', true);
 		}); // end $('.loginGET').click(function(e) {})
+		$('.member-info').on('click', 'a.countByNumberOnBoard, a.countByNumberOnCmRp', function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: '/mbti/member/history',
+				type: 'GET',
+			    data: {
+			    	boardPage : 1,
+			    	memberNumber : "${sessionScope.memberVO.memberNumber}",
+			    	option : 0
+			    	},
+				success: function(includeJSP) {
+					$('.content').html(includeJSP);
+				}
+			});
+		});
 	}); // end $(document).ready(function() {})
 </script>
 </head>
@@ -480,21 +484,21 @@ footer {
 										<th>등급</th>
 										<th class="member-grade">
 											<c:choose>
-												<c:when test="${sessionScope.memberVO.memberGrade eq 0}">씨앗</c:when>
-												<c:when test="${sessionScope.memberVO.memberGrade eq 1}">새싹</c:when>
-												<c:when test="${sessionScope.memberVO.memberGrade eq 2}">꽃</c:when>
-												<c:when test="${sessionScope.memberVO.memberGrade eq 3}">열매</c:when>
-												<c:when test="${sessionScope.memberVO.memberGrade eq 4}">스탭</c:when>
-												<c:when test="${sessionScope.memberVO.memberGrade eq 5}">매니저</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 0}">씨앗&#x1F954;</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 1}">새싹&#x1F331;</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 2}">꽃&#x1F33C;</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 3}">열매&#x1F352;</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 4}">스탭&#x1F332;</c:when>
+												<c:when test="${sessionScope.memberVO.memberGrade eq 5}">매니저&#x1F384;</c:when>
 											</c:choose>
 										</th>
 									</tr>
 									<tr>
-										<th>회원</th>
+										<th>프리미엄</th>
 										<th class="member-premium">
 											<c:choose>
-												<c:when test="${sessionScope.memberVO.memberPremium eq 0}">일반</c:when>
-												<c:when test="${sessionScope.memberVO.memberPremium eq 1}">프리미엄</c:when>
+												<c:when test="${sessionScope.memberVO.memberPremium eq 0}">&#x274C;</c:when>
+												<c:when test="${sessionScope.memberVO.memberPremium eq 1}">&#x1F48E;</c:when>
 											</c:choose>
 										</th>
 									</tr>
@@ -508,7 +512,7 @@ footer {
 									</tr>
 								</tbody>
 							</table>
-						</div>					
+						</div>
 					</c:if>
 				</div>
 				<!-- Category Boards content here -->

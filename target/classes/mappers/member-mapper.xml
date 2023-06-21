@@ -52,6 +52,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		AND
 		${memberPw} = #{memberPw}
 	</select>
+	<select id="selectNumberById" resultType="Integer">
+		SELECT ${memberNumber}
+		FROM ${member}
+		WHERE ${memberId} = #{memberId}
+	</select>
 	
 	<!-- 아이디/비밀번호 찾기 -->
 	<select id="selectId" resultType="String">
@@ -210,15 +215,58 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE ${memberNumber} = #{memberNumber}
 	</update>
 	
-	<!--  -->
-	<select id="selectNumberByNickname" resultType="Integer">
-		SELECT ${memberNumber}
-		FROM ${member}
-		WHERE ${memberNickname} = #{memberNickname}
+	<!-- 회원 게시글의 수 -->
+	<select id="selectCountByMember" resultType="Integer">
+		SELECT COUNT(${boardNumber}) AS CNT
+		FROM ${board}
+		WHERE ${boardNumber} > 0 AND ${memberNumber} = #{memberNumber}
 	</select>
-	<select id="selectNumberById" resultType="Integer">
-		SELECT ${memberNumber}
-		FROM ${member}
-		WHERE ${memberId} = #{memberId}
+	
+	<!-- 추천 게시글의 수 -->
+	<select id="selectCountByLike" resultType="Integer">
+		SELECT COUNT(${boardNumber}) AS CNT
+		FROM ${boardlike}
+		WHERE ${memberNumber} = #{memberNumber}
+	</select>
+	
+	<!-- 회원 게시글 정렬 후 출력 -->
+	<select id="selectAllByMember" resultType="BoardVO">
+  		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT B.${boardNumber}, B.${boardType}, B.${boardTitle}, B.${boardViews}, B.${boardLikes}, B.${boardComments}, B.${boardRegdate}, M.${memberNickname}
+				FROM ${board} B
+				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+				WHERE B.${boardNumber} > 0 AND B.${memberNumber} = #{memberNumber}
+				ORDER BY B.${boardNumber} DESC
+				) B1
+			) B2
+		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
+	</select>
+	
+	<!-- 회원 추천 게시글 정렬 후 출력 -->
+	<select id="selectAllByLike" resultType="BoardVO">
+  		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
+  		FROM
+  			(
+  			SELECT ROWNUM AS RN, B1.*
+  			FROM
+  				(
+  				SELECT B.*, M.${memberNickname}
+  				FROM ${board} B
+  				LEFT OUTER JOIN ${member} M ON B.${memberNumber} = M.${memberNumber}
+  				WHERE ${boardNumber} IN
+  					(
+  					SELECT BL.${boardNumber}
+  					FROM ${boardlike} BL
+  					WHERE BL.${memberNumber} = #{memberNumber}
+  					)
+  				ORDER BY B.${boardNumber} DESC
+  				) B1
+  			) B2
+  		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 </mapper>

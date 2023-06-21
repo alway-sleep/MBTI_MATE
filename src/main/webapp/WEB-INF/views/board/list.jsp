@@ -158,7 +158,7 @@ body {
 					}
 				});
 			</c:if>
-		}); // end $('tbody td').closest('tr').find('a').click()		
+		}); // end $('tbody td').closest('tr').find('a').click()
 		// 게시글 작성
 		$('.list-options button[type="button"]').click(function(e) {
 			e.preventDefault();
@@ -299,6 +299,9 @@ body {
 						url: '/mbti/board/list',
 						type: 'GET',
 					    data: {
+					    	boardSection : "${sessionScope.target.boardSection}",
+					    	boardList : "${sessionScope.target.boardList}",
+					    	boardName : "${sessionScope.target.boardName}",
 					    	searchOption : parseInt($('#searchOption').val()),
 					    	keyword : $('#keyword').val()
 					    	},
@@ -391,20 +394,20 @@ body {
 				<li><a href="#" class="listGET-end">끝</a></li>
 			</ul>
 		</div>
-			<form class="search-form">
-				<select id="searchOption">
-					<option value="0">게시글 제목</option>
-					<option value="1">게시글 내용</option>
-					<option value="2">게시글 작성자</option>
-					<option value="3">댓글 내용</option>
-					<option value="4">댓글 작성자</option>
-					<option value="5">게시글 작성일</option>
-				</select>
-				&nbsp;
-				<input type="text" id="keyword" minlength="1"/>
-				&nbsp;
-				<input type="submit" value="검색">
-			</form>
+		<form class="search-form">
+			<select id="searchOption">
+				<option value="0">게시글 제목</option>
+				<option value="1">게시글 내용</option>
+				<option value="2">게시글 작성자</option>
+				<option value="3">댓글 내용</option>
+				<option value="4">댓글 작성자</option>
+				<option value="5">게시글 작성일</option>
+			</select>
+			&nbsp;
+			<input type="text" id="keyword" minlength="1"/>
+			&nbsp;
+			<input type="submit" value="검색">
+		</form>
 	</div>
 </body>
 </html>

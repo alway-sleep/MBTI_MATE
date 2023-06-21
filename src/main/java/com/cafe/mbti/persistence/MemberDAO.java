@@ -1,5 +1,8 @@
 package com.cafe.mbti.persistence;
 
+import java.util.List;
+
+import com.cafe.mbti.domain.BoardVO;
 import com.cafe.mbti.domain.MemberVO;
 
 public interface MemberDAO {
@@ -13,6 +16,7 @@ public interface MemberDAO {
 	int isDuplicatedEmail(String memberEmail);
 	// 로그인
 	int login(String memberId, String memberPw);
+	int selectNumberById(String memberId);
 	// 아이디/비밀번호 찾기
 	String selectId(String memberName, String memberRRN, String memberPhone);
 	int selectPw(String memberId, String memberName, String memberRRN, String memberPhone, String memberEmail);
@@ -47,7 +51,12 @@ public interface MemberDAO {
 	int delete(int memberNumber);
 	// 회원사진
 	int updatePicture(MemberVO memberVO);
-	//	
-	int selectNumberByNickname(String memberNickname);
-	int selectNumberById(String memberId);
+	// 회원 게시글의 수
+	int selectCountByMember(int memberNumber);
+	// 회원 추천 게시글의 수
+	int selectCountByLike(int memberNumber);
+	// 회원 게시글 정렬 후 출력
+	List<BoardVO> selectAllByMember(int memberNumber, int boardStart, int boardEnd);
+	// 회원 추천 게시글 정렬 후 출력
+	List<BoardVO> selectAllByLike(int memberNumber, int boardStart, int boardEnd);
 }
