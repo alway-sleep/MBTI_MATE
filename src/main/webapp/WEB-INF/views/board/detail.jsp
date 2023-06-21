@@ -1335,10 +1335,10 @@ body {
 					</div>
 				</div>
 			</div>
-			<c:if test="${boardVO.boardFiles[0].toString() ne \"''\"}">
+			<c:if test="${boardVO.boardFiles ne '*'}">
 				<input type="text" value="첨부파일" style="border: none;" onfocus="blur()" readonly>
 				<div class="board-files">
-						<c:forEach var="fileName" items="${boardVO.boardFiles}">
+						<c:forEach var="fileName" items="${boardVO.boardFilesArray}">
 							<div class="board-file"><a href="/mbti/resources/board?boardNumber=${boardVO.boardNumber}&fileName=${fileName}" download="${fileName}">${fileName}</a></div>
 						</c:forEach>
 				</div>

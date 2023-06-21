@@ -1,6 +1,5 @@
 package com.cafe.mbti.domain;
 
-import java.util.Arrays;
 import java.util.Date;
 
 public class BoardVO {
@@ -8,16 +7,17 @@ public class BoardVO {
 	private String boardName, boardTitle, boardContent;
 	private int boardViews, boardLikes, boardComments;
 	private Date boardRegdate;
-	private String[] boardFiles;
+	private String boardFiles;
 	// JOIN
 	private String memberNickname, memberPicture;
 	private int boardviewNumber, boardlikeNumber;
+	private String[] boardFilesArray;
 
 	public BoardVO() {}
 
 	public BoardVO(int boardNumber, int memberNumber, int boardSection, int boardList, int boardType, String boardName,
 			String boardTitle, String boardContent, int boardViews, int boardLikes, int boardComments,
-			Date boardRegdate, String[] boardFiles, String memberNickname, String memberPicture, int boardviewNumber, int boardlikeNumber) {
+			Date boardRegdate, String boardFiles, String memberNickname, String memberPicture, int boardviewNumber, int boardlikeNumber) {
 		this.boardNumber = boardNumber;
 		this.memberNumber = memberNumber;
 		this.boardSection = boardSection;
@@ -164,14 +164,17 @@ public class BoardVO {
 		this.boardlikeNumber = boardlikeNumber;
 	}
 
-	public String[] getBoardFiles() {
+	public String getBoardFiles() {
 		return boardFiles;
 	}
 
 	public void setBoardFiles(String boardFiles) {
-		if (boardFiles != null || boardFiles != "") {
-			this.boardFiles = boardFiles.split(", ");			
-		}
+		this.boardFiles = boardFiles;
+		this.boardFilesArray = boardFiles.split(", ");
+	}
+	
+	public String[] getBoardFilesArray() {
+		return boardFilesArray;
 	}
 
 	public int getBoardSeqNextVal() {
@@ -184,7 +187,7 @@ public class BoardVO {
 				+ memberNumber + ", boardSection=" + boardSection + ", boardList=" + boardList + ", boardType="
 				+ boardType + ", boardName=" + boardName + ", boardTitle=" + boardTitle + ", boardContent="
 				+ boardContent + ", boardViews=" + boardViews + ", boardLikes=" + boardLikes + ", boardComments="
-				+ boardComments + ", boardRegdate=" + boardRegdate + ", boardFiles=" + Arrays.toString(boardFiles)
+				+ boardComments + ", boardRegdate=" + boardRegdate + ", boardFiles=" + boardFiles
 				+ ", memberNickname=" + memberNickname + ", memberPicture=" + memberPicture + ", boardviewNumber="
 				+ boardviewNumber + ", boardlikeNumber=" + boardlikeNumber + "]";
 	}

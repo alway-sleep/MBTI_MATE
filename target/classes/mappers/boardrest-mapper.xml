@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace : dao 클래스의 sqlSession과 연결하기 위한 키로 사용 -->
+<mapper namespace = "com.cafe.mbti.BoardrestMapper">
+<!-- mapper 태그 -->
+<!-- <insert>, <select>, <update>, <delete> dao-sqlSession의 함수(insert, selectOne, selectList, update, delete)와 매핑되어 쿼리를 수행-->
+
+	<!-- id : dao.class의 sqlSession 특정 함수와 연결하기 위해 사용 -->
+	<!-- ${key} : mybatis-config.xml의 property.name의 value(DB테이블의 컬럼) -->
+	<!-- #{key} : dao.class의 sqlSession의 request.Parameter("name")의 value(입력받은 데이터) -->	
+
+	<!-- 게시글 추천 등록 -->
+	<insert id="insertBoardlike">
+		<selectKey keyProperty="boardlikeSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT BOARDLIKE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT
+		INTO ${boardlike}
+		(${boardlikeNumber}, ${boardNumber}, ${memberNumber})
+		VALUES
+		(#{boardlikeSeqNextVal}, #{boardNumber}, #{memberNumber})
+	</insert>
+	
+	<!-- 게시글 조회수 -->
+	<insert id="insertBoardview">
+		<selectKey keyProperty="boardviewSeqNextVal" resultType="Integer" order="BEFORE">
+				SELECT BOARDVIEW_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT
+		INTO ${boardview}
+		(${boardviewNumber}, ${boardNumber}, ${memberNumber})
+		VALUES
+		(#{boardviewSeqNextVal}, #{boardNumber}, #{memberNumber})
+	</insert>
+	
+	<!-- 게시글 추천 등록/취소 후 카운트 -->
+	<select id="selectBoardlikeCount" resultType="Integer">
+		SELECT COUNT(${boardlikeNumber}) AS CNT
+		FROM ${boardlike}
+		WHERE ${boardNumber} = #{boardNumber}
+	</select>
+	
+	<!-- 게시글 추천 취소 -->
+	<delete id="delete">
+		DELETE
+		FROM ${boardlike}
+		WHERE ${boardNumber} = #{boardNumber} AND ${memberNumber} = #{memberNumber}
+	</delete>
+	
+	<!-- 게시글 삭제 시 해당 게시글 추천 삭제 -->
+	<delete id="deleteOnBoard">
+		DELETE
+		FROM ${boardlike}
+		WHERE ${boardNumber} = #{boardNumber}
+	</delete>
+	
+	<!-- 회원탈퇴 시 해당 회원 게시글 추천 삭제 -->
+	<delete id="deleteOnMember">
+		DELETE
+		FROM ${boardlike}
+		WHERE ${memberNumber} = #{memberNumber}
+	</delete>
+</mapper>

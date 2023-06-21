@@ -120,13 +120,15 @@ public class BoardController {
 		Target target = (Target) request.getSession().getAttribute("target");
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		FileUtil fileUtil = new FileUtil();
-		String boardFiles = "";
+		String boardFiles = "*";
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
 		
+		System.out.println("첨부파일"+files);
+		System.out.println("첨부파일"+files.length);
 		if (files.length != 0) {
 			for (int i = 0; i < files.length; i++) {
 				for (MultipartFile file : files) {
-					boardFiles = (boardFiles == "") ? file.getOriginalFilename() : boardFiles + ", " + file.getOriginalFilename();
+					boardFiles = (boardFiles == "*") ? file.getOriginalFilename() : boardFiles + ", " + file.getOriginalFilename();
 				}
 			}
 		}
@@ -134,7 +136,7 @@ public class BoardController {
 		boardVO.setMemberNumber(memberVO.getMemberNumber());
 		boardVO.setBoardSection(target.getBoardSection());
 		boardVO.setBoardList(target.getBoardList());
-		if (boardService.create(boardVO) == 1 && boardFiles != "") {
+		if (boardService.create(boardVO) == 1) {
 			fileUtil.saveBoardFiles(resourcesPath, files, boardVO.getBoardSeqNextVal());
 			redirectAttributes.addFlashAttribute("message", "게시글이 등록되었습니다.");			
 		} else {

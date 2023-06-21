@@ -34,12 +34,10 @@ public class BoardServiceImple implements BoardService {
 	@Autowired
 	private ReplyDAO replyDAO;
 
-	@Transactional(value = "transactionManager")
 	@Override
 	public int create(BoardVO boardVO) {
 		logger.info("create() 호출");
-		boardDAO.insert(boardVO);
-		return 1;
+		return boardDAO.insert(boardVO);
 	}
 
 	@Override

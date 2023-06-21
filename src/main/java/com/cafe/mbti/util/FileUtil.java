@@ -32,7 +32,7 @@ public class FileUtil {
 		String dirPath = resourcePath + Integer.toString(boardSeqNextVal);
 		new File(dirPath).mkdir();
 		for (MultipartFile file : files) {
-			file.transferTo(new File(dirPath + file.getOriginalFilename()));
+			file.transferTo(new File(dirPath + "/" + file.getOriginalFilename()));
 		}
 	}
 	
