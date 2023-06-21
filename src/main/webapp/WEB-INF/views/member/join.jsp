@@ -162,6 +162,17 @@ body {
 	font-weight: bold;
 	font-size: 12px;
 }
+
+.join-wrapper a {
+	text-decoration: none;
+	margin: 0 0 5px 80px;
+	color: #003bff;
+	font-weight: bold;
+	font-size: 12px;
+}
+.join-wrapper a:hover {
+	text-decoration: underline;
+}
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
@@ -476,6 +487,9 @@ body {
 					<option>ENFJ: 언변능숙자, 카리스마 있는 선도자</option>
 					<option>ENTJ: 지도자, 비전을 가진 지도자</option>
 				</select>
+			</div>
+			<div class="display-flex">
+				<a href="https://www.16personalities.com/ko" target="_blank">아직 MBTI를 모르고 있다면?</a>
 			</div>
 			<input type="submit" value="가입하기">
 		</form>
