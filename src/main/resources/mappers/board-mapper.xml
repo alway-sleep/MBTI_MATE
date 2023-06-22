@@ -524,7 +524,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 게시글 수정 -->
 	<update id="update">
 		UPDATE ${board}
-		SET ${boardSection} = #{boardSection}, ${boardList} = #{boardList}, ${boardName} = #{boardName}, ${boardTitle} = #{boardTitle}, ${boardContent} = #{boardContent}, ${boardRegdate} = SYSDATE
+		SET ${boardSection} = #{boardSection}, ${boardList} = #{boardList}, ${boardName} = #{boardName}, ${boardTitle} = #{boardTitle}, ${boardContent} = #{boardContent}, ${boardFiles} = #{boardFiles}, ${boardRegdate} = SYSDATE
 		WHERE ${boardNumber} = #{boardNumber}
 	</update>
 	

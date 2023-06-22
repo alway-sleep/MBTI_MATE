@@ -31,6 +31,24 @@ body {
 	flex-direction: column;
 }
 
+.update-wrapper form .board-files {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	font-size: 12px;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 3px;
+	margin: 3px 0;
+}
+
+.update-wrapper form .board-files span {
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: bold;
+}
+
 .update-wrapper input[type=text],
 .update-wrapper input[type=file],
 .update-wrapper textarea {
@@ -87,17 +105,38 @@ body {
 				}
 			});
 		}); // end $('.update-options button[type="button"]').click(function(e) {})
+		// 첨부파일 삭제
+		$('.update-wrapper form .board-files span').click(function(e) {
+			  e.preventDefault();
+			  var boardFiles = '*';
+			  var boardFilesArray = "${boardVO.boardFilesArray}";
+			  $(this).closest('div').remove();
+
+			  $('.board-files a').each(function() {
+			      boardFiles += ', ' + $(this).text();
+			  });
+			  $('#boardFiles').val(boardFiles);
+			});
 	}); // end $(document).ready()
 </script>
 </head>
 <body>
 	<div class="update-wrapper">
 		<h2>게시글 수정</h2>
-		<form class="update-form" action="/mbti/board/update" method="POST">
+		<form class="update-form" action="/mbti/board/update" method="POST" enctype="multipart/form-data">
 			<input type="hidden" id="boardSection" name="boardSection" value="${boardVO.boardSection}">
 			<input type="hidden" id="boardList" name="boardList" value="${boardVO.boardList}">
 			<input type="text" id="boardName" name="boardName" value="${boardVO.boardName}" style="border: none;" onfocus="blur()" readonly>
 			<input type="text" id="boardTitle" name="boardTitle" minlength="1" maxlength="40" placeholder="제목 입력" value="${boardVO.boardTitle}" required>
+			<c:if test="${boardVO.boardFiles ne '*'}">
+				<input type="text" value="첨부파일" style="border: none;" onfocus="blur()" readonly>
+				<div class="board-files">
+						<c:forEach var="fileName" items="${boardVO.boardFilesArray}">
+							<div class="board-file"><a href="/mbti/resources/board?boardNumber=${boardVO.boardNumber}&fileName=${fileName}" download="${fileName}">${fileName}</a>&nbsp;&nbsp;<span>&times;</span></div>
+						</c:forEach>
+						<input type="hidden" id="boardFiles" name="boardFiles" value="${boardVO.boardFiles}">
+				</div>
+			</c:if>
 			<input type="file" id="files" name="files" multiple="multiple">
 			<textarea rows="20" cols="120" minlength="2" maxlength="2000" id="boardContent" name="boardContent" placeholder="내용 입력" style="resize: none;" required>${boardVO.boardContent}</textarea>
 			<div class="update-options">

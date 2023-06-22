@@ -192,7 +192,7 @@ public class BoardDAOImple implements BoardDAO {
 	}
 
 	@Override
-	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
+	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, String boardFiles, int boardNumber) {
 		logger.info("update() 호출");
 		Map<String, Object> args = new HashMap<>();
 		args.put("boardSection", boardSection);
@@ -200,6 +200,7 @@ public class BoardDAOImple implements BoardDAO {
 		args.put("boardName", boardName);
 		args.put("boardTitle", boardTitle);
 		args.put("boardContent", boardContent);
+		args.put("boardFiles", boardFiles);
 		args.put("boardNumber",boardNumber);
 		return sqlSession.update(NAMESPACE + ".update", args);
 	}

@@ -61,7 +61,7 @@ public interface BoardDAO {
 	// 게시글 조회수
 	int selectBoardViews(int boardNumber);
 	// 게시글 수정
-	int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber);
+	int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, String boardFiles, int boardNumber);
 	// 인기글 업데이트
 	int updateType(int boardType, int boardNumber);
 	// 게시글 삭제

@@ -39,7 +39,6 @@ public class FileUtil {
 	public void deleteBoardFiles(String resourcesPath, int boardNumber) {
 	    String resourcePath = resourcesPath + "board/";
 	    String dirPath = resourcePath + Integer.toString(boardNumber);
-
 	    File folder = new File(dirPath);
 	    deleteFolder(folder);
 	}
@@ -57,9 +56,6 @@ public class FileUtil {
 	            }
 	        }
 	        folder.delete(); // 폴더 삭제
-	        System.out.println("폴더가 성공적으로 삭제되었습니다.");
-	    } else {
-	        System.out.println("폴더가 존재하지 않습니다.");
 	    }
 	}
 }

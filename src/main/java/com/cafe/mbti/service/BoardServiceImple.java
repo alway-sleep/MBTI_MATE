@@ -196,9 +196,9 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Override
-	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, int boardNumber) {
+	public int update(int boardSection, int boardList, String boardName, String boardTitle, String boardContent, String boardFiles, int boardNumber) {
 		logger.info("update() 호출");
-		return boardDAO.update(boardSection, boardList, boardName, boardTitle, boardContent, boardNumber);
+		return boardDAO.update(boardSection, boardList, boardName, boardTitle, boardContent, boardFiles, boardNumber);
 	}
 	
 	@Override

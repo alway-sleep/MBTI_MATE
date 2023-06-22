@@ -147,7 +147,6 @@ public class BoardController {
 				boardFiles = (boardFiles == "*") ? file.getOriginalFilename() : boardFiles + ", " + file.getOriginalFilename();
 			}
 		}
-		logger.info("boardFiles = {}", boardFiles);
 		boardVO.setBoardFiles(boardFiles);
 		boardVO.setMemberNumber(memberVO.getMemberNumber());
 		boardVO.setBoardSection(target.getBoardSection());
@@ -186,11 +185,20 @@ public class BoardController {
 	} // end updateGET()
 	
 	@PostMapping("/update")
-	public String updatePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, Integer boardSection, Integer boardList, String boardName, String boardTitle, String boardContent) {
+	public String updatePOST(HttpServletRequest request, RedirectAttributes redirectAttributes, Integer boardSection, Integer boardList, String boardName, String boardTitle, String boardContent, String boardFiles, MultipartFile[] files) throws IOException {
 		Target target = (Target) request.getSession().getAttribute("target");
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		if (boardService.update(boardSection, boardList, boardName, boardTitle, boardContent, target.getBoardNumber()) == 1) {
+		FileUtil fileUtil = new FileUtil();
+		
+		boardFiles = (boardFiles == "*") ? boardFiles : boardFiles.replace("*, ", "");
+		if (files.length != 0) {
+			for (MultipartFile file : files) {
+				boardFiles = (boardFiles == "*") ? file.getOriginalFilename() : boardFiles + ", " + file.getOriginalFilename();
+			}
+		}
+		if (boardService.update(boardSection, boardList, boardName, boardTitle, boardContent, boardFiles, target.getBoardNumber()) == 1) {
+			fileUtil.saveBoardFiles(resourcesPath, files, target.getBoardNumber());
 			redirectAttributes.addFlashAttribute("message", "게시글이 수정되었습니다.");
 		} else {
 			redirectAttributes.addFlashAttribute("message", "게시글 수정을 실패했습니다.");
