@@ -140,17 +140,14 @@ public class BoardController {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("memberVO");
 		FileUtil fileUtil = new FileUtil();
 		String boardFiles = "*";
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
-		System.out.println("첨부파일"+files);
-		System.out.println("첨부파일"+files.length);
 		if (files.length != 0) {
-			for (int i = 0; i < files.length; i++) {
-				for (MultipartFile file : files) {
-					boardFiles = (boardFiles == "*") ? file.getOriginalFilename() : boardFiles + ", " + file.getOriginalFilename();
-				}
+			for (MultipartFile file : files) {
+				boardFiles = (boardFiles == "*") ? file.getOriginalFilename() : boardFiles + ", " + file.getOriginalFilename();
 			}
 		}
+		logger.info("boardFiles = {}", boardFiles);
 		boardVO.setBoardFiles(boardFiles);
 		boardVO.setMemberNumber(memberVO.getMemberNumber());
 		boardVO.setBoardSection(target.getBoardSection());

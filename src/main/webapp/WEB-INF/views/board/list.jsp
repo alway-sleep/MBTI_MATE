@@ -355,7 +355,7 @@ body {
 				type: 'GET',
 			    data: {
 			    	boardNumsPerPage : $(this).val(),
-			    	boardPage : "${sessionScope.target.boardPage}",
+			    	boardPage : 1,
 			    	boardSection : "${sessionScope.target.boardSection}",
 			    	boardList : "${sessionScope.target.boardList}",
 			    	boardName : "${sessionScope.target.boardName}",
