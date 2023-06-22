@@ -251,6 +251,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
 	</select>
 	
+	<!-- 회원 댓글 정렬 후 출력 -->
+	<select id="selectAllByCmRp" resultType="CmRpVO">
+		SELECT U2.${commentsNumber}, U2.${replyNumber}, U2.${boardNumber}, U2.${memberNumber}, U2.${commentsContent}, U2.${replyContent}, U2.regdate
+		FROM
+			(
+			SELECT ROWNUM AS RN, U.*
+			FROM
+				(
+				SELECT ${commentsNumber}, ${boardNumber}, ${memberNumber}, ${commentsContent}, ${commentsRegdate} AS regdate, NULL AS ${replyNumber}, NULL AS ${replyContent}
+				FROM ${comments}
+				WHERE ${memberNumber} = #{memberNumber}
+				UNION ALL
+				SELECT R.${commentsNumber}, C.${boardNumber}, R.${memberNumber}, NULL AS ${commentsContent}, R.${replyRegdate} AS regdate, R.${replyNumber}, R.${replyContent}
+				FROM ${reply} R
+				LEFT OUTER JOIN ${comments} C ON C.${commentsNumber} = R.${commentsNumber}
+				WHERE R.${memberNumber} = #{memberNumber}
+				ORDER BY regdate DESC
+				) U
+			) U2
+		WHERE U2.RN BETWEEN #{boardStart} AND #{boardEnd}
+	</select>
+	
 	<!-- 회원 추천 게시글 정렬 후 출력 -->
 	<select id="selectAllByLike" resultType="BoardVO">
   		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}

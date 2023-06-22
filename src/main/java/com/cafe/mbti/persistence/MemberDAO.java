@@ -3,6 +3,7 @@ package com.cafe.mbti.persistence;
 import java.util.List;
 
 import com.cafe.mbti.domain.BoardVO;
+import com.cafe.mbti.domain.CmRpVO;
 import com.cafe.mbti.domain.MemberVO;
 
 public interface MemberDAO {
@@ -57,6 +58,8 @@ public interface MemberDAO {
 	int selectCountByLike(int memberNumber);
 	// 회원 게시글 정렬 후 출력
 	List<BoardVO> selectAllByMember(int memberNumber, int boardStart, int boardEnd);
+	// 회원 댓글 정렬 후 출력
+	List<CmRpVO> selectAllByCmRp(int memberNumber, int boardStart, int boardEnd);
 	// 회원 추천 게시글 정렬 후 출력
 	List<BoardVO> selectAllByLike(int memberNumber, int boardStart, int boardEnd);
 }

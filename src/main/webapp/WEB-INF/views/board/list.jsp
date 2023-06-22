@@ -149,7 +149,7 @@ body {
 			$('#keyword').val("${pageMaker.boardPageCriteria.keyword}");
 		</c:if>
 		// 게시글의 수 정렬
-		$('#boardNumsPerPage option').each(function() {
+		$('.content #boardNumsPerPage option').each(function() {
 			if ($(this).val() == "${sessionScope.target.boardNumsPerPage}") {
 				$(this).prop('selected', true);
 				return false;
@@ -174,6 +174,7 @@ body {
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			</c:if>
@@ -230,6 +231,7 @@ body {
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -249,6 +251,7 @@ body {
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -268,6 +271,7 @@ body {
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -287,6 +291,7 @@ body {
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -306,6 +311,7 @@ body {
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -333,6 +339,7 @@ body {
 					    	},
 						success: function(includeJSP) {
 							$('.content').html(includeJSP);
+							$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 						}
 					});
 				} else {
@@ -341,7 +348,7 @@ body {
 			</c:if>
 		}) // end $('.search-form input[type="submit"]').click(function() {})
 		// 게시글 수 정렬
-		$('#boardNumsPerPage').change(function(e) {
+		$('.content #boardNumsPerPage').change(function(e) {
 			e.preventDefault();
 			$.ajax({
 				url: '/mbti/board/list',
@@ -357,6 +364,7 @@ body {
 			    	},
 				success: function(includeJSP) {
 					$('.content').html(includeJSP);
+					$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 				}
 			});
 		});
@@ -437,7 +445,7 @@ body {
 					<li><a href="#" class="listGET-start">처음</a></li>				
 				</c:if>
 				<c:if test="${pageMaker.boardHasPrev}">
-				<li><a href="#" class="listGET-prev">이전</a></li>
+					<li><a href="#" class="listGET-prev">이전</a></li>
 				</c:if>
 				<c:forEach var="boardPage" begin="${pageMaker.boardStartPage}" end="${pageMaker.boardEndPage}">
 				<c:if test="${pageMaker.boardPageCriteria.boardPage eq boardPage}">
@@ -448,7 +456,7 @@ body {
 				</c:if>
 				</c:forEach>
 				<c:if test="${pageMaker.boardHasNext}">
-				<li><a href="#"	class="listGET-next">다음</a></li>
+					<li><a href="#"	class="listGET-next">다음</a></li>
 				</c:if>
 				<c:if test="${pageMaker.boardPageCriteria.boardEnd < 5}">
 					<li><a href="#" class="listGET-end">끝</a></li>

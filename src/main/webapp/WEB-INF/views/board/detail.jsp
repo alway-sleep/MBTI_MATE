@@ -293,12 +293,22 @@ body {
 					}); // end ajax()
 				} // end success()
 			}); // end ajax()
+			// 나의 활동 새로고침
+			$.ajax({
+				url: '/mbti/memberrest/history/'+memberNumber,
+				type: 'GET',
+				success: function(historyGETResult) {
+					$('.countByNumberOnBoard').text(historyGETResult[0]);
+					$('.countByNumberOnCmRp').text(historyGETResult[1]);
+				}
+			});
 		} // end commentsGET()
 		// 댓글 페이지 이동
 		$('.comments-page').on('click', 'ul li a', function(e) {
 			e.preventDefault();
 			commentsPage = ($(this).hasClass('commentsGET-page')) ? parseInt($(this).text()) : $(this).data('commentsPage');
 			commentsGET(commentsPage);
+			$('html, body').animate({scrollTop: $('.comments-list').offset().top}, 500);
 		});// end $('.comments-page').on('click', 'ul li a', function(e) {});
 		// 댓글 등록
 		$('.comments-options .commentsPOST').click(function(e) {
@@ -325,6 +335,7 @@ body {
 								success: function(boardCommentsGETResult) {
 									$('#boardComments').html(boardCommentsGETResult);
 									commentsGET(commentsPage);
+									$('html, body').animate({scrollTop: $('.comments-page').offset().top}, 500);
 								}
 							}); // end ajax()
 						}
@@ -388,6 +399,7 @@ body {
 									success: function(boardCommentsGETResult) {
 										$('#boardComments').html(boardCommentsGETResult);
 										commentsGET(commentsPage);
+										$('html, body').animate({scrollTop: $('#boardComments').offset().top}, 500);
 									}
 								}); // end ajax()
 							}
@@ -405,6 +417,7 @@ body {
 			var replyList = $(this).closest('.comments-options').next();
 			var replyPage = 1;
 			replyList.off('click', '.reply-options .replyPOST').off('click', '.reply-options .replyPUT').off('click', '.reply-options .replyDELETE').off('click', '.reply-page ul li a');
+			$('html, body').animate({scrollTop: replyGET.offset().top}, 500);
 			replyList.toggle();
 			// 답글 불러오기
 			var commentsNumber = $(this).val();
@@ -565,11 +578,13 @@ body {
 			// 답글 페이지 이동
 			replyList.on('click', '.reply-page ul li a', function(e) {
 				e.preventDefault();
+				var targetReplyPage = $(this).closest('.reply-list');
 				replyPage = ($(this).hasClass('replyGET-page')) ? parseInt($(this).text()) : $(this).data('replyPage');
 				$.ajax({
 					url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 					type: 'GET',
 					success: function(replyGETResult) {
+						$('html, body').animate({scrollTop: targetReplyPage.offset().top}, 500);
 						replyList.empty();
 						$(replyGETResult).each(function() {
 							var replyRegdate = new Date(this.replyRegdate);
@@ -695,6 +710,7 @@ body {
 			// 답글 등록
 			replyList.on('click', '.reply-options .replyPOST', function(e) {
 				e.preventDefault();
+				var targetReplyPage = $(this).closest('.reply').siblings('.reply-page');
 				replyPage = (replyPage == 1) ? replyPage : $('.replyGET-end').data('replyPage');
 				var replyContent = $(this).closest('.reply-options').siblings('#replyContent').val();				
 				if (replyContent.length >= 5) {
@@ -715,6 +731,7 @@ body {
 									type: 'GET',
 									success: function(boardCommentsGETResult) {
 										$('#boardComments').html(boardCommentsGETResult);
+										$('html, body').animate({scrollTop: targetReplyPage.offset().top}, 500);
 									}
 								}); // end ajax()
 								$.ajax({
@@ -848,10 +865,20 @@ body {
 				} else {
 					alert('5글자 이상 작성해주세요.');
 				}
+				// 나의 활동 새로고침
+				$.ajax({
+					url: '/mbti/memberrest/history/'+memberNumber,
+					type: 'GET',
+					success: function(historyGETResult) {
+						$('.countByNumberOnBoard').text(historyGETResult[0]);
+						$('.countByNumberOnCmRp').text(historyGETResult[1]);
+					}
+				});
 			}); // end replyList.on('click', '.reply-options .replyPOST', function(e) {})
 			// 답글 수정
 			replyList.on('click', '.reply-options .replyPUT', function(e) {
 				e.preventDefault();
+				var targetReplyList = $(this).closest('.reply-list');
 				var replyTextarea = $(this).parent().parent().siblings('textarea');
 				var replyContent = replyTextarea.val();
 				replyTextarea.removeAttr('readonly');
@@ -1038,6 +1065,7 @@ body {
 				// 등록된 답글 삭제
 				$(this).siblings('.replyDELETE').click(function(e) {
 					e.preventDefault();
+					var targetCommentsOptions = $(this).closest('.reply-list').siblings('.comments-options');
 					// 답글을 삭제할 건지 다시 한번 확인
 					if (confirm('답글을 삭제하시겠습니까?')) {
 						$.ajax({
@@ -1051,6 +1079,7 @@ body {
 										type: 'GET',
 										success: function(boardCommentsGETResult) {
 											$('#boardComments').html(boardCommentsGETResult);
+											$('html, body').animate({scrollTop: targetCommentsOptions.offset().top}, 500);
 										}
 									}); // end ajax()
 									$.ajax({
@@ -1214,6 +1243,15 @@ body {
 							} // end success()
 						}); // end ajax()
 					}
+					// 나의 활동 새로고침
+					$.ajax({
+						url: '/mbti/memberrest/history/'+memberNumber,
+						type: 'GET',
+						success: function(historyGETResult) {
+							$('.countByNumberOnBoard').text(historyGETResult[0]);
+							$('.countByNumberOnCmRp').text(historyGETResult[1]);
+						}
+					});
 				}); // end $(this).siblings('.replyDELETE').click(function(e) {})
 			}); // end replyList.on('click', '.reply-options .replyPUT', function(e) {})
 		}); // end $('.comments').on('click', '.comments-options .replyGET', function(e) {})
@@ -1272,11 +1310,12 @@ body {
 		// 이전 목록으로 돌아가기
 		$('.detail-options .listGET').click(function(e) {
 			e.preventDefault();
-			if ("${target.option}" == -1) {
+			if ("${sessionScope.target.historyOption}" == -1) {
 				$.ajax({
 					url: '/mbti/board/list',
 					type: 'GET',
 					data: {
+						boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 						boardPage : "${sessionScope.target.boardPage}",
 						boardSection : "${sessionScope.target.boardSection}",
 						boardList : "${sessionScope.target.boardList}",
@@ -1286,6 +1325,7 @@ body {
 					},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			} else {
@@ -1293,12 +1333,16 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 					data: {
+						boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 						boardPage : "${sessionScope.target.boardPage}",
 						memberNumber : "${sessionScope.target.memberNumber}",
-						option : "${sessionScope.target.option}"
+						historyOption : "${sessionScope.target.historyOption}"
 					},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.content').css('display', 'none');
+						$('.history').html(includeJSP);
+						$('.history').css('display', 'block');
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -1313,6 +1357,7 @@ body {
 					type: 'GET',
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			} else {
@@ -1325,7 +1370,7 @@ body {
 			// 해당 게시글 작성자만 게시글 삭제 가능
 			if ("${boardVO.memberNumber}" == "${sessionScope.memberVO.memberNumber}") {
 				// 게시글을 삭제할 건지 한번 더 확인
-				return confirm('게시글을 삭제하시겠습니까?') ? true : false;			
+				return confirm('게시글을 삭제하시겠습니까?') ? true : false;
 			} else {
 				alert('해당 게시글의 삭제 권한이 없습니다.');
 				return false;
@@ -1338,7 +1383,7 @@ body {
 					type: 'POST',
 					headers: {'Content-Type' : 'application/json'},
 					data: JSON.stringify({
-				    	boardNumber : "${target.boardNumber}",
+				    	boardNumber : "${sessionScope.target.boardNumber}",
 				    	memberNumber : memberNumber
 				    	}),
 					success: function(boardviewPOSTResult) {
@@ -1357,9 +1402,10 @@ body {
 				url: '/mbti/member/history',
 				type: 'GET',
 			    data: {
+			    	boardNumsPerPage : 5,
 			    	boardPage : 1,
 			    	memberNumber : $(this).val(),
-			    	option : 0
+			    	historyOption : 0
 			    	},
 				success: function(includeJSP) {
 					$('.content').css('display', 'none');

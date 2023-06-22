@@ -356,6 +356,7 @@ footer {
 				});
 				</c:when>
 			</c:choose>
+			$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 		</c:if>
 		// 왼쪽 게시판 목록에서 게시판 클릭 시 해당 게시판으로 target설정
 		$('.left-container').on('click', 'ul li a', function(e) {
@@ -376,6 +377,7 @@ footer {
 			    	},
 				success: function(includeJSP) {
 					$('.content').html(includeJSP);
+					$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 				}
 			});
 		}); // end $('.left-container').on('click', 'ul li a', function(e) {})
@@ -393,20 +395,23 @@ footer {
 			$('.login-modal').css('display', 'block');
 			$('#memberId').attr('autofocus', true);
 		}); // end $('.loginGET').click(function(e) {})
+		// 활동 내역
 		$('.member-info').on('click', 'a.countByNumberOnBoard, a.countByNumberOnCmRp', function(e) {
 			e.preventDefault();
 			$.ajax({
 				url: '/mbti/member/history',
 				type: 'GET',
 			    data: {
+			    	boardNumsPerPage : 5,
 			    	boardPage : 1,
 			    	memberNumber : "${sessionScope.memberVO.memberNumber}",
-			    	option : 0
+			    	historyOption : 0
 			    	},
 				success: function(includeJSP) {
 					$('.content').css('display', 'none');
 					$('.history').html(includeJSP);
 					$('.history').css('display', 'block');
+					$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 				}
 			});
 		});

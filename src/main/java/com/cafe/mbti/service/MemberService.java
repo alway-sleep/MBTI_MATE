@@ -3,6 +3,7 @@ package com.cafe.mbti.service;
 import java.util.List;
 
 import com.cafe.mbti.domain.BoardVO;
+import com.cafe.mbti.domain.CmRpVO;
 import com.cafe.mbti.domain.MemberVO;
 
 public interface MemberService {
@@ -57,6 +58,8 @@ public interface MemberService {
 	int readCountByLike(int memberNumber);
 	// 회원 게시글 정렬 후 출력
 	List<BoardVO> readAllByMember(int memberNumber, int boardStart, int boardEnd);
+	// 회원 댓글 정렬 후 출력
+	List<CmRpVO> readAllByCmRp(int memberNumber, int boardStart, int boardEnd);
 	// 회원 추천 게시글 정렬 후 출력
 	List<BoardVO> readAllByLike(int memberNumber, int boardStart, int boardEnd);
 }

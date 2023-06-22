@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cafe.mbti.domain.BoardVO;
+import com.cafe.mbti.domain.CmRpVO;
 import com.cafe.mbti.domain.MemberVO;
 
 // TODO @Repository @Component : 영속 계층(Persistence Layer)의 DB 관련 기능을 담당
@@ -267,6 +268,16 @@ public class MemberDAOImple implements MemberDAO {
 		args.put("boardStart", boardStart);
 		args.put("boardEnd", boardEnd);
 		return sqlSession.selectList(NAMESPACE + ".selectAllByMember", args);
+	}
+	
+	@Override
+	public List<CmRpVO> selectAllByCmRp(int memberNumber, int boardStart, int boardEnd) {
+		logger.info("selectAllByCmRp()  호출");
+		Map<String, Object> args = new HashMap<>();
+		args.put("memberNumber", memberNumber);
+		args.put("boardStart", boardStart);
+		args.put("boardEnd", boardEnd);
+		return sqlSession.selectList(NAMESPACE + ".selectAllByCmRp", args);
 	}
 	
 	@Override

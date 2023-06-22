@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -111,7 +112,14 @@ public class MemberRestController {
 	
 	@GetMapping("/memberPwString")
 	public ResponseEntity<String> memberPwString(HttpServletRequest request, @RequestParam int memberNumber) {
-		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());		
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		return new ResponseEntity<String>(memberService.readPwStr(memberNumber), HttpStatus.OK);
+	}
+	
+	@GetMapping("/history/{memberNumber}")
+	public ResponseEntity<Integer[]> memberHistory(HttpServletRequest request, @PathVariable("memberNumber") int memberNumber) {
+		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
+		Integer[] historyGETResult = {memberService.readByNumberOnBoard(memberNumber), memberService.readByNumberOnCmRp(memberNumber)};
+		return new ResponseEntity<Integer[]>(historyGETResult, HttpStatus.OK);
 	}
 } // end MemberController

@@ -48,12 +48,24 @@ body {
 	margin-bottom: 5px;
 }
 
-.history-board,
+.history-list,
 .history-member {
 	display: flex;
 	flex-direction: column;
 	aling-self: center;
 	justify-content: center;
+}
+
+.history-wrapper .boardNumsPerPage {
+	text-align: right;
+	width: 80%;
+	align-self: center;
+	margin-bottom: 3px;
+}
+
+.history-wrapper .boardNumsPerPage select,
+.history-wrapper .boardNumsPerPage select option {
+	font-weight: bold;
 }
 
 .history-wrapper table {
@@ -139,6 +151,13 @@ body {
 		} else if ("${sessionScope.target.historyOption}" == 2) {
 			$('.history-options-boardlike').addClass('selected');
 		}
+		// 게시글의 수 정렬
+		$('.history #boardNumsPerPage option').each(function() {
+			if ($(this).val() == "${sessionScope.target.boardNumsPerPage}") {
+				$(this).prop('selected', true);
+				return false;
+			}
+		});
 		// 옵션 선택
 		$('.history-options').on('click', 'a', function(e) {
 			e.preventDefault();
@@ -150,12 +169,13 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : 5,
 				    	boardPage : 1,
 				    	memberNumber : "${memberVO.memberNumber}",
 				    	historyOption : 0
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
 					}
 				});
 			// 작성 댓글
@@ -164,12 +184,13 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : 5,
 				    	boardPage : 1,
 				    	memberNumber : "${memberVO.memberNumber}",
 				    	historyOption : 1
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
 					}
 				});
 			// 추천 게시글
@@ -178,15 +199,17 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : 5,
 				    	boardPage : 1,
 				    	memberNumber : "${memberVO.memberNumber}",
 				    	historyOption : 2
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
 					}
 				});
 			}
+			$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 		});
 		// 게시글 보기
 		$('tbody td').closest('tr').find('a').click(function(e) {
@@ -199,7 +222,10 @@ body {
 				   	boardNumber : boardNumber
 				   	},
 				success: function(includeJSP) {
+					$('.history').css('display', 'none');
 					$('.content').html(includeJSP);
+					$('.content').css('display', 'block');
+					$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 				}
 			});
 		}); // end $('tbody td').closest('tr').find('a').click()
@@ -212,12 +238,14 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : 1,
 						memberNumber : "${sessionScope.target.memberNumber}",
 						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -227,12 +255,14 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : "${pageMaker.boardEndPage - 1}",
 						memberNumber : "${sessionScope.target.memberNumber}",
 						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -242,12 +272,14 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : parseInt($(this).text()),
 						memberNumber : "${sessionScope.target.memberNumber}",
 						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -257,12 +289,14 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : "${pageMaker.boardEndPage + 1}",
 						memberNumber : "${sessionScope.target.memberNumber}",
 						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
@@ -272,22 +306,66 @@ body {
 					url: '/mbti/member/history',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : "${pageMaker.boardTotalPage}",
 				    	memberNumber : "${sessionScope.target.memberNumber}",
 				    	historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
-						$('.content').html(includeJSP);
+						$('.history').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
 					}
 				});
 			}
 		}); // end $('.list-page').on('click', 'ul li a', function(e) {})
+		// 게시글 수 정렬
+		$('.history #boardNumsPerPage').change(function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: '/mbti/member/history',
+				type: 'GET',
+			    data: {
+			    	boardNumsPerPage : $(this).val(),
+			    	boardPage : 1,
+			    	memberNumber : "${sessionScope.target.memberNumber}",
+			    	historyOption : "${sessionScope.target.historyOption}"
+			    	},
+				success: function(includeJSP) {
+					$('.history').html(includeJSP);
+					$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
+				}
+			});
+		});
+		// 닫기
+		$('.close button').click(function(e) {
+			if ("${sessionScope.target.historyOption}" == -1) {
+				$.ajax({
+					url: '/mbti/board/list',
+					type: 'GET',
+					data: {
+						boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
+						boardPage : "${sessionScope.target.boardPage}",
+						boardSection : "${sessionScope.target.boardSection}",
+						boardList : "${sessionScope.target.boardList}",
+						boardName : "${sessionScope.target.boardName}",
+						searchOption : "${sessionScope.target.searchOption}",
+						keyword : "${sessionScope.target.keyword}"
+					},
+					success: function(includeJSP) {
+						$('.content').html(includeJSP);
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
+					}
+				});
+			} else {
+				location.href = "/mbti";
+			}
+		});
 	}); // end document.ready()	
 </script>
 </head>
 <body>
 	<div class="history-wrapper">
-		<div class="close"><button type="button" onclick="$('.history').css('display', 'none');$('.content').css('display', 'block');">&times;</button></div>
+		<div class="close"><button type="button">&times;</button></div>
 		<div class="history-member">
 			<div class="member-profile">
 				<div class="member-picture">
@@ -321,61 +399,108 @@ body {
 				<a href="#" class="history-options-boardlike">추천 게시글</a>
 			</div>
 		</div>
-		<div class="history-board">
-			<table class="list-table">
-				<thead>
-					<tr>
-						<th>번호</th>
-						<th>제목</th>
-						<th>작성자</th>
-						<th>작성일</th>
-						<th>조회</th>
-						<th>좋아요</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="boardVO" items="${boardVO}">
-						<c:if test="${boardVO.boardType eq 2}">
-							<tr style="background-color: #FFF0F5;">
-								<td class="boardNumber">${boardVO.boardNumber}</td>
-								<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
-								<td>${boardVO.memberNickname}</td>
-								<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
-								<td>${boardRegdate}</td>
-								<td>${boardVO.boardViews}</td>
-								<td>${boardVO.boardLikes}</td>
-							</tr>
-						</c:if>
-						<c:if test="${boardVO.boardType eq 1}">
-							<tr style="background-color: #FFEFD5;">
-								<td class="boardNumber">${boardVO.boardNumber}</td>
-								<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
-								<td>${boardVO.memberNickname}</td>
-								<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
-								<td>${boardRegdate}</td>
-								<td>${boardVO.boardViews}</td>
-								<td>${boardVO.boardLikes}</td>
-							</tr>
-						</c:if>
-						<c:if test="${boardVO.boardType eq 0}">
-							<tr>
-								<td class="boardNumber">${boardVO.boardNumber}</td>
-								<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
-								<td>${boardVO.memberNickname}</td>
-								<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
-								<td>${boardRegdate}</td>
-								<td>${boardVO.boardViews}</td>
-								<td>${boardVO.boardLikes}</td>
-							</tr>
-						</c:if>
-					</c:forEach>
-				</tbody>
-			</table>
+		<div class="history-list">
+			<div class="boardNumsPerPage">
+				<select id="boardNumsPerPage">
+					<option value="5">5개씩</option>
+					<option value="10">10개씩</option>
+					<option value="15">15개씩</option>
+					<option value="20">20개씩</option>
+					<option value="30">30개씩</option>
+					<option value="40">40개씩</option>
+					<option value="50">50개씩</option>
+				</select>
+			</div>
+			<c:if test="${empty cmRpVO}">
+				<table class="list-table">
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>제목</th>
+							<th>작성자</th>
+							<th>작성일</th>
+							<th>조회</th>
+							<th>좋아요</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="boardVO" items="${boardVO}">
+							<c:if test="${boardVO.boardType eq 2}">
+								<tr style="background-color: #FFF0F5;">
+									<td class="boardNumber">${boardVO.boardNumber}</td>
+									<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
+									<td>${boardVO.memberNickname}</td>
+									<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
+									<td>${boardRegdate}</td>
+									<td>${boardVO.boardViews}</td>
+									<td>${boardVO.boardLikes}</td>
+								</tr>
+							</c:if>
+							<c:if test="${boardVO.boardType eq 1}">
+								<tr style="background-color: #FFEFD5;">
+									<td class="boardNumber">${boardVO.boardNumber}</td>
+									<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
+									<td>${boardVO.memberNickname}</td>
+									<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
+									<td>${boardRegdate}</td>
+									<td>${boardVO.boardViews}</td>
+									<td>${boardVO.boardLikes}</td>
+								</tr>
+							</c:if>
+							<c:if test="${boardVO.boardType eq 0}">
+								<tr>
+									<td class="boardNumber">${boardVO.boardNumber}</td>
+									<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
+									<td>${boardVO.memberNickname}</td>
+									<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
+									<td>${boardRegdate}</td>
+									<td>${boardVO.boardViews}</td>
+									<td>${boardVO.boardLikes}</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+			</c:if>
+			<c:if test="${not empty cmRpVO}">
+				<table class="list-table">
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>내용</th>
+							<th>작성일</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="cmRpVO" items="${cmRpVO}">
+							<c:if test="${cmRpVO.replyNumber eq 0}">
+								<tr>
+									
+									<td class="commentsNumber">${cmRpVO.commentsNumber}<span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span></td>
+									<td><a href="#">${cmRpVO.commentsContent}</a></td>
+									<fmt:formatDate value="${cmRpVO.regdate}" pattern="yyyy-MM-dd" var="regdate" />
+									<td>${regdate}</td>
+								</tr>
+							</c:if>
+							<c:if test="${cmRpVO.replyNumber ne 0}">
+								<tr>
+									<td class="replyNumber">${cmRpVO.replyNumber}<span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span></td>
+									<td><a href="#">${cmRpVO.replyContent}</a></td>
+									<fmt:formatDate value="${cmRpVO.regdate}" pattern="yyyy-MM-dd" var="regdate" />
+									<td>${regdate}</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+			</c:if>
 			<div class="list-page">
 				<ul>
-					<li><a href="#" class="listGET-start">처음</a></li>
+					<c:if test="${pageMaker.boardPageCriteria.boardEnd < 5}">
+						<li><a href="#" class="listGET-start">처음</a></li>				
+					</c:if>
 					<c:if test="${pageMaker.boardHasPrev}">
-					<li><a href="#" class="listGET-prev">이전</a></li>
+						<li><a href="#" class="listGET-prev">이전</a></li>
 					</c:if>
 					<c:forEach var="boardPage" begin="${pageMaker.boardStartPage}" end="${pageMaker.boardEndPage}">
 					<c:if test="${pageMaker.boardPageCriteria.boardPage eq boardPage}">
@@ -386,9 +511,11 @@ body {
 					</c:if>
 					</c:forEach>
 					<c:if test="${pageMaker.boardHasNext}">
-					<li><a href="#"	class="listGET-next">다음</a></li>
+						<li><a href="#"	class="listGET-next">다음</a></li>
 					</c:if>
-					<li><a href="#" class="listGET-end">끝</a></li>
+					<c:if test="${pageMaker.boardPageCriteria.boardEnd < 5}">
+						<li><a href="#" class="listGET-end">끝</a></li>
+					</c:if>
 				</ul>
 			</div>
 		</div>

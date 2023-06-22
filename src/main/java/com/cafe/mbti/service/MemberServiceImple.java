@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cafe.mbti.domain.BoardVO;
+import com.cafe.mbti.domain.CmRpVO;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.persistence.BoardDAO;
 import com.cafe.mbti.persistence.BoardRestDAO;
@@ -231,13 +232,19 @@ public class MemberServiceImple implements MemberService {
 	
 	@Override
 	public List<BoardVO> readAllByMember(int memberNumber, int boardStart, int boardEnd) {
-		logger.info("readAllByMember() 호출");	
+		logger.info("readAllByMember() 호출");
 		return memberDAO.selectAllByMember(memberNumber, boardStart, boardEnd);
 	}
 	
 	@Override
+	public List<CmRpVO> readAllByCmRp(int memberNumber, int boardStart, int boardEnd) {
+		logger.info("readAllByCmRp() 호출");
+		return memberDAO.selectAllByCmRp(memberNumber, boardStart, boardEnd);
+	}
+	
+	@Override
 	public List<BoardVO> readAllByLike(int memberNumber, int boardStart, int boardEnd) {
-		logger.info("readAllByLike() 호출");	
+		logger.info("readAllByLike() 호출");
 		return memberDAO.selectAllByLike(memberNumber, boardStart, boardEnd);
 	}
 }

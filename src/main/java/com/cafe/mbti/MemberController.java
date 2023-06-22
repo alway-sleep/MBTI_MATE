@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cafe.mbti.domain.BoardVO;
+import com.cafe.mbti.domain.CmRpVO;
 import com.cafe.mbti.domain.MemberVO;
 import com.cafe.mbti.service.MemberService;
 import com.cafe.mbti.util.BoardPageCriteria;
@@ -213,28 +214,35 @@ public class MemberController {
 	}
 	
 	@GetMapping("/history")
-	public void historyGET(HttpServletRequest request, Model model, Integer boardPage, Integer memberNumber, Integer historyOption) {
+	public void historyGET(HttpServletRequest request, Model model, Integer boardNumsPerPage, Integer boardPage, Integer memberNumber, Integer historyOption) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
 		Target target = new Target();
+		target.setBoardNumsPerPage(boardNumsPerPage);
 		target.setBoardPage(boardPage);
 		target.setMemberNumber(memberNumber);
 		target.setHistoryOption(historyOption);
 		request.getSession().setAttribute("target", target);
 		
 		BoardPageCriteria boardPageCriteria = new BoardPageCriteria();
+		boardPageCriteria.setBoardNumsPerPage(boardNumsPerPage);
 		boardPageCriteria.setBoardPage(boardPage);
 		List<BoardVO> boardVO = null;
+		List<CmRpVO> cmRpVO = null;
 		if (historyOption == 0) {
 			boardVO = memberService.readAllByMember(memberNumber, boardPageCriteria.getBoardStart(), boardPageCriteria.getBoardEnd());
 			model.addAttribute("pageMaker", pageMaker(boardPageCriteria, memberService.readCountByMember(memberNumber)));
+			model.addAttribute("boardVO", boardVO);
 		} else if (historyOption == 1) {
-			
+			cmRpVO = memberService.readAllByCmRp(memberNumber, boardPageCriteria.getBoardStart(), boardPageCriteria.getBoardEnd());
+			logger.info("cmRpVO = {}", cmRpVO.toString());
+			model.addAttribute("pageMaker", pageMaker(boardPageCriteria, memberService.readByNumberOnCmRp(memberNumber)));
+			model.addAttribute("cmRpVO", cmRpVO);
 		} else if (historyOption == 2) {
 			boardVO = memberService.readAllByLike(memberNumber, boardPageCriteria.getBoardStart(), boardPageCriteria.getBoardEnd());
 			model.addAttribute("pageMaker", pageMaker(boardPageCriteria, memberService.readCountByLike(memberNumber)));
+			model.addAttribute("boardVO", boardVO);
 		}
-		model.addAttribute("boardVO", boardVO);
 		model.addAttribute("memberVO", memberService.read(memberNumber));
 	}
 	
