@@ -76,6 +76,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteOnMember">
 		DELETE
 		FROM ${reply}
-		WHERE ${memberNumber} = #{memberNumber}
+		WHERE ${replyNumber} IN
+			(
+			SELECT ${replyNumber}
+			FROM ${rpely}
+			WHERE ${memberNumber} = #{memberNumber}
+			)
 	</delete>
 </mapper>

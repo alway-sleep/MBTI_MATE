@@ -171,7 +171,8 @@ a:hover,
 	padding: 10px;
 }
 
-.content {
+.content,
+.history {
 	flex: 2;
 	padding: 3px 10px;
 }
@@ -401,7 +402,9 @@ footer {
 			    	option : 0
 			    	},
 				success: function(includeJSP) {
-					$('.content').html(includeJSP);
+					$('.content').css('display', 'none');
+					$('.history').html(includeJSP);
+					$('.history').css('display', 'block');
 				}
 			});
 		});
@@ -589,6 +592,8 @@ footer {
 						</a>
 						<img src="/mbti/resources/index?fileName=mbticompat.png" alt="MBTI 궁합표">
 					</div>
+				</div>
+				<div class="history" style="display: none;">
 				</div>
 			</div>
 		</div>	

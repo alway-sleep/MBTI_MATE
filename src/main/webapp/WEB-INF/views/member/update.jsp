@@ -254,6 +254,8 @@ body {
 		var memberNicknameIsValid = 1;
 		var memberPwIsValid = 0;
 		var memberPw2IsValid = 0;
+		var memberPwNewIsValid = 0;
+		var memberPwNew2IsValid = 0;
 		var memberPhoneIsValid = 1;
 		var memberEmailIsValid = 1;
 		// 닉네임 유효성검사
@@ -364,10 +366,10 @@ body {
 				$('.memberPwNewIsDuplicated').html("<label id='memberPwNewIsDuplicated'>사용하실 비밀번호를 입력해 주세요.</label>");
 			} else if (memberPw.length <= 7 || !memberPwPattern.test(memberPw)) {
 				$('.memberPwNewIsDuplicated').html("<label id='memberPwNewIsDuplicated1'>비밀번호는 8~16자리이며<br>영문, 숫자, 특수문자(!@#$%^&*()-=_+{},./?\<>:;)가<br>각각 1개 이상씩 포함되어있어야 합니다.</label>");
-				memberPwIsValid = 0;
+				memberPwNewIsValid = 0;
 			} else {
 				$('.memberPwNewIsDuplicated').html("<label id='memberPwNewIsDuplicated0'>사용 가능한 비밀번호입니다.</label>");
-				memberPwIsValid = 1;
+				memberPwNewIsValid = 1;
 			} 
 		}); // end $('#memberPwNew').keyup()		
 		$('#memberPwNew2').keyup(function() {
@@ -377,10 +379,10 @@ body {
 				$('.memberPwNew2IsDuplicated').html("<label id='memberPwNew2IsDuplicated'>비밀번호를 한번 더 입력해 주세요.</label>");
 			} else if (memberPw !== memberPw2) {
 				$('.memberPwNew2IsDuplicated').html("<label id='memberPwNew2IsDuplicated1'>비밀번호가 일치하지 않습니다.</label>");
-				memberPw2IsValid = 0;
+				memberPwNew2IsValid = 0;
 			} else {
 				$('.memberPwNew2IsDuplicated').html("<label id='memberPwNew2IsDuplicated0'>비밀번호가 일치합니다.</label>");
-				memberPw2IsValid = 1;
+				memberPwNew2IsValid = 1;
 			} 
 		}); // end $('#memberPwNew2').keyup()
 		// 회원탈퇴 시 비밀번호 유효성검사
@@ -420,7 +422,7 @@ body {
 			}
 		}); // $('#memberPw2Del').keyup()
 		// 휴대폰 번호 유효성검사
-		$('#memberPhone').keyup(function() {
+		$('.memberPhone input').keyup(function() {
 			var memberPhone1 = $('#memberPhone1').val();
 			var memberPhone2 = $('#memberPhone2').val();
 			var memberPhone3 = $('#memberPhone3').val();
@@ -493,9 +495,9 @@ body {
 				return false;
 			}
 		}); // end $('input[type="submit"][value="회원정보 수정"]').click()
-		// 회원정보 수정 유효성검사
+		// 비밀번호 수정 유효성검사
 		$('input[type="submit"][value="비밀번호 변경"]').click(function() {			
-			var isValidResult = memberPwOriIsValid + memberPwOri2IsValid + memberPwNewIsValid + memberPwNew2IsValid;
+			var isValidResult = memberPwIsValid + memberPw2IsValid + memberPwNewIsValid + memberPwNew2IsValid;
 			if (isValidResult == 4) {
 				return true;
 			} else {

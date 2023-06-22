@@ -21,6 +21,7 @@ body {
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 	display: flex;
+	max-height: 97%;
 	flex-direction: column;
 }
 
@@ -286,6 +287,7 @@ body {
 </head>
 <body>
 	<div class="history-wrapper">
+		<div class="close"><button type="button" onclick="$('.history').css('display', 'none');$('.content').css('display', 'block');">&times;</button></div>
 		<div class="history-member">
 			<div class="member-profile">
 				<div class="member-picture">

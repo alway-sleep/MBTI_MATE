@@ -711,6 +711,13 @@ body {
 							if (replyPOSTResult == 1) {
 								alert('답글을 등록했습니다.');
 								$.ajax({
+									url: '/mbti/comments/'+boardNumber,
+									type: 'GET',
+									success: function(boardCommentsGETResult) {
+										$('#boardComments').html(boardCommentsGETResult);
+									}
+								}); // end ajax()
+								$.ajax({
 									url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 									type: 'GET',
 									success: function(replyGETResult) {
@@ -1040,6 +1047,13 @@ body {
 								if (replyDELETEResult == 1) {
 									alert('답글이 삭제되었습니다.');
 									$.ajax({
+										url: '/mbti/comments/'+boardNumber,
+										type: 'GET',
+										success: function(boardCommentsGETResult) {
+											$('#boardComments').html(boardCommentsGETResult);
+										}
+									}); // end ajax()
+									$.ajax({
 										url: '/mbti/reply/list/'+commentsNumber+'/'+replyPage,
 										type: 'GET',
 										data: {
@@ -1338,7 +1352,21 @@ body {
 		/**********************************************************************************************************************************/
 		$('.detail-wrapper').on('click', 'button#memberNicknameOnBoard, button.memberNicknameOnComments, button.memberNicknameOnReply', function(e) {
 			e.preventDefault();
-			window.open("/mbti/member/history?memberNumber="+$(this).val(), "_blank");
+			/* window.open("/mbti/member/history?memberNumber="+$(this).val(), "_blank"); */
+			$.ajax({
+				url: '/mbti/member/history',
+				type: 'GET',
+			    data: {
+			    	boardPage : 1,
+			    	memberNumber : $(this).val(),
+			    	option : 0
+			    	},
+				success: function(includeJSP) {
+					$('.content').css('display', 'none');
+					$('.history').html(includeJSP);
+					$('.history').css('display', 'block');
+				}
+			});
 		});
 	}); // end $(document).ready(function() {})
 </script>
