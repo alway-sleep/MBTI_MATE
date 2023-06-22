@@ -74,7 +74,7 @@ body {
 	height: 300px;
 }
 </style>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		<c:if test="${not empty message}">

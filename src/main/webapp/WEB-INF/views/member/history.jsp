@@ -126,17 +126,17 @@ body {
 	color: #000;
 }
 </style>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function() {
 		<c:if test="${not empty message}">
 			alert("${message}");
 		</c:if>
-		if ("${sessionScope.target.option}" == 0) {
+		if ("${sessionScope.target.historyOption}" == 0) {
 			$('.history-options-board').addClass('selected');
-		} else if ("${sessionScope.target.option}" == 1) {
+		} else if ("${sessionScope.target.historyOption}" == 1) {
 			$('.history-options-comments').addClass('selected');
-		} else if ("${sessionScope.target.option}" == 2) {
+		} else if ("${sessionScope.target.historyOption}" == 2) {
 			$('.history-options-boardlike').addClass('selected');
 		}
 		// 옵션 선택
@@ -152,7 +152,7 @@ body {
 				    data: {
 				    	boardPage : 1,
 				    	memberNumber : "${memberVO.memberNumber}",
-				    	option : 0
+				    	historyOption : 0
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -166,7 +166,7 @@ body {
 				    data: {
 				    	boardPage : 1,
 				    	memberNumber : "${memberVO.memberNumber}",
-				    	option : 1
+				    	historyOption : 1
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -180,7 +180,7 @@ body {
 				    data: {
 				    	boardPage : 1,
 				    	memberNumber : "${memberVO.memberNumber}",
-				    	option : 2
+				    	historyOption : 2
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -214,7 +214,7 @@ body {
 				    data: {
 				    	boardPage : 1,
 						memberNumber : "${sessionScope.target.memberNumber}",
-						option : "${sessionScope.target.option}"
+						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -229,7 +229,7 @@ body {
 				    data: {
 				    	boardPage : "${pageMaker.boardEndPage - 1}",
 						memberNumber : "${sessionScope.target.memberNumber}",
-						option : "${sessionScope.target.option}"
+						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -244,7 +244,7 @@ body {
 				    data: {
 				    	boardPage : parseInt($(this).text()),
 						memberNumber : "${sessionScope.target.memberNumber}",
-						option : "${sessionScope.target.option}"
+						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -259,7 +259,7 @@ body {
 				    data: {
 				    	boardPage : "${pageMaker.boardEndPage + 1}",
 						memberNumber : "${sessionScope.target.memberNumber}",
-						option : "${sessionScope.target.option}"
+						historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -274,7 +274,7 @@ body {
 				    data: {
 				    	boardPage : "${pageMaker.boardTotalPage}",
 				    	memberNumber : "${sessionScope.target.memberNumber}",
-						option : "${sessionScope.target.option}"
+				    	historyOption : "${sessionScope.target.historyOption}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);

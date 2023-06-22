@@ -30,6 +30,18 @@ body {
 	align-self: center;
 }
 
+.list-wrapper .boardNumsPerPage {
+	text-align: right;
+	width: 80%;
+	align-self: center;
+	margin-bottom: 3px;
+}
+
+.list-wrapper .boardNumsPerPage select,
+.list-wrapper .boardNumsPerPage select option {
+	font-weight: bold;
+}
+
 .list-wrapper table {
 	border-collapse: collapse;
 	width: 80%;
@@ -125,7 +137,7 @@ body {
 	font-weight: bold;
 }
 </style>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function() {
 		// redirectAttributes.addFlashAttribute 확인
@@ -133,9 +145,16 @@ body {
 			alert("${message}");
 		</c:if>
 		<c:if test="${not empty pageMaker.boardPageCriteria.keyword}">
-			$('#searchOption').val("${target.searchOption}");
+			$('#searchOption').val("${sessionScope.target.searchOption}");
 			$('#keyword').val("${pageMaker.boardPageCriteria.keyword}");
 		</c:if>
+		// 게시글의 수 정렬
+		$('#boardNumsPerPage option').each(function() {
+			if ($(this).val() == "${sessionScope.target.boardNumsPerPage}") {
+				$(this).prop('selected', true);
+				return false;
+			}
+		});
 		// 게시글 보기
 		$('tbody td').closest('tr').find('a').click(function(e) {
 			e.preventDefault();
@@ -201,12 +220,13 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : 1,
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
-				    	searchOption : parseInt($('#searchOption').val()),
-				    	keyword : $('#keyword').val()
+				    	searchOption : "${sessionScope.target.searchOption}",
+				    	keyword : "${sessionScope.target.keyword}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -219,12 +239,13 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : "${pageMaker.boardEndPage - 1}",
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
-				    	searchOption : parseInt($('#searchOption').val()),
-				    	keyword : $('#keyword').val()
+				    	searchOption : "${sessionScope.target.searchOption}",
+				    	keyword : "${sessionScope.target.keyword}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -237,12 +258,13 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : parseInt($(this).text()),
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
-				    	searchOption : parseInt($('#searchOption').val()),
-				    	keyword : $('#keyword').val()
+				    	searchOption : "${sessionScope.target.searchOption}",
+				    	keyword : "${sessionScope.target.keyword}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -255,12 +277,13 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : "${pageMaker.boardEndPage + 1}",
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
-				    	searchOption : parseInt($('#searchOption').val()),
-				    	keyword : $('#keyword').val()
+				    	searchOption : "${sessionScope.target.searchOption}",
+				    	keyword : "${sessionScope.target.keyword}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -273,12 +296,13 @@ body {
 					url: '/mbti/board/list',
 					type: 'GET',
 				    data: {
+				    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
 				    	boardPage : "${pageMaker.boardTotalPage}",
 				    	boardSection : "${sessionScope.target.boardSection}",
 				    	boardList : "${sessionScope.target.boardList}",
 				    	boardName : "${sessionScope.target.boardName}",
-				    	searchOption : parseInt($('#searchOption').val()),
-				    	keyword : $('#keyword').val()
+				    	searchOption :"${sessionScope.target.searchOption}",
+				    	keyword : "${sessionScope.target.keyword}"
 				    	},
 					success: function(includeJSP) {
 						$('.content').html(includeJSP);
@@ -299,6 +323,8 @@ body {
 						url: '/mbti/board/list',
 						type: 'GET',
 					    data: {
+					    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
+					    	boardPage : 1,
 					    	boardSection : "${sessionScope.target.boardSection}",
 					    	boardList : "${sessionScope.target.boardList}",
 					    	boardName : "${sessionScope.target.boardName}",
@@ -313,13 +339,44 @@ body {
 					return false;					
 				}
 			</c:if>
-		}) // end $('.search-form input[type="submit"]').click(function() {}) 
+		}) // end $('.search-form input[type="submit"]').click(function() {})
+		// 게시글 수 정렬
+		$('#boardNumsPerPage').change(function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: '/mbti/board/list',
+				type: 'GET',
+			    data: {
+			    	boardNumsPerPage : $(this).val(),
+			    	boardPage : "${sessionScope.target.boardPage}",
+			    	boardSection : "${sessionScope.target.boardSection}",
+			    	boardList : "${sessionScope.target.boardList}",
+			    	boardName : "${sessionScope.target.boardName}",
+			    	searchOption :"${sessionScope.target.searchOption}",
+			    	keyword : "${sessionScope.target.keyword}"
+			    	},
+				success: function(includeJSP) {
+					$('.content').html(includeJSP);
+				}
+			});
+		});
 	}); // end $(document).ready()
 </script>
 </head>
 <body>
 	<div class="list-wrapper">
 		<h2>${sessionScope.target.boardName}</h2>
+		<div class="boardNumsPerPage">
+			<select id="boardNumsPerPage">
+				<option value="5">5개씩</option>
+				<option value="10">10개씩</option>
+				<option value="15">15개씩</option>
+				<option value="20">20개씩</option>
+				<option value="30">30개씩</option>
+				<option value="40">40개씩</option>
+				<option value="50">50개씩</option>
+			</select>
+		</div>
 		<table class="list-table">
 			<thead>
 				<tr>
@@ -376,7 +433,9 @@ body {
 		</c:if>
 		<div class="list-page">
 			<ul>
-				<li><a href="#" class="listGET-start">처음</a></li>
+				<c:if test="${pageMaker.boardPageCriteria.boardEnd < 5}">
+					<li><a href="#" class="listGET-start">처음</a></li>				
+				</c:if>
 				<c:if test="${pageMaker.boardHasPrev}">
 				<li><a href="#" class="listGET-prev">이전</a></li>
 				</c:if>
@@ -391,7 +450,9 @@ body {
 				<c:if test="${pageMaker.boardHasNext}">
 				<li><a href="#"	class="listGET-next">다음</a></li>
 				</c:if>
-				<li><a href="#" class="listGET-end">끝</a></li>
+				<c:if test="${pageMaker.boardPageCriteria.boardEnd < 5}">
+					<li><a href="#" class="listGET-end">끝</a></li>
+				</c:if>
 			</ul>
 		</div>
 		<form class="search-form">
@@ -401,7 +462,7 @@ body {
 				<option value="2">게시글 작성자</option>
 				<option value="3">댓글 내용</option>
 				<option value="4">댓글 작성자</option>
-				<option value="5">게시글 작성일</option>
+				<!-- <option value="5">게시글 작성일</option> -->
 			</select>
 			&nbsp;
 			<input type="text" id="keyword" minlength="1"/>

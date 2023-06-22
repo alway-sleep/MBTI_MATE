@@ -44,9 +44,9 @@ public class BoardController {
 		Target target = (Target) request.getSession().getAttribute("target");
 		if (target == null) {
 			target = new Target();
-			request.getSession().setAttribute("target", target.setTarget(target, boardPage, boardSection, boardList, boardName, boardNumber, searchOption, keyword, 0, -1));
+			request.getSession().setAttribute("target", target.setTarget(target, boardNumsPerPage, boardPage, boardSection, boardList, boardName, boardNumber, searchOption, keyword, 0, -1));
 		} else {
-			target = target.setTarget(target, boardPage, boardSection, boardList, boardName, boardNumber, searchOption, keyword, 0, -1);
+			target = target.setTarget(target, boardNumsPerPage, boardPage, boardSection, boardList, boardName, boardNumber, searchOption, keyword, 0, -1);
 		}
 		boardPageCriteria = boardPageCriteria.setBoardPageCriteria(boardPageCriteria, boardPage, boardNumsPerPage, target.getBoardSection(), target.getBoardList(), target.getKeyword());
 		List<BoardVO> boardVO = null;

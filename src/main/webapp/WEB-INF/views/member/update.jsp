@@ -229,7 +229,7 @@ body {
 }
 </style>
 </head>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function() {
 		<c:if test="${not empty message}">

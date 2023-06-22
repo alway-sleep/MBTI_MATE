@@ -213,24 +213,24 @@ public class MemberController {
 	}
 	
 	@GetMapping("/history")
-	public void historyGET(HttpServletRequest request, Model model, Integer boardPage, Integer memberNumber, Integer option) {
+	public void historyGET(HttpServletRequest request, Model model, Integer boardPage, Integer memberNumber, Integer historyOption) {
 		logger.info("RequestURL: ({}){}",request.getMethod(), request.getRequestURI());
 		
 		Target target = new Target();
 		target.setBoardPage(boardPage);
 		target.setMemberNumber(memberNumber);
-		target.setOption(option);
+		target.setHistoryOption(historyOption);
 		request.getSession().setAttribute("target", target);
 		
 		BoardPageCriteria boardPageCriteria = new BoardPageCriteria();
 		boardPageCriteria.setBoardPage(boardPage);
 		List<BoardVO> boardVO = null;
-		if (option == 0) {
+		if (historyOption == 0) {
 			boardVO = memberService.readAllByMember(memberNumber, boardPageCriteria.getBoardStart(), boardPageCriteria.getBoardEnd());
 			model.addAttribute("pageMaker", pageMaker(boardPageCriteria, memberService.readCountByMember(memberNumber)));
-		} else if (option == 1) {
+		} else if (historyOption == 1) {
 			
-		} else if (option == 2) {
+		} else if (historyOption == 2) {
 			boardVO = memberService.readAllByLike(memberNumber, boardPageCriteria.getBoardStart(), boardPageCriteria.getBoardEnd());
 			model.addAttribute("pageMaker", pageMaker(boardPageCriteria, memberService.readCountByLike(memberNumber)));
 		}

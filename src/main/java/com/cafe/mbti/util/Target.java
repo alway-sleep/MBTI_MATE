@@ -1,11 +1,12 @@
 package com.cafe.mbti.util;
 
 public class Target {
-	private Integer boardPage, boardSection, boardList;
+	private Integer boardNumsPerPage, boardPage, boardSection, boardList;
 	private String boardName, keyword;
-	private Integer boardNumber, searchOption, memberNumber, option;
+	private Integer boardNumber, searchOption, memberNumber, historyOption;
 	
 	public Target() {
+		boardNumsPerPage = 5;
 		boardPage = 1;
 		boardSection = 0;
 		boardList = 1;
@@ -14,10 +15,11 @@ public class Target {
 		searchOption = 0;
 		keyword = "";
 		memberNumber = 0;
-		option = 0;
+		historyOption = 0;
 	}
 	
-	public Target setTarget(Target target, Integer boardPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword, Integer memberNumber, Integer option) {
+	public Target setTarget(Target target, Integer boardNumsPerPage, Integer boardPage, Integer boardSection, Integer boardList, String boardName, Integer boardNumber, Integer searchOption, String keyword, Integer memberNumber, Integer historyOption) {
+		target.setBoardNumsPerPage(boardNumsPerPage != null ? boardNumsPerPage : target.getBoardNumsPerPage());
 		target.setBoardPage(boardPage != null ? boardPage : target.getBoardPage());
 		target.setBoardSection(boardSection != null ? boardSection : target.getBoardSection());
 		target.setBoardList(boardList != null ? boardList : target.getBoardList());
@@ -26,9 +28,17 @@ public class Target {
 		target.setSearchOption(searchOption != null ? searchOption : target.getSearchOption());
 		target.setKeyword(keyword != null ? keyword : target.getKeyword());
 		target.setMemberNumber(memberNumber != null ? memberNumber : target.getMemberNumber());
-		target.setOption(option != null ? option : target.getOption());
+		target.setHistoryOption(historyOption != null ? historyOption : target.getHistoryOption());
 		System.out.println(target.toString());
 		return target;
+	}
+
+	public Integer getBoardNumsPerPage() {
+		return boardNumsPerPage;
+	}
+
+	public void setBoardNumsPerPage(Integer boardNumsPerPage) {
+		this.boardNumsPerPage = boardNumsPerPage;
 	}
 
 	public Integer getBoardPage() {
@@ -95,18 +105,19 @@ public class Target {
 		this.memberNumber = memberNumber;
 	}
 
-	public Integer getOption() {
-		return option;
+	public Integer getHistoryOption() {
+		return historyOption;
 	}
 
-	public void setOption(Integer option) {
-		this.option = option;
+	public void setHistoryOption(Integer historyOption) {
+		this.historyOption = historyOption;
 	}
 
 	@Override
 	public String toString() {
-		return "Target [boardPage=" + boardPage + ", boardSection=" + boardSection + ", boardList=" + boardList
-				+ ", boardName=" + boardName + ", keyword=" + keyword + ", boardNumber=" + boardNumber
-				+ ", searchOption=" + searchOption + ", memberNumber=" + memberNumber + ", option=" + option + "]";
+		return "Target [boardNumsPerPage=" + boardNumsPerPage + ", boardPage=" + boardPage + ", boardSection="
+				+ boardSection + ", boardList=" + boardList + ", boardName=" + boardName + ", keyword=" + keyword
+				+ ", boardNumber=" + boardNumber + ", searchOption=" + searchOption + ", memberNumber=" + memberNumber
+				+ ", historyOption=" + historyOption + "]";
 	}
 }
