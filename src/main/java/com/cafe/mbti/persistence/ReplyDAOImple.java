@@ -55,9 +55,9 @@ public class ReplyDAOImple implements ReplyDAO {
 	}
 	
 	@Override
-	public int updateDeleteOnComments(int boardNumber) {
+	public int updateDeleteOnComments(int commentsNumber) {
 		logger.info("updateDeleteOnComments() 호출");
-		return sqlSession.update(NAMESPACE + ".updateDeleteOnComments", boardNumber);
+		return sqlSession.update(NAMESPACE + ".updateDeleteOnComments", commentsNumber);
 	}
 	
 	@Override
@@ -70,5 +70,11 @@ public class ReplyDAOImple implements ReplyDAO {
 	public int deleteOnMember(int memberNumber) {
 		logger.info("deleteOnMember() 호출");
 		return sqlSession.delete(NAMESPACE + ".deleteOnMember", memberNumber);
+	}
+	
+	@Override
+	public int updateDeleteOnMember(int memberNumber) {
+		logger.info("updateDeleteOnMember() 호출");
+		return sqlSession.update(NAMESPACE + ".updateDeleteOnMember", memberNumber);
 	}
 } // end ReplyDAOImple

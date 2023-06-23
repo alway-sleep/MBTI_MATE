@@ -52,14 +52,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 	<!-- 댓글 삭제 시 게시글 번호 초기화 -->
 	<update id="updateDeleteOnComments">
-		UPDATE ${reply} R
-		SET R.COMMENTS_NUMBER = -1
-		WHERE R.${commentsNumber} IN
-		(
-		SELECT C.${commentsNumber}
-		FROM ${comments} C
-		WHERE C.${boardNumber} = #{boardNumber}
-		)
+		UPDATE ${reply}
+		SET ${commentsNumber} = -1
+		WHERE ${commentsNumber} = #{commentsNumber}
 	</update>
 	
 	<update id="updateDeleteOnBoard">
@@ -72,15 +67,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE C.${boardNumber} = #{boardNumber}
 		)
 	</update>
-	<!-- 회원탈퇴 시 해당 회원 답글 삭제 -->
-	<delete id="deleteOnMember">
+	<delete id="deleteOnMember">		
 		DELETE
 		FROM ${reply}
-		WHERE ${replyNumber} IN
+		WHERE ${memberNumber} = #{memberNumber}
+	</delete>
+	<!-- 회원탈퇴 시 해당 회원 답글 삭제 -->
+	<update id="updateDeleteOnMember">
+		UPDATE ${reply}
+		SET ${commentsNumber} = -1
+		WHERE ${commentsNumber} IN
 			(
-			SELECT ${replyNumber}
-			FROM ${rpely}
+			SELECT ${commentsNumber}
+			FROM ${comments}
 			WHERE ${memberNumber} = #{memberNumber}
 			)
-	</delete>
+	</update>
 </mapper>

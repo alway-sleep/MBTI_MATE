@@ -21,5 +21,5 @@ public interface CommentsDAO {
 	// 게시글 삭제 시 게시글 번호 초기화
 	int updateDeleteOnBoard(int boardNumber);
 	// 회원탈퇴
-	int deleteOnMember(int memberNumber);
+	int updateDeleteOnMember(int memberNumber);
 }

@@ -206,10 +206,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE
 		FROM ${member}
 		WHERE ${memberNumber} = #{memberNumber}
-		DELETE
-		FROM ${boardlike}
-		WHERE ${memberNumber} = #{memberNumber}
-		DELETE
 	</delete>
 	
 	<!-- 회원사진 -->

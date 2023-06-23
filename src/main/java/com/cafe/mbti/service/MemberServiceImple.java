@@ -26,7 +26,7 @@ public class MemberServiceImple implements MemberService {
 	@Autowired
 	private BoardDAO boardDAO;
 	@Autowired
-	private BoardRestDAO boardlikeDAO;
+	private BoardRestDAO boardrestDAO;
 	@Autowired
 	private CommentsDAO commentsDAO;
 	@Autowired
@@ -205,10 +205,11 @@ public class MemberServiceImple implements MemberService {
 	@Override
 	public int delete(int memberNumber) throws Exception {
 		logger.info("delete() 호출");
-		boardDAO.deleteOnMember(memberNumber);
-		boardlikeDAO.deleteOnMember(memberNumber);
-		commentsDAO.deleteOnMember(memberNumber);
+		boardrestDAO.deleteOnMember(memberNumber);
 		replyDAO.deleteOnMember(memberNumber);
+		replyDAO.updateDeleteOnMember(memberNumber);
+		commentsDAO.updateDeleteOnMember(memberNumber);
+		boardDAO.deleteOnMember(memberNumber);
 		return memberDAO.delete(memberNumber);
 	}
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.cafe.mbti.domain.CommentsVO;
 import com.cafe.mbti.persistence.CommentsDAO;
+import com.cafe.mbti.persistence.ReplyDAO;
 import com.cafe.mbti.util.CmRpPageCriteria;
 
 @Service
@@ -17,6 +18,8 @@ public class CommentsServiceImple implements CommentsService {
 	
 	@Autowired
 	private CommentsDAO commentDAO;
+	@Autowired
+	private ReplyDAO replyDAO;
 
 	@Override
 	public int create(CommentsVO commentsVO) {
@@ -51,6 +54,7 @@ public class CommentsServiceImple implements CommentsService {
 	@Override
 	public int delete(int commentsNumber) {
 		logger.info("delete() 호출");
+		replyDAO.updateDeleteOnComments(commentsNumber);
 		return commentDAO.delete(commentsNumber);
 	}
 }

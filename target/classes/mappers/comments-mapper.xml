@@ -73,4 +73,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			WHERE ${memberNumber} = #{memberNumber}
 			)
 	</delete>
+	<update id="updateDeleteOnMember">
+		UPDATE ${comments}
+		SET ${boardNumber} = -1
+		WHERE ${boardNumber} IN
+			(
+			SELECT ${boardNumber}
+			FROM ${board}
+			WHERE ${memberNumber} = #{memberNumber}
+			)
+	</update>
 </mapper>

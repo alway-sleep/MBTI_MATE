@@ -132,10 +132,35 @@ body {
 	color: #555;
 }
 
+.history-wrapper table a {
+	color: #000;
+}
+
 .history-wrapper a:hover,
 .history-options .selected {
 	text-decoration: underline;
 	color: #000;
+}
+
+.history-wrapper .list-options {
+	width: 80%;
+	display: flex;
+	align-self: center;
+	justify-content: flex-end;
+}
+
+.history-wrapper .list-options button {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 5px 10px;
+	cursor: pointer;
+	margin-top: 3px;
+}
+
+.history-wrapper .list-options button:hover {
+	background-color: #00abff;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -215,19 +240,28 @@ body {
 		$('tbody td').closest('tr').find('a').click(function(e) {
 			e.preventDefault();
 			var boardNumber = parseInt($(this).closest('tr').find('.boardNumber').text());
-			$.ajax({
-				url: '/mbti/board/detail',
-				type: 'GET',
-				   data: {
-				   	boardNumber : boardNumber
-				   	},
-				success: function(includeJSP) {
-					$('.history').css('display', 'none');
-					$('.content').html(includeJSP);
-					$('.content').css('display', 'block');
-					$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
-				}
-			});
+			var commentsNumber = parseInt($(this).closest('tr').find('.commentsNumber').text());
+			if (boardNumber == -1) {
+				alert('삭제된 게시글입니다.');
+				return false;
+			} else if (commentsNumber == -1) {
+				alert('삭제된 댓글입니다.');
+				return false;
+			} else {
+				$.ajax({
+					url: '/mbti/board/detail',
+					type: 'GET',
+					   data: {
+					   	boardNumber : boardNumber
+					   	},
+					success: function(includeJSP) {
+						$('.history').css('display', 'none');
+						$('.content').html(includeJSP);
+						$('.content').css('display', 'block');
+						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
+					}
+				});				
+			}
 		}); // end $('tbody td').closest('tr').find('a').click()
 		// 페이지 목록
 		$('.list-page').on('click', 'ul li a', function(e) {
@@ -336,36 +370,97 @@ body {
 				}
 			});
 		});
-		// 닫기
-		$('.close button').click(function(e) {
-			if ("${sessionScope.target.historyOption}" == -1) {
-				$.ajax({
-					url: '/mbti/board/list',
-					type: 'GET',
-					data: {
-						boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
-						boardPage : "${sessionScope.target.boardPage}",
-						boardSection : "${sessionScope.target.boardSection}",
-						boardList : "${sessionScope.target.boardList}",
-						boardName : "${sessionScope.target.boardName}",
-						searchOption : "${sessionScope.target.searchOption}",
-						keyword : "${sessionScope.target.keyword}"
-					},
-					success: function(includeJSP) {
-						$('.content').html(includeJSP);
-						$('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
-					}
-				});
-			} else {
-				location.href = "/mbti";
-			}
+		// 삭제 목록 선택
+		$('.history-list .list-table').on('click', 'tr td', function(e) {
+			$('.history-list .list-table').off('click', 'tr td');
+		    e.preventDefault();
+		    if ("${sessionScope.target.historyOption eq 1}") {
+			    if ($(this).css('color') === 'rgb(0, 0, 0)') {
+			        $(this).css('color', 'rgb(255, 0, 0)');
+			        if ($(this).hasClass('commentsNumber')) {
+					    var commentsNumber = parseInt($(this).find('span.commentsNumber').text());	
+					    $('.list-options .delete-btn').click(function(e) {
+				        	e.preventDefault();
+				        	// 댓글을 삭제할 건지 다시 한번 확인
+							if (confirm('댓글을 삭제하시겠습니까?')) {
+								$.ajax({
+									url: '/mbti/comments/delete/'+commentsNumber,
+									type: 'DELETE',
+									success: function(commentsDELETEResult) {
+										if (commentsDELETEResult == 1) {
+											alert('댓글이 삭제되었습니다.');
+											$.ajax({
+												url: '/mbti/member/history',
+												type: 'GET',
+											    data: {
+											    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
+											    	boardPage : "${sessionScope.target.boardPage}",
+											    	memberNumber : "${sessionScope.memberVO.memberNumber}",
+											    	historyOption : 1
+											    	},
+												success: function(includeJSP) {
+													$('.history').html(includeJSP);												
+												}
+											});
+										}
+									}
+								}); // end ajax()					
+							}
+				        });
+				    } else if ($(this).hasClass('replyNumber')) {
+					    var replyNumber = parseInt($(this).find('span.replyNumber').text());		    	
+				        $('.list-options .delete-btn').click(function(e) {
+				        	e.preventDefault();
+				        	// 답글을 삭제할 건지 다시 한번 확인
+							if (confirm('답글을 삭제하시겠습니까?')) {
+								$.ajax({
+									url: '/mbti/reply/delete/'+replyNumber,
+									type: 'DELETE',
+									success: function(replyDELETEResult) {
+										if (replyDELETEResult == 1) {
+											alert('답글이 삭제되었습니다.');
+											$.ajax({
+												url: '/mbti/member/history',
+												type: 'GET',
+											    data: {
+											    	boardNumsPerPage : "${sessionScope.target.boardNumsPerPage}",
+											    	boardPage : "${sessionScope.target.boardPage}",
+											    	memberNumber : "${sessionScope.memberVO.memberNumber}",
+											    	historyOption : 1
+											    	},
+												success: function(includeJSP) {
+													$('.history').html(includeJSP);												
+												}
+											});
+										}
+									}
+								});
+							}
+				        });
+				    }
+			    	// 나의 활동 새로고침
+					$.ajax({
+						url: '/mbti/memberrest/history/'+"${sessionScope.memberVO.memberNumber}",
+						type: 'GET',
+						success: function(historyGETResult) {
+							$('.countByNumberOnBoard').text(historyGETResult[0]);
+							$('.countByNumberOnCmRp').text(historyGETResult[1]);
+						}
+					});
+			        $('html, body').animate({scrollTop: $('.banner').offset().top}, 500);
+			    } else if ($(this).css('color') === 'rgb(255, 0, 0)') {
+			        $(this).css('color', 'rgb(0, 0, 0)');
+			    }
+		    } else {
+		    	return false;		    	
+		    }
 		});
 	}); // end document.ready()	
 </script>
 </head>
 <body>
 	<div class="history-wrapper">
-		<div class="close"><button type="button">&times;</button></div>
+		<div class="close"><button type="button" onclick="$('.history').css('display', 'none');$('.content').css('display', 'block');">&times;</button></div>
 		<div class="history-member">
 			<div class="member-profile">
 				<div class="member-picture">
@@ -427,7 +522,7 @@ body {
 						<c:forEach var="boardVO" items="${boardVO}">
 							<c:if test="${boardVO.boardType eq 2}">
 								<tr style="background-color: #FFF0F5;">
-									<td class="boardNumber">${boardVO.boardNumber}</td>
+									<td class="boardNumber" style="cursor: pointer;">${boardVO.boardNumber}</td>
 									<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
 									<td>${boardVO.memberNickname}</td>
 									<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
@@ -438,7 +533,7 @@ body {
 							</c:if>
 							<c:if test="${boardVO.boardType eq 1}">
 								<tr style="background-color: #FFEFD5;">
-									<td class="boardNumber">${boardVO.boardNumber}</td>
+									<td class="boardNumber" style="cursor: pointer;">${boardVO.boardNumber}</td>
 									<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
 									<td>${boardVO.memberNickname}</td>
 									<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
@@ -449,7 +544,7 @@ body {
 							</c:if>
 							<c:if test="${boardVO.boardType eq 0}">
 								<tr>
-									<td class="boardNumber">${boardVO.boardNumber}</td>
+									<td class="boardNumber" style="cursor: pointer;">${boardVO.boardNumber}</td>
 									<td><a href="#">${boardVO.boardTitle}</a>&nbsp;[${boardVO.boardComments}]</td>
 									<td>${boardVO.memberNickname}</td>
 									<fmt:formatDate value="${boardVO.boardRegdate}" pattern="yyyy-MM-dd" var="boardRegdate" />
@@ -474,9 +569,8 @@ body {
 					<tbody>
 						<c:forEach var="cmRpVO" items="${cmRpVO}">
 							<c:if test="${cmRpVO.replyNumber eq 0}">
-								<tr>
-									
-									<td class="commentsNumber">${cmRpVO.commentsNumber}<span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span></td>
+								<tr>									
+									<td class="commentsNumber" style="cursor: pointer;"><span class="commentsNumber">${cmRpVO.commentsNumber}</span><span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span></td>
 									<td><a href="#">${cmRpVO.commentsContent}</a></td>
 									<fmt:formatDate value="${cmRpVO.regdate}" pattern="yyyy-MM-dd" var="regdate" />
 									<td>${regdate}</td>
@@ -484,7 +578,7 @@ body {
 							</c:if>
 							<c:if test="${cmRpVO.replyNumber ne 0}">
 								<tr>
-									<td class="replyNumber">${cmRpVO.replyNumber}<span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span></td>
+									<td class="replyNumber" style="cursor: pointer;"><span class="replyNumber">${cmRpVO.replyNumber}</span><span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span><span class="commentsNumber" style="display: none;">${cmRpVO.commentsNumber}</span></td>
 									<td><a href="#">${cmRpVO.replyContent}</a></td>
 									<fmt:formatDate value="${cmRpVO.regdate}" pattern="yyyy-MM-dd" var="regdate" />
 									<td>${regdate}</td>
@@ -492,8 +586,13 @@ body {
 							</c:if>
 						</c:forEach>
 					</tbody>
-				</table>
+				</table>				
 			</c:if>
+			<div class="list-options">
+				<c:if test="${sessionScope.memberVO.memberNumber eq sessionScope.target.memberNumber}">
+					<button type="button" class="delete-btn">삭제</button>				
+				</c:if>
+			</div>
 			<div class="list-page">
 				<ul>
 					<c:if test="${pageMaker.boardPageCriteria.boardEnd < 5}">

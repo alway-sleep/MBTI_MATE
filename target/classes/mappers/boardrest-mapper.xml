@@ -61,11 +61,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteOnMember">
 		DELETE
 		FROM ${boardlike}
-		WHERE ${boardNumber} IN
-			(
-			SELECT ${boardNumber}
-			FROM ${boardlike}
-			WHERE ${memberNumber} = #{memberNumber}
-			)
+		WHERE ${memberNumber} = #{memberNumber}
 	</delete>
 </mapper>

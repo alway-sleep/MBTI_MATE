@@ -17,9 +17,10 @@ public interface ReplyDAO {
 	// 답글 삭제
 	int delete(int replyNumber);
 	// 댓글 삭제 시 댓글 번호 초기화
-	int updateDeleteOnComments(int boardNumber);
+	int updateDeleteOnComments(int commentsNumber);
 	// 댓글 삭제 시 댓글 번호 초기화
 	int updateDeleteOnBoard(int boardNumber);
 	// 회원탈퇴
 	int deleteOnMember(int memberNumber);
+	int updateDeleteOnMember(int memberNumber);
 }

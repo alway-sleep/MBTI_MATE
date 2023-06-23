@@ -1,0 +1,64 @@
+<댓글 작성자>
+SELECT B1.${boardNumber}, B1.${boardType}, B1.${boardTitle}, B1.${boardViews}, B1.${boardLikes}, B1.${boardComments}, B1.${boardRegdate}, B1.${memberNickname}
+FROM
+(
+  SELECT ROWNUM AS RN, B.*
+  FROM
+  (
+    SELECT ${boardNumber}, ${boardType}, ${boardTitle}, ${boardViews}, ${boardLikes}, ${boardComments}, ${boardRegdate}, C.${memberNickname}
+    FROM ${board}
+    LEFT JOIN
+    (
+      SELECT ${boardNumber}, R.${memberNumber}, R.${memberNickname}
+      FROM ${comments}
+      LEFT JOIN
+      (
+        SELECT ${commentsNumber}, M.${memberNumber}, M.${memberNickname}
+        FROM ${reply}
+        LEFT JOIN
+        (
+          SELECT ${memberNumber}, ${memberNickname}
+          FROM ${member}
+          WHERE ${memberNickname} LIKE #{keyword}
+        ) M ON ${reply}.${memberNumber} = M.${memberNumber}
+      ) R ON ${comments}.${commentsNumber} = R.${commentsNumber}
+    ) C ON ${board}.${boardNumber} = C.${boardNumber}
+    ORDER BY ${board}.${boardNumber} DESC
+  ) B
+) B1
+WHERE B1.RN BETWEEN #{start} AND #{end};
+위의 쿼리는 댓글 또는 답글 작성자를 검색했을 때, 작성된 댓글 또는 답글이 있는 게시글을 검색하는 쿼리야.
+데이터베이스 설계는
+member테이블에 memberNumber(작성자번호)라는 PK가 존재하고, memberNickname(작성자닉네임)라는 컬럼이 존재해.
+board테이블에 boardNumber(게시글번호)라는 PK가 존재하고 memberNumber(작성자번호)를 외래키로 가져.
+comments테이블에 commentsNumber(댓글번호)라는 PK가 존재하고, boardNumber(게시글번호)를 외래키로 가지고, memberNumber(작성자번호)를 외래키로 가져.
+reply테이블에 replyNumber(답글번호)라는 PK가 존재하고, commentsNumber(댓글번호)를 외래키로 가지고, memberNumber(작성자번호)를 외래키로 가져.
+검색조건이 memberNumber(작성자번호)가 아닌 memberNickname(작성자닉네임)라서 먼저 member테이블에서 keyword(검색어)를 포함하는 memberNickname(작성자닉네임)의 memberNumber(작성자번호)를 검색하고
+검색된 memberNumber(작성자번호)를 바탕으로 reply, comments, board테이블을 순차적으로 검색 후 해당 keyword(검색어)를 포함하는 memberNickname(작성자닉네임)가 작성한 comments(댓글) 또는 reply(답글)이 존재하는 board(게시글)을 출력하고싶어.
+쿼리에 오류는 없는지 확인해줘.
+
+<댓글 내용>
+SELECT B1.${boardNumber}, B1.${boardType}, B1.${boardTitle}, B1.${boardViews}, B1.${boardLikes}, B1.${boardComments}, B1.${boardRegdate}, B1.${memberNickname}
+FROM
+(
+  SELECT ROWNUM AS RN, B.*
+  FROM
+  (
+    SELECT ${boardNumber}, ${boardType}, ${boardTitle}, ${boardViews}, ${boardLikes}, ${boardComments}, ${boardRegdate}, C.${memberNickname}
+    FROM ${board}
+    LEFT JOIN
+    (
+      SELECT ${boardNumber}
+      FROM ${comments}
+      LEFT JOIN
+      (
+        SELECT ${commentsNumber}
+        FROM ${reply}
+        WHERE ${replyContent} LIKE #{keyword}
+      ) R ON ${comments}.${commentsNumber} = R.${commentsNumber}
+      WHERE ${comments}.${commentsContent} LIKE #{keyword}
+    ) C ON ${board}.${boardNumber} = C.${boardNumber}
+    ORDER BY ${board}.${boardNumber} DESC
+  ) B
+) B1
+WHERE B1.RN BETWEEN #{start} AND #{end};
