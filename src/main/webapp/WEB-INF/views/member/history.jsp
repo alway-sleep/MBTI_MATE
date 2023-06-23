@@ -570,7 +570,10 @@ body {
 						<c:forEach var="cmRpVO" items="${cmRpVO}">
 							<c:if test="${cmRpVO.replyNumber eq 0}">
 								<tr>									
-									<td class="commentsNumber" style="cursor: pointer;"><span class="commentsNumber">${cmRpVO.commentsNumber}</span><span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span></td>
+									<td class="commentsNumber" style="cursor: pointer;">
+									<span class="commentsNumber">${cmRpVO.commentsNumber}</span>
+									<span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span>
+									</td>
 									<td><a href="#">${cmRpVO.commentsContent}</a></td>
 									<fmt:formatDate value="${cmRpVO.regdate}" pattern="yyyy-MM-dd" var="regdate" />
 									<td>${regdate}</td>
@@ -578,7 +581,11 @@ body {
 							</c:if>
 							<c:if test="${cmRpVO.replyNumber ne 0}">
 								<tr>
-									<td class="replyNumber" style="cursor: pointer;"><span class="replyNumber">${cmRpVO.replyNumber}</span><span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span><span class="commentsNumber" style="display: none;">${cmRpVO.commentsNumber}</span></td>
+									<td class="replyNumber" style="cursor: pointer;">
+									<span class="replyNumber">${cmRpVO.replyNumber}</span>
+									<span class="boardNumber" style="display: none;">${cmRpVO.boardNumber}</span>
+									<span class="commentsNumber" style="display: none;">${cmRpVO.commentsNumber}</span>
+									</td>
 									<td><a href="#">${cmRpVO.replyContent}</a></td>
 									<fmt:formatDate value="${cmRpVO.regdate}" pattern="yyyy-MM-dd" var="regdate" />
 									<td>${regdate}</td>

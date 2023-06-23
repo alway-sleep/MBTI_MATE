@@ -22,4 +22,5 @@ public interface CommentsDAO {
 	int updateDeleteOnBoard(int boardNumber);
 	// 회원탈퇴
 	int updateDeleteOnMember(int memberNumber);
+	int deleteOnMember(int memberNumber);
 }

@@ -206,9 +206,10 @@ public class MemberServiceImple implements MemberService {
 	public int delete(int memberNumber) throws Exception {
 		logger.info("delete() 호출");
 		boardrestDAO.deleteOnMember(memberNumber);
-		replyDAO.deleteOnMember(memberNumber);
 		replyDAO.updateDeleteOnMember(memberNumber);
+		replyDAO.deleteOnMember(memberNumber);
 		commentsDAO.updateDeleteOnMember(memberNumber);
+		commentsDAO.deleteOnMember(memberNumber);
 		boardDAO.deleteOnMember(memberNumber);
 		return memberDAO.delete(memberNumber);
 	}

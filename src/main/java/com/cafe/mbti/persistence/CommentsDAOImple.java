@@ -72,4 +72,11 @@ public class CommentsDAOImple implements CommentsDAO {
 		logger.info("updateDeleteOnMember() 호출");
 		return sqlSession.update(NAMESPACE + ".updateDeleteOnMember", memberNumber);
 	}
+
+	@Override
+	public int deleteOnMember(int memberNumber) {
+		logger.info("deleteOnMember() 호출");
+		return sqlSession.delete(NAMESPACE + ".deleteOnMember", memberNumber);
+	}
+	
 }

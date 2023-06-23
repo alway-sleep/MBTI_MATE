@@ -28,8 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0
-	</select>
-	
+	</select>	
 	<!-- 해당 게시판 게시글의 수 -->
 	<select id="selectCountOnBoard2" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
@@ -42,15 +41,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${boardTitle} LIKE #{sqlKeyword}
-	</select>
-	
+	</select>	
 	<!-- 전체 게시판 게시글 내용으로 검색한 게시글의 수 -->
 	<select id="selectCountByBoardContent" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${boardContent} LIKE #{sqlKeyword}
-	</select>
-	
+	</select>	
 	<!-- 전체 게시판 게시글 작성자으로 검색한 게시글의 수 -->
 	<select id="selectCountByNicknameOnBoard" resultType="Integer">
 		SELECT COUNT(B1.${boardNumber}) AS CNT
@@ -62,8 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			WHERE B.${boardNumber} > 0
 			) B1
 		WHERE B1.${memberNickname} LIKE #{sqlKeyword}
-	</select>
-	
+	</select>	
 	<!-- 전체 게시판 댓글 내용으로 검색한 게시글의 수 -->
 	<select id="selectCountByCmRpContent" resultType="Integer">
 		SELECT COUNT(B.${boardNumber}) AS CNT
@@ -85,8 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
 			)
 		)
-	</select>
-	
+	</select>	
 	<!-- 전체 게시판 댓글 작성자으로 검색한 게시글의 수 -->
 	<select id="selectCountByNicknameOnCmRp" resultType="Integer">
 		SELECT COUNT(B.${boardNumber}) AS CNT
@@ -130,15 +125,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${boardSection} = #{boardSection} AND ${boardList} = #{boardList} AND ${boardTitle} LIKE #{sqlKeyword}
-	</select>
-	
+	</select>	
 	<!-- 해당 게시판 게시글 내용으로 검색한 게시글의 수 -->
 	<select id="selectCountByBoardContent2" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${boardSection} = #{boardSection} AND ${boardList} = #{boardList} AND ${boardContent} LIKE #{sqlKeyword}
-	</select>
-	
+	</select>	
 	<!-- 해당 게시판 게시글 작성자으로 검색한 게시글의 수 -->
 	<select id="selectCountByNicknameOnBoard2" resultType="Integer">
 		SELECT COUNT(B1.${boardNumber}) AS CNT
@@ -150,8 +143,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			WHERE B.${boardNumber} > 0 AND B.${boardSection} = #{boardSection} AND B.${boardList} = #{boardList}
 			) B1
 		WHERE B1.${memberNickname} LIKE #{sqlKeyword}
-	</select>
-	
+	</select>	
 	<!-- 해당 게시판 댓글 내용으로 검색한 게시글의 수 -->
 	<select id="selectCountByCmRpContent2" resultType="Integer">
 		SELECT COUNT(B.${boardNumber}) AS CNT
@@ -173,8 +165,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			C.${commentsContent} LIKE #{sqlKeyword} AND C.${commentsNumber} > 0
 			)
 		)
-	</select>
-	
+	</select>	
 	<!--  해당 게시판댓글 작성자으로 검색한 게시글의 수 -->
 	<select id="selectCountByNicknameOnCmRp2" resultType="Integer">
 		SELECT COUNT(B.${boardNumber}) AS CNT
@@ -229,11 +220,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			) B2
 		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
-	</select>
-	
-	<!-- 게시판 정렬 후 출력 -->
-	<!-- #{boardSection} : criteria.getboardSection(), #{boardList} : criteria.getboardList() -->
-	<!-- #{start} : pageCriteria.getStart(), #{end} : pageCriteria.getEnd() -->
+	</select>	
+	<!-- 해당 게시판 정렬 후 출력 -->
 	<select id="selectBoard" resultType="BoardVO">
   		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
   		FROM

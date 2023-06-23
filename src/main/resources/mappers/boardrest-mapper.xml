@@ -23,6 +23,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		VALUES
 		(#{boardlikeSeqNextVal}, #{boardNumber}, #{memberNumber})
 	</insert>
+	<!-- 게시글 추천 취소 -->
+	<delete id="delete">
+		DELETE
+		FROM ${boardlike}
+		WHERE ${boardNumber} = #{boardNumber} AND ${memberNumber} = #{memberNumber}
+	</delete>
+	<!-- 게시글 추천 등록/취소 후 카운트 -->
+	<select id="selectBoardlikeCount" resultType="Integer">
+		SELECT COUNT(${boardlikeNumber}) AS CNT
+		FROM ${boardlike}
+		WHERE ${boardNumber} = #{boardNumber}
+	</select>	
 	
 	<!-- 게시글 조회수 -->
 	<insert id="insertBoardview">
@@ -36,19 +48,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		(#{boardviewSeqNextVal}, #{boardNumber}, #{memberNumber})
 	</insert>
 	
-	<!-- 게시글 추천 등록/취소 후 카운트 -->
-	<select id="selectBoardlikeCount" resultType="Integer">
-		SELECT COUNT(${boardlikeNumber}) AS CNT
-		FROM ${boardlike}
-		WHERE ${boardNumber} = #{boardNumber}
-	</select>
-	
-	<!-- 게시글 추천 취소 -->
-	<delete id="delete">
-		DELETE
-		FROM ${boardlike}
-		WHERE ${boardNumber} = #{boardNumber} AND ${memberNumber} = #{memberNumber}
-	</delete>
 	
 	<!-- 게시글 삭제 시 해당 게시글 추천 삭제 -->
 	<delete id="deleteOnBoard">

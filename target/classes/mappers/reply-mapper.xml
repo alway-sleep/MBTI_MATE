@@ -67,6 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE C.${boardNumber} = #{boardNumber}
 		)
 	</update>
+	<!-- 회원탈퇴 시 해당 회원 답글 삭제 -->
 	<delete id="deleteOnMember">		
 		DELETE
 		FROM ${reply}

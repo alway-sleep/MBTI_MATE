@@ -155,14 +155,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM ${member}
 		WHERE ${memberGrade} = #{memberGrade}
 	</select>
+	<!-- 전체 회원의 수 -->
+	<select id="selectMemberCount" resultType="Integer">
+		SELECT COUNT(${memberNumber}) AS CNT
+		FROM ${member}
+		WHERE ${memberNumber} > 0
+	</select>
 	
 	<!-- 내가 쓴 게시글의 수 -->
 	<select id="selectByNumberOnBoard" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${memberNumber} = #{memberNumber}
-	</select>
-	
+	</select>	
 	<!-- 내가 쓴 댓글의 수 -->
 	<select id="selectByNumberOnCmRp" resultType="Integer">
 		SELECT
@@ -180,12 +185,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM DUAL
 	</select>
 	
-	<!-- 전체 회원의 수 -->
-	<select id="selectMemberCount" resultType="Integer">
-		SELECT COUNT(${memberNumber}) AS CNT
-		FROM ${member}
-		WHERE ${memberNumber} > 0
-	</select>	
 	
 	<!-- 회원 등업 -->
 	<update id="updateGrade">
@@ -220,15 +219,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${board}
 		WHERE ${boardNumber} > 0 AND ${memberNumber} = #{memberNumber}
-	</select>
-	
+	</select>	
 	<!-- 추천 게시글의 수 -->
 	<select id="selectCountByLike" resultType="Integer">
 		SELECT COUNT(${boardNumber}) AS CNT
 		FROM ${boardlike}
 		WHERE ${memberNumber} = #{memberNumber}
 	</select>
-	
 	<!-- 회원 게시글 정렬 후 출력 -->
 	<select id="selectAllByMember" resultType="BoardVO">
   		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}
@@ -245,8 +242,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) B1
 			) B2
 		WHERE B2.RN BETWEEN #{boardStart} AND #{boardEnd}
-	</select>
-	
+	</select>	
 	<!-- 회원 댓글 정렬 후 출력 -->
 	<select id="selectAllByCmRp" resultType="CmRpVO">
 		SELECT U2.${commentsNumber}, U2.${replyNumber}, U2.${boardNumber}, U2.${memberNumber}, U2.${commentsContent}, U2.${replyContent}, U2.regdate
@@ -267,8 +263,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) U
 			) U2
 		WHERE U2.RN BETWEEN #{boardStart} AND #{boardEnd}
-	</select>
-	
+	</select>	
 	<!-- 회원 추천 게시글 정렬 후 출력 -->
 	<select id="selectAllByLike" resultType="BoardVO">
   		SELECT B2.${boardNumber}, B2.${boardType}, B2.${boardTitle}, B2.${boardViews}, B2.${boardLikes}, B2.${boardComments}, B2.${boardRegdate}, B2.${memberNickname}

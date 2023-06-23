@@ -1376,6 +1376,7 @@ body {
 				return false;
 			}
 		}); // end $('input[type="submit"][value="삭제"]').click(function(e) {})
+		// 게시글 조회
 		function boardViews() {
 			<c:if test="${boardVO.memberNumber ne sessionScope.memberVO.memberNumber && boardVO.boardviewNumber eq 0}">
 				$.ajax({
